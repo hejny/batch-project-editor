@@ -1,0 +1,16 @@
+{
+  "name": "batch-project-editor",
+  "version": "0.1.0",
+  "license": "ISC",
+  "scripts": {
+    "start": "ts-node ./src/index.ts"
+  },
+  "dependencies": {
+    "nodegit": "^0.27.0",
+    "typescript": "^4.4.4"
+  },
+  "devDependencies": {
+    "@types/nodegit": "^0.27.3",
+    "ts-node": "^10.3.0"
+  }
+}
