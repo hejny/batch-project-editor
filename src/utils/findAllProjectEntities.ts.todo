@@ -1,0 +1,30 @@
+import { readAllProjectFiles } from './readAllProjectFiles';
+
+type IEntityType = 'const' | 'let' | 'class' | 'function' | 'interface' | 'type' /* TODO: more */;
+interface IEntity {
+    filePath: string;
+    type: IEntityType;
+    name: string /* TODO: abstract, async... */;
+}
+
+export async function findAllProjectEntities(): Promise<IEntity[]> {
+    const files = await readAllProjectFiles();
+
+    //console.log(files.map(({ path }) => path));
+    //process.exit(0);
+
+    const entitities: IEntity[] = [];
+    for (const file of files) {
+        for (const match of file.content.matchAll(
+            /export(?:\s+declare)?(?:\s+abstract)?(?:\s+async)?(?:\s+(?<type>[a-z]+))(?:\s+(?<name>[a-zA-Z0-9_]+))/gs,
+        )) {
+            const { type, name } = match.groups!;
+            entitities.push({ filePath: file.path, type: type as IEntityType, name });
+        }
+    }
+
+    //console.log(entitities.map(({ name }) => name));
+    //process.exit(0);
+
+    return entitities;
+}
