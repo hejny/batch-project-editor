@@ -17,6 +17,8 @@ import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
 main();
 
 async function main() {
+    const changedProjects: string[] = [];
+
     for (const projectPath of await findAllProjects()) {
         for (const workflow of WORKFLOWS) {
             const projectName = await findProjectName(projectPath);
@@ -70,8 +72,9 @@ async function main() {
             function modifyPackage(
                 fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
             ): Promise<void> {
-                return modifyFiles('package.json', async (fileContent) =>
-                    JSON.stringify(fileModifier(JSON.parse(fileContent)), null, 2) + '\n',
+                return modifyFiles(
+                    'package.json',
+                    async (fileContent) => JSON.stringify(fileModifier(JSON.parse(fileContent)), null, 2) + '\n',
                 );
             }
 
@@ -83,6 +86,7 @@ async function main() {
                 });
             }
 
+            let isCommitted = false;
             async function commit(message: string): Promise<void> {
                 if (await isWorkingTreeClean(projectPath)) {
                     console.info(chalk.gray(`⏩ Not commiting because nothings changed`));
@@ -116,6 +120,8 @@ async function main() {
                     crashOnError: false,
                     command: `git push --quiet`,
                 });
+
+                isCommitted = true;
             }
 
             await workflow({
@@ -127,8 +133,26 @@ async function main() {
                 modifyPackage,
                 commit,
             });
+
+            if (!(await isWorkingTreeClean(projectPath))) {
+                console.info(
+                    chalk.red(
+                        `❗ Workflow ${workflow.name} for the project ${projectName} ended with dirty working dir`,
+                    ),
+                );
+                process.exit();
+            }
+
+            if (isCommitted) {
+                changedProjects.push(projectPath);
+            }
         }
     }
 
-    console.info(chalk.bgGreen('[ Done ]'));
+    console.info(chalk.bgGreen(`Changed ${changedProjects.length} projects:`));
+
+    for (const projectPath of changedProjects) {
+        // TODO: !!!  Do not show here system path but GitHub URL
+        console.info(chalk.bgGreen(projectPath));
+    }
 }
