@@ -3,7 +3,7 @@ import { execCommand } from '../../utils/execCommand/execCommand';
 import { isFileExisting } from '../../utils/isFileExisting';
 import { IWorkflowOptions } from '../IWorkflow';
 
-export async function badges({ projectPath, commit }: IWorkflowOptions): Promise<void> {
+export async function prettier({ projectPath, commit }: IWorkflowOptions): Promise<void> {
     // TODO: !!! Require updated main/master branch
 
     if (await isFileExisting(join(projectPath, '.prettierrc'))) {

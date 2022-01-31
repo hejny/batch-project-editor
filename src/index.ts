@@ -42,6 +42,7 @@ async function main() {
 
             await execCommand({
                 command: 'git pull',
+                crashOnError: false,
                 cwd: projectPath,
             });
 
@@ -70,7 +71,7 @@ async function main() {
                 fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
             ): Promise<void> {
                 return modifyFiles('package.json', async (fileContent) =>
-                    JSON.stringify(fileModifier(JSON.parse(fileContent)), null, 2),
+                    JSON.stringify(fileModifier(JSON.parse(fileContent)), null, 2) + '\n',
                 );
             }
 
@@ -128,4 +129,6 @@ async function main() {
             });
         }
     }
+
+    console.info(chalk.bgGreen('[ Done ]'));
 }

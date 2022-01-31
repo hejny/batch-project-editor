@@ -106,7 +106,7 @@ async function main() {
 
     await promisify(writeFile)(
         join(__dirname, '../../package.json'),
-        JSON.stringify(packageJson, null, 4),
+        JSON.stringify(packageJson, null, 2) + '\n',
     );
 
     // Note: Here is not prettier due to prettier will be triggered automatically by prettier-watch script

@@ -5,7 +5,7 @@ import { forEver } from 'waitasecond';
 import { execCommand } from '../../utils/execCommand/execCommand';
 import { IWorkflowOptions } from '../IWorkflow';
 
-export async function lines({ projectPath, commit }: IWorkflowOptions): Promise<void> {
+export async function libraryBoilerplate({ projectPath, commit }: IWorkflowOptions): Promise<void> {
 
   // TODO: !!! Combine files like JSONs and YML and give priority to existing project ones
   // TODO: !!! Skip on non-lib projects

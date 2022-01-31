@@ -1,7 +1,6 @@
 import { copyFile } from 'fs/promises';
 import glob from 'glob-promise';
 import { join, relative } from 'path';
-import { forEver } from 'waitasecond';
 import { execCommand } from '../../utils/execCommand/execCommand';
 import { IWorkflowOptions } from '../IWorkflow';
 
@@ -11,15 +10,14 @@ export async function lines({ projectPath, commit }: IWorkflowOptions): Promise<
         ignore: ['**/node_modules/**', '**/.git/**'],
     })) {
         const command = `dos2unix ./${relative(projectPath, filePath).split('\\').join('/')}`;
-        console.log(command);
         await execCommand({
             command,
             crashOnError: false,
             cwd: projectPath,
+            // TODO: Probbably not so verborse
         });
     }
 
-    await forEver();
     await commit('⏎ Changing lines to unix');
 
     // TODO: Some util to copy boilerplate files
