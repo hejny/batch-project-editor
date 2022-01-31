@@ -1,12 +1,15 @@
-import { Promisable } from 'type-fest';
+import { PackageJson, Promisable } from 'type-fest';
 
 export interface IWorkflowOptions {
     projectPath: string;
+    // projectUrl: string;
+
     projectName: string;
+    packageJson: PackageJson;
 
-    // TODO: !!! execCommand (with preset cwd)
-
+    runCommand(command: string): Promise<string>;
     modifyFiles(globPattern: string, fileModifier: (fileContent: string) => Promisable<string>): Promise<void>;
+    modifyPackage(fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>): Promise<void>;
     commit(message: string): Promise<void>;
 }
 

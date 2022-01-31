@@ -1,5 +1,5 @@
-import { badges } from "./workflows/badges/badges";
-import { IWorkflow } from "./workflows/IWorkflow";
+import { badges } from './workflows/badges/badges';
+import { IWorkflow } from './workflows/IWorkflow';
 
 export const BASE_PATH = 'C:/Users/me/work';
-export const WORKFLOWS: IWorkflow[] = [badges];
+export const WORKFLOWS: IWorkflow[] = [badges /* !!! List all and allow to pick via CLI flags */];

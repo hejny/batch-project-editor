@@ -1,10 +1,11 @@
 import chalk from 'chalk';
 import { spawn } from 'child_process';
+import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
 import { execCommandNormalizeOptions } from './execCommandNormalizeOptions';
 import { IExecCommandOptions } from './IExecCommandOptions';
 
-export function execCommand(options: IExecCommandOptions): Promise<void> {
+export function execCommand(options: IExecCommandOptions): Promise<string> {
     return new Promise((resolve, reject) => {
         let { command, humanReadableCommand, args, cwd, crashOnError, timeout } = execCommandNormalizeOptions(options);
 
@@ -17,7 +18,7 @@ export function execCommand(options: IExecCommandOptions): Promise<void> {
                     console.warn(
                         `Command "${humanReadableCommand}" exceeded time limit of ${timeout}ms but continues running`,
                     );
-                    resolve();
+                    resolve('Command exceeded time limit');
                 }
             });
         }
@@ -29,7 +30,6 @@ export function execCommand(options: IExecCommandOptions): Promise<void> {
         console.info(chalk.yellow(cwd) + ' ' + chalk.green(command) + ' ' + chalk.blueBright(args.join(' ')));
 
         try {
-            // console.log(`spawn(${JSON.stringify(command)}, ${JSON.stringify(args)},  ${JSON.stringify({ cwd })})`);
             const commandProcess = spawn(command, args, { cwd });
 
             commandProcess.on('message', (message) => {
@@ -65,10 +65,10 @@ export function execCommand(options: IExecCommandOptions): Promise<void> {
                         );
                     } else {
                         console.warn(`Command "${humanReadableCommand}" exited with code ${code}`);
-                        resolve();
+                        resolve(spaceTrim(output.join('\n')));
                     }
                 } else {
-                    resolve();
+                    resolve(spaceTrim(output.join('\n')));
                 }
             };
 
@@ -83,7 +83,7 @@ export function execCommand(options: IExecCommandOptions): Promise<void> {
                     reject(new Error(`Command "${humanReadableCommand}" failed: \n${error.message}`));
                 } else {
                     console.warn(error);
-                    resolve();
+                    resolve(spaceTrim(output.join('\n')));
                 }
             });
         } catch (error) {
