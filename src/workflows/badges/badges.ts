@@ -13,7 +13,15 @@ export async function badges({ runCommand, modifyFiles, commit }: IWorkflowOptio
         href: string;
     }> = [];
 
-    // TODO: !!! For eacg project only relevant badges should be added
+    // TODO: !!! For each project only relevant badges should be added
+
+    badges.push({
+        // TODO: !!! Use here some npm name not name
+        // TODO: !!! Only for not scoped packages on NPM
+        title: 'Package Quality',
+        imageSrc: `https://packagequality.com/shield/${name}.svg`,
+        href: `https://packagequality.com/#?package=${name}`,
+    });
 
     badges.push({
         title: 'License',
@@ -51,7 +59,6 @@ export async function badges({ runCommand, modifyFiles, commit }: IWorkflowOptio
         href: `https://github.com/${scope}/${name}/issues`,
     });
 
-    // TODO: !!! Code quality badges
     // TODO: !!! Test working of images and links
 
     const badgesMarkdown = spaceTrim(
