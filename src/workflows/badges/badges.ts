@@ -3,6 +3,7 @@ import { basename, join } from 'path';
 import spaceTrim from 'spacetrim';
 import YAML from 'yaml';
 import { isFileExisting } from '../../utils/isFileExisting';
+import { isUrlExisting } from '../../utils/isUrlExisting';
 import { IWorkflowOptions } from '../IWorkflow';
 
 const BADGES = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
@@ -36,19 +37,26 @@ export async function badges({
         href: `https://raw.githubusercontent.com/${projectOrg}/${projectName}/master/LICENSE`,
     });
 
-    badges.push({
-        title: `NPM Version`,
-        imageSrc: `https://badge.fury.io/js/@${projectOrg}%2F${projectName}.svg`,
-        href: `https://www.npmjs.com/package/@${projectOrg}/${projectName}`,
-    });
+    if (await isUrlExisting(`https://registry.npmjs.org/package/@${projectOrg}/${projectName}`)) {
+        badges.push({
+            title: `NPM Version`,
+            imageSrc: `https://badge.fury.io/js/@${projectOrg}%2F${projectName}.svg`,
+            href: `https://www.npmjs.com/package/@${projectOrg}/${projectName}`,
+        });
+    }
 
     for (const workflowPath of await glob(join(projectPath, '/.github/workflows/*.yml'), { dot: true })) {
+        const workflowName = basename(workflowPath).replace(/\.yml$/, '');
+
+        if (workflowName === 'publish') {
+            // Note: Publish status is shown in badge "NPM Version" above
+            continue;
+        }
+
         badges.push({
-            title: YAML.parse(workflowPath).name,
-            imageSrc: `https://github.com/${projectOrg}/${projectName}/actions/workflows/${basename(
-                workflowPath,
-            )}/badge.svg`,
-            href: `https://github.com/${projectOrg}/${projectName}/actions/workflows/${basename(workflowPath)}.yml`,
+            title: YAML.parse(workflowPath).name || workflowName /* TODO: <- Capitalize first letter on workflowName */,
+            imageSrc: `https://github.com/${projectOrg}/${projectName}/actions/workflows/${workflowName}.yml/badge.svg`,
+            href: `https://github.com/${projectOrg}/${projectName}/actions/workflows/${workflowName}.yml`,
         });
     }
 
@@ -90,7 +98,7 @@ export async function badges({
         badges.push({
             title: `IPv6 ready`,
             imageSrc: `http://ipv6-test.com/button-ipv6-80x15.png`,
-            href: `http://ipv6-test.com/validate.php?url=collboard.com`,
+            href: `http://ipv6-test.com/validate.php?url=collboard.com` /* <- "collboard.com" is hardcoded */,
         });
     }
 

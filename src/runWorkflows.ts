@@ -1,11 +1,11 @@
 #!/usr/bin/env ts-node
 
+
 import chalk from 'chalk';
 import { readFile, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
-//import nodegit from 'nodegit';
 import { PackageJson, Promisable } from 'type-fest';
 import { WORKFLOWS } from './config';
 import { execCommand } from './utils/execCommand/execCommand';
@@ -163,6 +163,11 @@ export async function runWorkflows() {
     console.info(chalk.bgGreen(`Changed ${changedProjects.length} projects:`));
 
     for (const { projectTitle, projectUrl } of changedProjects) {
-        console.info(chalk.bgGreen(` [${projectTitle}] `) + ' ' + chalk.gray(projectUrl.href));
+        console.info(chalk.bgGreen(` ${projectTitle} `) + ' ' + chalk.gray(projectUrl.href));
     }
 }
+
+
+/**
+ * TODO: Maybe use nodegit
+ */

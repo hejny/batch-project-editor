@@ -4,7 +4,7 @@ export async function isUrlExisting(url: string): Promise<boolean> {
     try {
         const response = await fetch(url);
         console.log(response.status);
-        return response.status < 300 /* Note: Redirects are sign of private packages */;
+        return response.status < 400;
     } catch (error) {
         return false;
     }
