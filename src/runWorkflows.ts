@@ -11,17 +11,20 @@ import { WORKFLOWS } from './config';
 import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjects } from './utils/findAllProjects';
 import { findProjectName } from './utils/findProjectName';
+import { findProjectTitle } from './utils/findProjectTitle';
+import { isFileExisting } from './utils/isFileExisting';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
 
-export async function workflows() {
-    const changedProjects: string[] = [];
+export async function runWorkflows() {
+    const changedProjects: { projectTitle: string; projectUrl: URL }[] = [];
 
     // console.log(await findAllProjects());
     // await forEver();
 
     for (const projectPath of await findAllProjects()) {
         for (const workflow of WORKFLOWS) {
-            const projectName = await findProjectName(projectPath);
+            const projectTitle = await findProjectTitle(projectPath);
+            const { name: projectName, org: projectOrg, url: projectUrl } = await findProjectName(projectPath);
 
             const currentBranch = await execCommand({
                 command: 'git branch --show-current',
@@ -30,17 +33,22 @@ export async function workflows() {
 
             if (currentBranch !== 'main' && currentBranch !== 'master') {
                 console.info(
-                    `⏩ Skipping project ${projectName} because current branch is not main (or master) but ${currentBranch}`,
+                    `⏩ Skipping project ${projectTitle} because current branch is not main (or master) but ${currentBranch}`,
                 );
                 continue;
             }
 
             if (!(await isWorkingTreeClean(projectPath))) {
-                console.info(chalk.gray(`⏩ Skipping project ${projectName} because working dir is not clean`));
+                console.info(chalk.gray(`⏩ Skipping project ${projectTitle} because working dir is not clean`));
                 continue;
             }
 
-            console.info(`🔼 Running workflow ${workflow.name} for project ${projectName}`);
+            if (!(await isFileExisting(join(projectPath, 'package.json')))) {
+                console.info(chalk.gray(`⏩ Skipping project ${projectTitle} because package.json does not exist`));
+                continue;
+            }
+
+            console.info(`🔼 Running workflow ${workflow.name} for project ${projectTitle}`);
 
             await execCommand({
                 command: 'git pull',
@@ -125,8 +133,11 @@ export async function workflows() {
             }
 
             await workflow({
+                projectTitle,
                 projectPath,
                 projectName,
+                projectUrl,
+                projectOrg,
                 packageJson,
                 runCommand,
                 modifyFiles,
@@ -137,22 +148,21 @@ export async function workflows() {
             if (!(await isWorkingTreeClean(projectPath))) {
                 console.info(
                     chalk.red(
-                        `❗ Workflow ${workflow.name} for the project ${projectName} ended with dirty working dir`,
+                        `❗ Workflow ${workflow.name} for the project ${projectTitle} ended with dirty working dir`,
                     ),
                 );
                 process.exit();
             }
 
             if (isCommitted) {
-                changedProjects.push(projectPath);
+                changedProjects.push({ projectTitle, projectUrl });
             }
         }
     }
 
     console.info(chalk.bgGreen(`Changed ${changedProjects.length} projects:`));
 
-    for (const projectPath of changedProjects) {
-        // TODO: !!!  Do not show here system path but GitHub URL
-        console.info(chalk.bgGreen(projectPath));
+    for (const { projectTitle, projectUrl } of changedProjects) {
+        console.info(chalk.bgGreen(` [${projectTitle}] `) + ' ' + chalk.gray(projectUrl.href));
     }
 }

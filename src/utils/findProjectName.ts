@@ -1,16 +1,9 @@
-import { readFile } from 'fs/promises';
-import { basename, join } from 'path';
-import { PackageJson } from 'type-fest';
-import { isFileExisting } from './isFileExisting';
+import { execCommand } from './execCommand/execCommand';
 
-export async function findProjectName(projectPath: string): Promise<string> {
-    if (await isFileExisting(join(projectPath, 'package.json'))) {
-        const projectName = (JSON.parse(await readFile(join(projectPath, 'package.json'), 'utf8')) as PackageJson).name;
+export async function findProjectName(projectPath: string): Promise<{ org: string; name: string; url: URL }> {
+    const projectUrlString = await execCommand({ cwd: projectPath, command: 'git config --get remote.origin.url' });
+    const { org, name } = /^(https|git):\/\/github\.com\/(?<org>.*)\/(?<name>.*)(\.git)?$/.exec(projectUrlString)!
+        .groups!;
 
-        if (projectName) {
-            return projectName;
-        }
-    }
-
-    return basename(projectPath);
+    return { org, name, url: new URL(projectUrlString) };
 }

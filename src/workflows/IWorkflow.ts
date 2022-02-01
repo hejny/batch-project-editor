@@ -1,9 +1,10 @@
 import { PackageJson, Promisable } from 'type-fest';
 
 export interface IWorkflowOptions {
+    projectTitle: string;
     projectPath: string;
-    // projectUrl: string;
-
+    projectUrl: URL;
+    projectOrg: string;
     projectName: string;
     packageJson: PackageJson;
 

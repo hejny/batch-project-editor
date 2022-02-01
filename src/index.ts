@@ -5,6 +5,7 @@ import commander from 'commander';
 import { mkdir } from 'fs/promises';
 import { join } from 'path';
 import { BASE_PATH } from './config';
+import { runWorkflows } from './runWorkflows';
 import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjectsRemote } from './utils/findAllProjectsRemote';
 
@@ -20,7 +21,7 @@ async function main() {
     const { list, clone, workflows } = program.opts();
 
     if (workflows) {
-        await workflows();
+        await runWorkflows();
     } else if (list) {
         for (const [org, projectUrls] of Object.entries(await findAllProjectsRemote())) {
             console.info(chalk.bgYellowBright(org));
