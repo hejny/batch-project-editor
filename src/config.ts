@@ -1,11 +1,10 @@
-import { auditDependencies } from './workflows/auditDependencies/auditDependencies';
 import { badges } from './workflows/badges/badges';
 import { IWorkflow } from './workflows/IWorkflow';
-import { lines } from './workflows/lines/lines';
 
-export const BASE_PATH = 'C:/Users/me/work';
+export const BASE_PATH = 'C:/Users/me/autowork';
+//export const BASE_PATH = 'G:/Backups/github';
 export const WORKFLOWS: IWorkflow[] = [
-    auditDependencies,
+    //auditDependencies,
     badges,
-    lines /* !!! List all and allow to pick via CLI flags */,
+    //lines /* !!! List all and allow to pick via CLI flags */,
 ];

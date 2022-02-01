@@ -5,7 +5,7 @@ const BADGES = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
 
 export async function badges({ runCommand, modifyFiles, commit }: IWorkflowOptions): Promise<void> {
     const remoteOriginUrl = await runCommand('git config --get remote.origin.url');
-    const { scope, name } = /^https:\/\/github\.com\/(?<scope>.*)\/(?<name>.*)(\.git)$/.exec(remoteOriginUrl)!.groups!;
+    const { scope, name } = /^(https|git):\/\/github\.com\/(?<scope>.*)\/(?<name>.*)(\.git)$/.exec(remoteOriginUrl)!.groups!;
 
     const badges: Array<{
         title: string;

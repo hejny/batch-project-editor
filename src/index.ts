@@ -19,6 +19,9 @@ main();
 async function main() {
     const changedProjects: string[] = [];
 
+    // console.log(await findAllProjects());
+    // await forEver();
+
     for (const projectPath of await findAllProjects()) {
         for (const workflow of WORKFLOWS) {
             const projectName = await findProjectName(projectPath);

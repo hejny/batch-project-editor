@@ -7,6 +7,13 @@
             "command": "npm start",
             "onlySingle": true,
             "focus": true
+        },
+        {
+            "name": "⬛ List all repositories",
+            "command": "./list-all-repos.sh",
+            "cwd": "./other",
+            "onlySingle": true,
+            "focus": true
         }
     ]
 }
