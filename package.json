@@ -1,7 +1,7 @@
 {
   "name": "batch-project-editor",
   "version": "0.1.0",
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "list": "ts-node ./src/index.ts --list",
     "clone": "ts-node ./src/index.ts --clone",
