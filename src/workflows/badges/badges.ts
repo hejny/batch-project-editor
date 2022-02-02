@@ -4,6 +4,7 @@ import spaceTrim from 'spacetrim';
 import YAML from 'yaml';
 import { findPackagePublished } from '../../utils/findPackagePublished';
 import { isFileExisting } from '../../utils/isFileExisting';
+import { isUrlExisting } from '../../utils/isUrlExisting';
 import { IWorkflowOptions } from '../IWorkflow';
 
 const BADGES = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
@@ -94,7 +95,25 @@ export async function badges({
         });
     }
 
-    // TODO: !!! Test working of images and links
+    //Note: Test working of images and links
+    const imagesAndLinksCanBeLoaded = await Promise.all([
+        ...badges.map(async (badge) => ({
+            badgeTitle: badge.title,
+            url: badge.href,
+            exists: await isUrlExisting(badge.href),
+        })),
+        ...badges.map(async (badge) => ({
+            badgeTitle: badge.title,
+            url: badge.imageSrc,
+            exists: await isUrlExisting(badge.imageSrc),
+        })),
+    ]);
+
+    const imagesAndLinksCantBeLoaded = imagesAndLinksCanBeLoaded.filter(({ exists }) => !exists);
+    if (imagesAndLinksCantBeLoaded.length > 0) {
+        console.info({ imagesAndLinksCantBeLoaded });
+        throw new Error(`Some referenced urls in badges can not be loaded.`);
+    }
 
     const badgesMarkdown = spaceTrim(
         (block) => `

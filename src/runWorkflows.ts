@@ -14,6 +14,7 @@ import { findProjectTitle } from './utils/findProjectTitle';
 import { isFileExisting } from './utils/isFileExisting';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
 
+// TODO: !!! Recieve workflows + projects
 export async function runWorkflows() {
     const changedProjects: { projectTitle: string; projectUrl: URL }[] = [];
 
