@@ -26,7 +26,7 @@ export async function badges({
     badges.push({
         title: `License of ${projectTitle}`,
         imageSrc: `https://img.shields.io/github/license/${projectOrg}/${projectName}.svg?style=flat`,
-        href: `https://raw.githubusercontent.com/${projectOrg}/${projectName}/master/LICENSE`,
+        href: `https://github.com/${projectOrg}/${projectName}/blob/main/LICENSE`,
     });
 
     const published = await findPackagePublished({ projectOrg, projectName });
