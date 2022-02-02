@@ -1,7 +1,7 @@
 import { ConfigChecker } from 'configchecker';
 import dotenv from 'dotenv';
 import path from 'path';
-import { badges } from './workflows/badges/badges';
+import { badges } from './workflows/800-badges/badges';
 import { IWorkflow } from './workflows/IWorkflow';
 
 export const WORKFLOWS: IWorkflow[] = [
