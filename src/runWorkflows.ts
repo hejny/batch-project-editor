@@ -158,6 +158,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 projectUrl,
                 projectOrg,
                 packageJson,
+                branch: currentBranch,
                 runCommand,
                 modifyFiles,
                 modifyPackage,

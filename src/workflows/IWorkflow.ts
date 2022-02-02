@@ -7,6 +7,7 @@ export interface IWorkflowOptions {
     projectOrg: string;
     projectName: string;
     packageJson: PackageJson;
+    branch: 'master' | 'main';
 
     runCommand(command: string): Promise<string>;
     modifyFiles(globPattern: string, fileModifier: (fileContent: string) => Promisable<string>): Promise<void>;
