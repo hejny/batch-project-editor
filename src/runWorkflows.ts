@@ -174,7 +174,9 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
             }
 
             if (isCommitted) {
-                changedProjects.push({ projectTitle, projectUrl });
+                if (!changedProjects.some(({ projectTitle: projectTitle2 }) => projectTitle === projectTitle2)) {
+                    changedProjects.push({ projectTitle, projectUrl });
+                }
             }
         }
     }
