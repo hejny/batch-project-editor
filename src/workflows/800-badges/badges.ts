@@ -97,12 +97,14 @@ export async function badges({
     }
 
     //Note: Test working of images and links
-    const badgesLoadable = await Promise.all(
-        badges.map(async (badge) => ({
-            ...badge,
-            isLoadable: (await isUrlExisting(badge.href)) && (await isUrlExisting(badge.imageSrc)),
-        })),
-    );
+    const badgesLoadable = (
+        await Promise.all(
+            badges.map(async (badge) => ({
+                ...badge,
+                isLoadable: (await isUrlExisting(badge.href)) && (await isUrlExisting(badge.imageSrc)),
+            })),
+        )
+    ).sort(({ isLoadable: a }, { isLoadable: b }) => Number(a) - Number(b));
 
     const badgesMarkdown = spaceTrim(
         (block) => `
