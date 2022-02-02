@@ -2,8 +2,7 @@
 
 <!--Badges-->
 
- [![Package Quality](https://packagequality.com/shield/batch-project-editor.svg)](https://packagequality.com/#?package=batch-project-editor)
- [![License](https://img.shields.io/github/license/hejny/batch-project-editor.svg?style=flat)](https://raw.githubusercontent.com/hejny/batch-project-editor/master/LICENSE)
+ [![License of 🔼 Batch project editor](https://img.shields.io/github/license/hejny/batch-project-editor.svg?style=flat)](https://github.com/hejny/batch-project-editor/blob/main/LICENSE)
  [![Known Vulnerabilities](https://snyk.io/test/github/hejny/batch-project-editor/badge.svg)](https://snyk.io/test/github/hejny/batch-project-editor)
  [![Issues](https://img.shields.io/github/issues/hejny/batch-project-editor.svg?style=flat)](https://github.com/hejny/batch-project-editor/issues)
 
