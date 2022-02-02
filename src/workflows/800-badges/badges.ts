@@ -105,7 +105,7 @@ export async function badges({
             })),
         )
     )
-        // Note: Unloadable badges at the end:
+        // Note: Unloadable badges at the end: (!!! Is it at end or begining)
         .sort(({ isLoadable: a }, { isLoadable: b }) => Number(a) - Number(b));
 
     const badgesMarkdown = spaceTrim(
