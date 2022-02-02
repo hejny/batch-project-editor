@@ -15,7 +15,7 @@
     "configchecker": "1.5.1",
     "dotenv": "^15.0.0",
     "glob-promise": "4.2.2",
-    "node-fetch": "2.6.5",
+    "node-fetch": "2.6.7",
     "nodegit": "0.27.0",
     "spacetrim": "0.7.0",
     "ts-node": "10.4.0",
