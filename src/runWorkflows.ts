@@ -3,7 +3,7 @@
 import chalk from 'chalk';
 import { readFile, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
-import { join } from 'path';
+import { basename, join } from 'path';
 import spaceTrim from 'spacetrim';
 import { PackageJson, Promisable } from 'type-fest';
 import { WORKFLOWS } from './config';
@@ -14,15 +14,33 @@ import { findProjectTitle } from './utils/findProjectTitle';
 import { isFileExisting } from './utils/isFileExisting';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
 
-// TODO: !!! Recieve workflows + projects
-export async function runWorkflows() {
+interface IRunWorkflowsOptions {
+    runWorkflows: string[] | true;
+    runProjects: string[] | true;
+}
+
+export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsOptions) {
     const changedProjects: { projectTitle: string; projectUrl: URL }[] = [];
 
+    // console.log({ runProjects, runWorkflows });
     // console.log(await findAllProjects());
     // await forEver();
 
     for (const projectPath of await findAllProjects()) {
+        // console.log({ project: basename(projectPath /* TODO: Match more things in projects */) });
+        if (
+            runProjects !== true &&
+            !runProjects.includes(basename(projectPath /* TODO: Match more things in projects */))
+        ) {
+            continue;
+        }
+
         for (const workflow of WORKFLOWS) {
+            // console.log({ workflows: workflow.name }, runWorkflows !== true && !runWorkflows.includes(workflow.name));
+            if (runWorkflows !== true && !runWorkflows.includes(workflow.name)) {
+                continue;
+            }
+
             const projectTitle = await findProjectTitle(projectPath);
             const { name: projectName, org: projectOrg, url: projectUrl } = await findProjectName(projectPath);
 

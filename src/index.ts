@@ -15,14 +15,14 @@ async function main() {
     const program = new commander.Command();
     program.option('--list', `List all projects`);
     program.option('--clone', `Clone all projects`);
-    program.option('--workflows', `Run the workflows`);
+    program.option('--workflows <workflows>', `Run the workflows`, 'all');
+    program.option('--projects <projects>', `Run the projects`, 'all');
 
     program.parse(process.argv);
-    const { list, clone, workflows } = program.opts();
+    const { list, clone, workflows, projects } = program.opts();
+    // console.log({ list, clone, workflows, projects });
 
-    if (workflows) {
-        await runWorkflows();
-    } else if (list) {
+    if (list) {
         for (const [org, projectUrls] of Object.entries(await findAllProjectsRemote())) {
             console.info(chalk.bgYellowBright(org));
             for (const projectUrl of projectUrls) {
@@ -46,6 +46,11 @@ async function main() {
                 });
             }
         }
+    } else if (workflows) {
+        await runWorkflows({
+            runWorkflows: workflows === 'all' ? true : workflows.split(','),
+            runProjects: projects === 'all' ? true : projects.split(','),
+        });
     } else {
         console.info(chalk.bgRed(`No action specified`));
     }

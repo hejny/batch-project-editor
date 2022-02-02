@@ -9,6 +9,12 @@
             "focus": true
         },
         {
+            "name": "🔼👨🏽‍💻 Run one workflow on one project",
+            "command": "ts-node ./src/index.ts --workflows badges --projects spacetrim",
+            "onlySingle": true,
+            "focus": true
+        },
+        {
             "name": "🔽 Clone",
             "command": "ts-node ./src/index.ts --clone",
             "onlySingle": true,

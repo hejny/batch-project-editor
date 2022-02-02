@@ -1,14 +1,15 @@
 import { ConfigChecker } from 'configchecker';
 import dotenv from 'dotenv';
 import path from 'path';
+import { lines } from './workflows/000-lines/lines';
+import { prettier } from './workflows/010-prettier/prettier';
+import { auditDependencies } from './workflows/100-auditDependencies/auditDependencies';
+import { libraryBoilerplate } from './workflows/200-libraryBoilerplate/libraryBoilerplate';
+import { license } from './workflows/300-license/license';
 import { badges } from './workflows/800-badges/badges';
 import { IWorkflow } from './workflows/IWorkflow';
 
-export const WORKFLOWS: IWorkflow[] = [
-    //auditDependencies,
-    badges,
-    //lines /* !!! List all and allow to pick via CLI flags */,
-];
+export const WORKFLOWS: IWorkflow[] = [lines, prettier, auditDependencies, libraryBoilerplate, license, badges];
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 const config = ConfigChecker.from(process.env);
