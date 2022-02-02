@@ -1,6 +1,5 @@
 #!/usr/bin/env ts-node
 
-
 import chalk from 'chalk';
 import { readFile, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
@@ -13,7 +12,6 @@ import { findAllProjects } from './utils/findAllProjects';
 import { findProjectName } from './utils/findProjectName';
 import { findProjectTitle } from './utils/findProjectTitle';
 import { isFileExisting } from './utils/isFileExisting';
-import { isUrlExisting } from './utils/isUrlExisting';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
 
 export async function runWorkflows() {
@@ -121,6 +119,7 @@ export async function runWorkflows() {
 
                 await execCommand({
                     cwd: projectPath,
+                    crashOnError: false,
                     command: `git commit --file ${commitMessageFilePath}`,
                 });
 
@@ -167,7 +166,6 @@ export async function runWorkflows() {
         console.info(chalk.bgGreen(` ${projectTitle} `) + ' ' + chalk.gray(projectUrl.href));
     }
 }
-
 
 /**
  * TODO: Maybe use nodegit
