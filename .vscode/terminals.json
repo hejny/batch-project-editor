@@ -4,7 +4,7 @@
     "terminals": [
         {
             "name": "🔼 Run workflows",
-            "command": "ts-node ./src/index.ts --workflows",
+            "command": "ts-node ./src/index.ts --workflows all --projects all",
             "onlySingle": true,
             "focus": true
         },
