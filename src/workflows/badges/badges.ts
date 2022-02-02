@@ -2,13 +2,14 @@ import glob from 'glob-promise';
 import { basename, join } from 'path';
 import spaceTrim from 'spacetrim';
 import YAML from 'yaml';
+import { findPackagePublished } from '../../utils/findPackagePublished';
 import { isFileExisting } from '../../utils/isFileExisting';
-import { isUrlExisting } from '../../utils/isUrlExisting';
 import { IWorkflowOptions } from '../IWorkflow';
 
 const BADGES = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
 
 export async function badges({
+    projectTitle,
     projectName,
     projectPath,
     projectOrg,
@@ -21,28 +22,33 @@ export async function badges({
         href: string;
     }> = [];
 
-    if (projectOrg === 'hejny' /* TODO: Bit hardcoded */) {
-        badges.push({
-            // TODO: !!! Use here some npm name not name
-            // TODO: !!! Only for not scoped packages on NPM
-            title: 'Package Quality',
-            imageSrc: `https://packagequality.com/shield/${projectName}.svg`,
-            href: `https://packagequality.com/#?package=${projectName}`,
-        });
-    }
-
     badges.push({
-        title: 'License',
+        title: `License of ${projectTitle}`,
         imageSrc: `https://img.shields.io/github/license/${projectOrg}/${projectName}.svg?style=flat`,
         href: `https://raw.githubusercontent.com/${projectOrg}/${projectName}/master/LICENSE`,
     });
 
-    if (await isUrlExisting(`https://registry.npmjs.org/package/@${projectOrg}/${projectName}`)) {
+    const published = await findPackagePublished({ projectOrg, projectName });
+    if (published.npm) {
         badges.push({
-            title: `NPM Version`,
-            imageSrc: `https://badge.fury.io/js/@${projectOrg}%2F${projectName}.svg`,
-            href: `https://www.npmjs.com/package/@${projectOrg}/${projectName}`,
+            title: `NPM Version of ${projectTitle}`,
+            imageSrc: `https://badge.fury.io/js/${published.npm.scope ? `@${published.npm.scope}%2F` : ''}${
+                published.npm.name
+            }.svg`,
+            href: published.npm.url.href,
         });
+
+        if (
+            !published.npm.scope
+            // Note: packagequality is working only for non-scoped packages
+            //       @see https://github.com/alexfernandez/package-quality/issues/65
+        ) {
+            badges.push({
+                title: `Quality of package ${projectTitle}`,
+                imageSrc: `https://packagequality.com/shield/${published.npm.name}.svg`,
+                href: `https://packagequality.com/#?package=${published.npm.name}`,
+            });
+        }
     }
 
     for (const workflowPath of await glob(join(projectPath, '/.github/workflows/*.yml'), { dot: true })) {
@@ -59,20 +65,6 @@ export async function badges({
             href: `https://github.com/${projectOrg}/${projectName}/actions/workflows/${workflowName}.yml`,
         });
     }
-
-    /*
-    badges.push({
-        title: `Test`,
-        imageSrc: `https://github.com/${org}/${name}/actions/workflows/test.yml/badge.svg`,
-        href: `https://github.com/${org}/${name}/actions/workflows/test.yml`,
-    });
-
-    badges.push({
-        title: `Lint`,
-        imageSrc: `https://github.com/${org}/${name}/actions/workflows/lint.yml/badge.svg`,
-        href: `https://github.com/${org}/${name}/actions/workflows/lint.yml`,
-    });
-    */
 
     badges.push({
         title: `Known Vulnerabilities`,
