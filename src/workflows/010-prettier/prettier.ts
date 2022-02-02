@@ -4,6 +4,7 @@ import { isFileExisting } from '../../utils/isFileExisting';
 import { IWorkflowOptions } from '../IWorkflow';
 
 export async function prettier({ projectPath, commit }: IWorkflowOptions): Promise<void> {
+    return; // TODO: !!! Make this workflow working
     if (await isFileExisting(join(projectPath, '.prettierrc'))) {
         // !!! Add prettier to the project
         await commit('🧹 Configure prettier');
