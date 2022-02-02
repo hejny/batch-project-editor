@@ -16,7 +16,7 @@ export async function badges({
     projectOrg,
     modifyFiles,
     commit,
-    branch
+    branch,
 }: IWorkflowOptions): Promise<void> {
     const badges: Array<{
         title: string;
@@ -97,30 +97,29 @@ export async function badges({
     }
 
     //Note: Test working of images and links
-    const imagesAndLinksCanBeLoaded = await Promise.all([
-        ...badges.map(async (badge) => ({
-            badgeTitle: badge.title,
-            url: badge.href,
-            exists: await isUrlExisting(badge.href),
+    const badgesLoadable = await Promise.all(
+        badges.map(async (badge) => ({
+            ...badge,
+            isLoadable: (await isUrlExisting(badge.href)) && (await isUrlExisting(badge.imageSrc)),
         })),
-        ...badges.map(async (badge) => ({
-            badgeTitle: badge.title,
-            url: badge.imageSrc,
-            exists: await isUrlExisting(badge.imageSrc),
-        })),
-    ]);
-
-    const imagesAndLinksCantBeLoaded = imagesAndLinksCanBeLoaded.filter(({ exists }) => !exists);
-    if (imagesAndLinksCantBeLoaded.length > 0) {
-        console.info({ imagesAndLinksCantBeLoaded });
-        throw new Error(`Some referenced urls in badges can not be loaded.`);
-    }
+    );
 
     const badgesMarkdown = spaceTrim(
         (block) => `
           <!--Badges-->
 
-          ${block(badges.map(({ title, imageSrc, href }) => ` [![${title}](${imageSrc})](${href})`).join('\n'))}
+          ${block(
+              badgesLoadable
+                  .map(({ title, imageSrc, href, isLoadable }) => {
+                      const badgeMarkdown = `[![${title}](${imageSrc})](${href})`;
+                      if (isLoadable) {
+                          return badgeMarkdown;
+                      } else {
+                          return `<!--${badgeMarkdown}-->`;
+                      }
+                  })
+                  .join('\n'),
+          )}
 
           <!--/Badges-->
     `,
