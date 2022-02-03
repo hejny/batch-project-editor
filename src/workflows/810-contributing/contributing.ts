@@ -12,17 +12,20 @@ export async function contributing({
     commit,
     branch,
 }: IWorkflowOptions): Promise<void> {
-    const contributingMarkdown = spaceTrim(`
+    const contributingMarkdown =
+        projectOrg !== 'hejny'
+            ? ``
+            : spaceTrim(`
 
-      <!--Contributing-->
+                <!--Contributing-->
 
-      ## 🖋️ Contributing
+                ## 🖋️ Contributing
 
-      I am open to pull requests, feedback, and suggestions. Or if you like this utility, you can [☕ buy me a coffee](https://www.buymeacoffee.com/hejny) or [donate via cryptocurrencies](https://github.com/hejny/hejny/blob/main/documents/crypto.md).
+                I am open to pull requests, feedback, and suggestions. Or if you like this utility, you can [☕ buy me a coffee](https://www.buymeacoffee.com/hejny) or [donate via cryptocurrencies](https://github.com/hejny/hejny/blob/main/documents/crypto.md).
 
-      <!--/Contributing-->
+                <!--/Contributing-->
 
-`);
+              `);
 
     await modifyFiles('README.md', async (readmeContent) => {
         if (CONTRIBUTING_IN_MARKDOWN.test(readmeContent)) {
