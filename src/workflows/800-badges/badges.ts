@@ -7,7 +7,7 @@ import { isFileExisting } from '../../utils/isFileExisting';
 import { isUrlExisting } from '../../utils/isUrlExisting';
 import { IWorkflowOptions } from '../IWorkflow';
 
-const BADGES = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
+const BADGES_IN_MARKDOWN = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
 
 export async function badges({
     projectTitle,
@@ -130,8 +130,8 @@ export async function badges({
     );
 
     await modifyFiles('README.md', async (readmeContent) => {
-        if (BADGES.test(readmeContent)) {
-            return readmeContent.replace(BADGES, badgesMarkdown);
+        if (BADGES_IN_MARKDOWN.test(readmeContent)) {
+            return readmeContent.replace(BADGES_IN_MARKDOWN, badgesMarkdown);
         } else {
             let added = false;
             return readmeContent

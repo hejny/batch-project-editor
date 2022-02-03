@@ -7,9 +7,20 @@ import { auditDependencies } from './workflows/100-auditDependencies/auditDepend
 import { libraryBoilerplate } from './workflows/200-libraryBoilerplate/libraryBoilerplate';
 import { license } from './workflows/300-license/license';
 import { badges } from './workflows/800-badges/badges';
+import { contributing } from './workflows/810-contributing/contributing';
+import { partners } from './workflows/820-partners/partners';
 import { IWorkflow } from './workflows/IWorkflow';
 
-export const WORKFLOWS: IWorkflow[] = [lines, prettier, auditDependencies, libraryBoilerplate, license, badges];
+export const WORKFLOWS: IWorkflow[] = [
+    lines,
+    prettier,
+    auditDependencies,
+    libraryBoilerplate,
+    license,
+    badges,
+    contributing,
+    partners,
+];
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 const config = ConfigChecker.from(process.env);
