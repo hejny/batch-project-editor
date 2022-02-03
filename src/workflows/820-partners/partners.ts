@@ -1,45 +1,53 @@
 import spaceTrim from 'spacetrim';
 import { IWorkflowOptions } from '../IWorkflow';
-import { ORGANIZATIONS } from './organizations';
+import { pickPartnersForProject } from './organizations';
 
 const PARTNERS_IN_MARKDOWN = /<!--Partners-->(?<badges>.*)<!--\/Partners-->/is;
 
 export async function partners({
-    projectTitle,
+    projectUrl,
     projectName,
-    projectPath,
     projectOrg,
     modifyFiles,
     commit,
     branch,
 }: IWorkflowOptions): Promise<void> {
-    const partnersMarkdown = spaceTrim(
-        (block) => `
+    const organizations = pickPartnersForProject({
+        projectUrl,
+        projectOrg,
+        projectName,
+    });
 
-          <!--Partners-->
+    const partnersMarkdown =
+        organizations.length === 0
+            ? ``
+            : spaceTrim(
+                  (block) => `
 
-          ## ✨ Partners
+                    <!--Partners-->
 
-
-          ${block(
-              Object.values(ORGANIZATIONS)
-                  .map(({ title, url, logoSrc }) =>
-                      spaceTrim(`
-                    <a href="${url.href}">
-                      <img src="${logoSrc.href}" alt="${title} logo" width="50"  />
-                    </a>
-              `),
-                  )
-                  .join('\n&nbsp;&nbsp;&nbsp;\n'),
-          )}
+                    ## ✨ Partners
 
 
-          [Become a partner](https://www.pavolhejny.com/contact/)
+                    ${block(
+                        organizations
+                            .map(({ title, url, logoSrc }) =>
+                                spaceTrim(`
+                              <a href="${url.href}">
+                                <img src="${logoSrc.href}" alt="${title} logo" width="50"  />
+                              </a>
+                        `),
+                            )
+                            .join('\n&nbsp;&nbsp;&nbsp;\n'),
+                    )}
 
-          <!--/Partners-->
 
-`,
-    );
+                    [Become a partner](https://www.pavolhejny.com/contact/)
+
+                    <!--/Partners-->
+
+                `,
+              );
 
     await modifyFiles('README.md', async (readmeContent) => {
         if (PARTNERS_IN_MARKDOWN.test(readmeContent)) {
