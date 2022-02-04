@@ -94,6 +94,10 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 }
             }
 
+            function readProjectFile(filePath: string): Promise<string> {
+                return readFile(join(projectPath, filePath), 'utf8');
+            }
+
             const packageJson = JSON.parse(await readFile(join(projectPath, 'package.json'), 'utf8'));
             function modifyPackage(
                 fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
@@ -160,6 +164,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 packageJson,
                 branch: currentBranch,
                 runCommand,
+                readFile: readProjectFile,
                 modifyFiles,
                 modifyPackage,
                 commit,
