@@ -105,8 +105,8 @@ export async function badges({
             })),
         )
     )
-        // Note: Unloadable badges at the end: (!!! Is it at end or begining)
-        .sort(({ isLoadable: a }, { isLoadable: b }) => Number(a) - Number(b));
+        // Note: Unloadable badges at the end:
+        .sort(({ isLoadable: a }, { isLoadable: b }) => Number(b) - Number(a));
 
     const badgesMarkdown = spaceTrim(
         (block) => `
@@ -154,5 +154,5 @@ export async function badges({
 }
 
 /**
- * Maybe use>  (?<=((?<heading>^#[^\n]*$)(\s*)(?<description>^.*?$)?(\n{2,})))
+ * TODO: Add priority and pick only first 7
  */
