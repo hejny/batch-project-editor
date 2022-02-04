@@ -102,10 +102,10 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
             function modifyPackage(
                 fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
             ): Promise<void> {
-                return modifyFiles(
-                    'package.json',
-                    async (fileContent) => JSON.stringify(fileModifier(JSON.parse(fileContent)), null, 2) + '\n',
-                );
+                return modifyFiles('package.json', async (fileContent) => {
+                    const packageJson = JSON.parse(fileContent);
+                    return JSON.stringify((await fileModifier(packageJson)) || packageJson, null, 2) + '\n';
+                });
             }
 
             // TODO: !!! Rename to execCommand
