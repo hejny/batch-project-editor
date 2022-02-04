@@ -1,13 +1,10 @@
-import { Octokit } from '@octokit/rest';
-import { GITHUB_ORGANIZATIONS, GITHUB_TOKEN, GITHUB_USERNAME } from '../config';
+import { GITHUB_ORGANIZATIONS, GITHUB_USERNAME, githubOctokit } from '../config';
 
 export async function findAllProjectsRemote(): Promise<Record<string, string[]>> {
-    const octokit = new Octokit({ key: GITHUB_TOKEN });
-
     const aggregatedData: Record<string, string[]> = {};
 
     {
-        const { data } = await octokit.rest.repos.listForUser({
+        const { data } = await githubOctokit.rest.repos.listForUser({
             username: GITHUB_USERNAME,
             per_page: 100,
         });
@@ -15,7 +12,7 @@ export async function findAllProjectsRemote(): Promise<Record<string, string[]>>
     }
 
     for (const org of GITHUB_ORGANIZATIONS) {
-        const { data } = await octokit.rest.repos.listForOrg({
+        const { data } = await githubOctokit.rest.repos.listForOrg({
             org,
             per_page: 100,
         });

@@ -1,3 +1,4 @@
+import { Octokit } from '@octokit/rest';
 import { ConfigChecker } from 'configchecker';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -41,3 +42,5 @@ export const BASE_PATH = config.get('BASE_PATH').required().value;
 export const GITHUB_USERNAME = config.get('GITHUB_USERNAME').required().value;
 export const GITHUB_ORGANIZATIONS = config.get('GITHUB_ORGANIZATIONS').list().required().value;
 export const GITHUB_TOKEN = config.get('GITHUB_TOKEN').required().value;
+
+export const githubOctokit = new Octokit({ key: GITHUB_TOKEN });
