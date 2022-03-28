@@ -3,11 +3,12 @@
 import chalk from 'chalk';
 import commander from 'commander';
 import { mkdir } from 'fs/promises';
-import { join } from 'path';
+import { basename, join } from 'path';
 import { BASE_PATH } from './config';
 import { runWorkflows } from './runWorkflows';
 import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjectsRemote } from './utils/findAllProjectsRemote';
+import { isDirectoryExisting } from './utils/isDirectoryExisting';
 
 main();
 
@@ -34,6 +35,14 @@ async function main() {
             const cwd = join(BASE_PATH, org);
             await mkdir(cwd, { recursive: true });
             for (const projectUrl of projectUrls) {
+                const projectName = basename(projectUrl);
+                if (await isDirectoryExisting(join(cwd, projectName))) {
+                    console.info(
+                        chalk.gray(`⏩ Skipping clonning of project ${projectName} because it already exists`),
+                    );
+                    continue;
+                }
+
                 await execCommand({
                     cwd,
                     command: `git clone ${projectUrl}`,
