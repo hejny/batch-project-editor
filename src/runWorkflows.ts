@@ -66,8 +66,16 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 continue;
             }
 
+            console.info(`🔼 Running workflow ${workflow.name} for project ${projectTitle}`);
+
+            await execCommand({
+                command: 'git pull',
+                crashOnError: false,
+                cwd: projectPath,
+            });
+
             const configPath = join(projectPath, 'batch-project-editor.js');
-            if (!(await isFileExisting(configPath))) {
+            if (await isFileExisting(configPath)) {
                 const config = require(configPath);
                 if (config.ignoreWorkflows) {
                     if (config.ignoreWorkflows.includes(workflow.name)) {
@@ -80,14 +88,6 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     }
                 }
             }
-
-            console.info(`🔼 Running workflow ${workflow.name} for project ${projectTitle}`);
-
-            await execCommand({
-                command: 'git pull',
-                crashOnError: false,
-                cwd: projectPath,
-            });
 
             async function modifyFiles(
                 globPattern: string,
