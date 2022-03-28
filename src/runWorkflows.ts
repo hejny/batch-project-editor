@@ -66,6 +66,21 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 continue;
             }
 
+            const configPath = join(projectPath, 'batch-project-editor.js');
+            if (!(await isFileExisting(configPath))) {
+                const config = require(configPath);
+                if (config.ignoreWorkflows) {
+                    if (config.ignoreWorkflows.includes(workflow.name)) {
+                        console.info(
+                            chalk.gray(
+                                `⏩ Skipping workflow ${workflow.name} for project ${projectTitle} because projects config ignores this workflow`,
+                            ),
+                        );
+                        continue;
+                    }
+                }
+            }
+
             console.info(`🔼 Running workflow ${workflow.name} for project ${projectTitle}`);
 
             await execCommand({
