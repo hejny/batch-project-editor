@@ -11,6 +11,7 @@ import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjects } from './utils/findAllProjects';
 import { findProjectName } from './utils/findProjectName';
 import { findProjectTitle } from './utils/findProjectTitle';
+import { forPlay } from './utils/forPlay';
 import { isFileExisting } from './utils/isFileExisting';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
 
@@ -40,6 +41,8 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
             if (runWorkflows !== true && !runWorkflows.includes(workflow.name)) {
                 continue;
             }
+
+            await forPlay();
 
             const projectTitle = await findProjectTitle(projectPath);
             const { name: projectName, org: projectOrg, url: projectUrl } = await findProjectName(projectPath);
