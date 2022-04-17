@@ -1,9 +1,9 @@
 #!/usr/bin/env ts-node
 
 import chalk from 'chalk';
-import { readFile, writeFile } from 'fs/promises';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
-import { basename, join } from 'path';
+import { basename, dirname, join } from 'path';
 import spaceTrim from 'spacetrim';
 import { PackageJson, Promisable } from 'type-fest';
 import { WORKFLOWS } from './config';
@@ -153,6 +153,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     `,
                 );
 
+                await mkdir(dirname(commitMessageFilePath), { recursive: true });
                 await writeFile(commitMessageFilePath, commitMessage, 'utf8');
 
                 await execCommand({
