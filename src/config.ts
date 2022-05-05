@@ -9,6 +9,7 @@ import { libraryBoilerplate } from './workflows/200-libraryBoilerplate/libraryBo
 import { license } from './workflows/300-license/license';
 import { description } from './workflows/310-description/description';
 import { authors } from './workflows/320-authors/authors';
+import { repository } from './workflows/325-repository/repository';
 import { normalizePackage } from './workflows/330-normalizePackage/normalizePackage';
 import { badges } from './workflows/800-badges/badges';
 import { contributing } from './workflows/810-contributing/contributing';
@@ -28,6 +29,7 @@ export const WORKFLOWS: IWorkflow[] = [
     license,
     description,
     authors,
+    repository,
     normalizePackage,
     badges,
     contributing,
