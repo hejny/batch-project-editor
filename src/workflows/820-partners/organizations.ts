@@ -12,7 +12,7 @@ export function pickPartnersForProject({
             // TODO: Only for libraries, for non-libraties, use []
             return [collboard, czechevents, sigmastamp];
         case 'collboard':
-            return [hedu, collboard];
+            return [/*hedu, collboard*/];
         case 'sigmastamp':
             return [collboard, czechevents, sigmastamp];
 
