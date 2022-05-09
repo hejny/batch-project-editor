@@ -23,11 +23,13 @@ export async function findPackagePublished({
         };
     }
 
-    if (await isUrlExisting(`https://registry.npmjs.org/${projectName}`)) {
-        published.npm = {
-            name: projectName,
-            url: new URL(`https://www.npmjs.com/package/${projectName}`),
-        };
+    if (projectOrg !== 'collboard') {
+        if (await isUrlExisting(`https://registry.npmjs.org/${projectName}`)) {
+            published.npm = {
+                name: projectName,
+                url: new URL(`https://www.npmjs.com/package/${projectName}`),
+            };
+        }
     }
 
     return published;
