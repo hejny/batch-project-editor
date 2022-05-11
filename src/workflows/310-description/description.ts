@@ -22,7 +22,7 @@ export async function description({
     let descriptionText = markdownToTxt(description).split('\n').join(' ');
 
     descriptionText = descriptionText
-        .split(' created via [@collboard/modules-sdk](https://www.npmjs.com/package/@collboard/modules-sdk)')
+        .split(' created via @collboard/modules-sdk.')
         .join('');
 
     await modifyPackage((packageJson) => {
