@@ -116,14 +116,22 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 return readFile(join(projectPath, filePath), 'utf8');
             }
 
+            function modifyJsonFiles<T>(
+                globPattern: string,
+                fileModifier: (fileContent: T) => Promisable<T>,
+            ): Promise<void> {
+                return modifyFiles(globPattern, async (fileContent) => {
+                    const fileJson = JSON.parse(fileContent);
+                    return JSON.stringify((await fileModifier(fileJson)) || fileJson, null, 2) + '\n';
+                });
+            }
+
             const packageJson = JSON.parse(await readFile(join(projectPath, 'package.json'), 'utf8'));
+
             function modifyPackage(
                 fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
             ): Promise<void> {
-                return modifyFiles('package.json', async (fileContent) => {
-                    const packageJson = JSON.parse(fileContent);
-                    return JSON.stringify((await fileModifier(packageJson)) || packageJson, null, 2) + '\n';
-                });
+                return modifyJsonFiles<PackageJson>('package.json', (packageJson) => fileModifier(packageJson));
             }
 
             // TODO: !!! Rename to execCommand
@@ -185,6 +193,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 runCommand,
                 readFile: readProjectFile,
                 modifyFiles,
+                modifyJsonFiles,
                 modifyPackage,
                 commit,
             });
@@ -215,4 +224,5 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
 
 /**
  * TODO: Maybe use nodegit
+ * TODO: !!! Auto clone repos before run
  */

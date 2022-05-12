@@ -15,6 +15,7 @@ import { badges } from './workflows/800-badges/badges';
 import { contributing } from './workflows/810-contributing/contributing';
 import { partners } from './workflows/820-partners/partners';
 import { IWorkflow } from './workflows/IWorkflow';
+import { terminalsVersion } from './workflows/terminals-version/terminalsVersion';
 
 /**
  * Rare workflows are workflows that need to be used once but it would be too inefficient to run them every time.
@@ -34,6 +35,7 @@ export const WORKFLOWS: IWorkflow[] = [
     badges,
     contributing,
     partners,
+    terminalsVersion,
 ];
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
