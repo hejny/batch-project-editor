@@ -122,7 +122,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
             ): Promise<void> {
                 return modifyFiles(globPattern, async (fileContent) => {
                     const fileJson = JSON.parse(fileContent);
-                    return JSON.stringify((await fileModifier(fileJson)) || fileJson, null, 2) + '\n';
+                    return JSON.stringify((await fileModifier(fileJson)) || fileJson, null, 4) + '\n';
                 });
             }
 
