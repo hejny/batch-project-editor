@@ -1,48 +1,48 @@
 {
-  "autokill": true,
-  "@see": "https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-terminals",
-  "terminals": [
-    {
-      "name": "🔼 Run workflows",
-      "command": "ts-node ./src/index.ts --workflows all --projects all",
-      "onlySingle": true,
-      "focus": true
-    },
-    {
-      "name": "🔼👨🏽‍💻 Run one workflow on one project",
-      "command": "ts-node ./src/index.ts --workflows badges --projects spacetrim",
-      "onlySingle": true,
-      "focus": true
-    },
-    {
-      "name": "🔽 Clone",
-      "command": "ts-node ./src/index.ts --clone",
-      "onlySingle": true,
-      "focus": true
-    },
-    {
-      "name": "📋 List",
-      "command": "ts-node ./src/index.ts --list",
-      "onlySingle": true,
-      "focus": true
-    },
-    {
-      "name": "🔼👑 Release major version",
-      "command": "npm version major",
-      "onlySingle": true,
-      "focus": true
-    },
-    {
-      "name": "🔼🚀 Release minor version",
-      "command": "npm version minor",
-      "onlySingle": true,
-      "focus": true
-    },
-    {
-      "name": "🔼🩹 Release patch version",
-      "command": "npm version patch",
-      "onlySingle": true,
-      "focus": true
-    }
-  ]
+    "autokill": true,
+    "@see": "https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-terminals",
+    "terminals": [
+        {
+            "name": "🔼 Run workflows",
+            "command": "ts-node ./src/index.ts --workflows all --projects all",
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "🔼👨🏽‍💻 Run one workflow on one project",
+            "command": "ts-node ./src/index.ts --workflows badges --projects spacetrim",
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "🔽 Clone",
+            "command": "ts-node ./src/index.ts --clone",
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "📋 List",
+            "command": "ts-node ./src/index.ts --list",
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "🔼👑 Release major version",
+            "command": "npm version major",
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "🔼🚀 Release minor version",
+            "command": "npm version minor",
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "🔼🩹 Release patch version",
+            "command": "npm version patch",
+            "onlySingle": true,
+            "focus": true
+        }
+    ]
 }
