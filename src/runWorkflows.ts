@@ -6,7 +6,7 @@ import glob from 'glob-promise';
 import { basename, dirname, join } from 'path';
 import spaceTrim from 'spacetrim';
 import { PackageJson, Promisable } from 'type-fest';
-import { WORKFLOWS } from './config';
+import { WORKFLOWS } from './workflows/workflows';
 import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjects } from './utils/findAllProjects';
 import { findProjectName } from './utils/findProjectName';
