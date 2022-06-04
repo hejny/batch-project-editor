@@ -5,11 +5,13 @@ import commander from 'commander';
 import { mkdir } from 'fs/promises';
 import { basename, join } from 'path';
 import { BASE_PATH } from './config';
+import { declareGlobals } from './globals';
 import { runWorkflows } from './runWorkflows';
 import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjectsRemote } from './utils/findAllProjectsRemote';
 import { isDirectoryExisting } from './utils/isDirectoryExisting';
 
+declareGlobals();
 main();
 
 async function main() {
