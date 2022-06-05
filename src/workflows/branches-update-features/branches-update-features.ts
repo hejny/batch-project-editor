@@ -6,25 +6,31 @@ import { IWorkflowOptions } from '../IWorkflow';
  * - It will take only feature branches = branches that start with `feature/`
  */
 export async function branchesUpdateFeatures({ commit, runCommand, mainBranch }: IWorkflowOptions): Promise<void> {
-    const branches = (await runCommand(`git branch --remotes --no-merged ${mainBranch}`)).split('\n');
-    const fetureBranches = branches.filter((branch) => /(origin\/)?feature\//.test(branch));
-    const recentBranches = await fetureBranches.filterAsync(async (branch) => {
+    const remoteBranches = (await runCommand(`git branch --remotes --no-merged ${mainBranch}`)).split('\n');
+    const fetureRemoteBranches = remoteBranches.filter((branch) => /(origin\/)?feature\//.test(branch));
+    const recentFeatureRemoteBranches = await fetureRemoteBranches.filterAsync(async (branch) => {
         const lastCommitDateRaw = (await runCommand(`git log -1 --format=%ct ${branch}`)).trim();
         const lastCommitDate = new Date(parseInt(lastCommitDateRaw, 10) * 1000);
-        console.log(lastCommitDate);
 
         // Filter last two months
         return lastCommitDate > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 2);
     });
 
-    console.info({
-        branches,
-        fetureBranches,
-        recentBranches,
-    });
+    console.info(recentFeatureRemoteBranches);
 
-    for (const branch of fetureBranches) {
-        await runCommand(`git checkout ${branch}`);
+    for (const remoteBranch of recentFeatureRemoteBranches) {
+        const localBranch = remoteBranch.replace(/^origin\//, '');
+
+        await runCommand(`git switch ${localBranch}`).catch((error) => {
+            if (/Switched to( a new)? branch/.test(error.message)) {
+                return;
+            } else {
+                throw error;
+            }
+        });
+
         await runCommand('git pull');
+        await runCommand(`git merge ${mainBranch}`);
+        await commit(`🍴 Update ${localBranch} with latest commit from ${mainBranch}`);
     }
 }
