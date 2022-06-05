@@ -7,7 +7,7 @@ export interface IWorkflowOptions {
     projectOrg: string;
     projectName: string;
     packageJson: PackageJson;
-    branch: 'master' | 'main';
+    mainBranch: 'master' | 'main';
 
     runCommand(command: string): Promise<string>;
     readFile(filePath: string): Promise<string>;

@@ -6,7 +6,6 @@ import glob from 'glob-promise';
 import { basename, dirname, join } from 'path';
 import spaceTrim from 'spacetrim';
 import { PackageJson, Promisable } from 'type-fest';
-import { WORKFLOWS } from './workflows/workflows';
 import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjects } from './utils/findAllProjects';
 import { findProjectName } from './utils/findProjectName';
@@ -14,6 +13,7 @@ import { findProjectTitle } from './utils/findProjectTitle';
 import { forPlay } from './utils/forPlay';
 import { isFileExisting } from './utils/isFileExisting';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
+import { WORKFLOWS } from './workflows/workflows';
 
 interface IRunWorkflowsOptions {
     runWorkflows: string[] | true;
@@ -189,7 +189,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 projectUrl,
                 projectOrg,
                 packageJson,
-                branch: currentBranch,
+                mainBranch: currentBranch,
                 runCommand,
                 readFile: readProjectFile,
                 modifyFiles,
