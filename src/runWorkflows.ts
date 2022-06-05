@@ -13,6 +13,7 @@ import { findProjectTitle } from './utils/findProjectTitle';
 import { forPlay } from './utils/forPlay';
 import { isFileExisting } from './utils/isFileExisting';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
+import { randomEmoji } from './utils/random/randomEmoji';
 import { WORKFLOWS } from './workflows/workflows';
 
 interface IRunWorkflowsOptions {
@@ -21,7 +22,7 @@ interface IRunWorkflowsOptions {
 }
 
 export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsOptions) {
-    const errors: { projectTitle: string; workflowName: string; error: Error }[] = [];
+    const errors: { tag: string; projectTitle: string; workflowName: string; error: Error }[] = [];
     const changedProjects: { projectTitle: string; projectUrl: URL }[] = [];
 
     // console.log({ runProjects, runWorkflows });
@@ -234,8 +235,9 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     }
                 }
             } catch (error) {
+                const tag = `[${randomEmoji()}]`;
                 console.error(error);
-                errors.push({ projectTitle, workflowName: workflow.name, error });
+                errors.push({ tag, projectTitle, workflowName: workflow.name, error });
             }
         }
     }
@@ -246,9 +248,12 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
         console.info(chalk.bgGreen(` ${projectTitle} `) + ' ' + chalk.gray(projectUrl.href));
     }
 
-    for (const { projectTitle, workflowName, error } of errors) {
+    for (const { tag, projectTitle, workflowName, error } of errors) {
         console.info(
-            chalk.bgRed(` ${projectTitle} - ${workflowName} `) + ' ' + chalk.gray(error.message.split('\n')[0]),
+            chalk.bgRed(`${error.name}:`) +
+                chalk.red(` ${projectTitle} - ${workflowName} `) +
+                ' ' +
+                chalk.gray(`${tag}  ${error.message.split('\n')[0]}`),
         );
     }
 }

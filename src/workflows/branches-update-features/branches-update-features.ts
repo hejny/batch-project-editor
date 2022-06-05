@@ -30,7 +30,7 @@ export async function branchesUpdateFeatures({ commit, runCommand, mainBranch }:
         });
 
         await runCommand('git pull');
-        await runCommand(`git merge ${mainBranch}`);
+        await runCommand(`git merge ${mainBranch}`); // TODO: Detect success / fail
         await commit(`🍴 Update ${localBranch} with latest commit from ${mainBranch}`);
     }
 }
