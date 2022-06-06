@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+import { spawn } from 'child_process';
 import { IWorkflowOptions } from '../IWorkflow';
 
 /**
@@ -5,7 +7,13 @@ import { IWorkflowOptions } from '../IWorkflow';
  * - It will take only recent branches = branches with commits in the last two months
  * - It will take only feature branches = branches that start with `feature/`
  */
-export async function branchesUpdateFeatures({ commit, runCommand, mainBranch }: IWorkflowOptions): Promise<void> {
+export async function branchesUpdateFeatures({
+    projectTitle,
+    commit,
+    runCommand,
+    mainBranch,
+    projectPath,
+}: IWorkflowOptions): Promise<void> {
     const remoteBranches = (await runCommand(`git branch --remotes --no-merged ${mainBranch}`)).split('\n');
     const fetureRemoteBranches = remoteBranches.filter((branch) => /(origin\/)?feature\//.test(branch));
     const recentFeatureRemoteBranches = await fetureRemoteBranches.filterAsync(async (branch) => {
@@ -22,7 +30,7 @@ export async function branchesUpdateFeatures({ commit, runCommand, mainBranch }:
         const localBranch = remoteBranch.replace(/^origin\//, '');
 
         await runCommand(`git switch ${localBranch}`).catch((error) => {
-            if (/Switched to( a new)? branch/.test(error.message)) {
+            if (/Switched to( a new)? branch/i.test(error.message)) {
                 return;
             } else {
                 throw error;
@@ -30,7 +38,20 @@ export async function branchesUpdateFeatures({ commit, runCommand, mainBranch }:
         });
 
         await runCommand('git pull');
-        await runCommand(`git merge ${mainBranch}`); // TODO: Detect success / fail
+        await runCommand(`git merge ${mainBranch}`).catch(async (error) => {
+            // Automatic merge failed; fix conflicts and then commit the result.
+            if (/Automatic merge failed/i.test(error.message)) {
+                console.info(
+                    chalk.gray(`⏩ Opening project ${projectTitle} in vscode because automatic merge failed.`),
+                );
+                // TODO: [〽️] Use locate-app library to open project in vscode
+                spawn(`C:/Users/me/AppData/Local/Programs/Microsoft VS Code/Code.exe`, [projectPath]);
+                throw error;
+            } else {
+                return;
+            }
+        });
+
         await commit(`🍴 Update ${localBranch} with latest commit from ${mainBranch}`);
     }
 }
