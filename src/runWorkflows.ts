@@ -26,7 +26,7 @@ interface IRunWorkflowsOptions {
 
 export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsOptions) {
     const errors: { tag: string; projectTitle: string; workflowName: string; error: Error }[] = [];
-    const changedProjects: { projectTitle: string; projectUrl: URL }[] = [];
+    const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
 
     // console.log({ runProjects, runWorkflows });
     // console.log(await findAllProjects());
@@ -70,7 +70,6 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                             ),
                         );
 
-              
                         spawn(await locateVSCode(), [projectPath]);
                     }
                     continue;
@@ -180,7 +179,12 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     });
                 }
 
-                let isCommitted = false;
+                let isProjectChanged = false;
+                function projectWasChanged(): void {
+                    console.info(chalk.bgGray(`Project ${projectTitle} was changed with workflow ${workflow.name}`));
+                    isProjectChanged = true;
+                }
+
                 async function commit(message: string): Promise<void> {
                     if (await isWorkingTreeClean(projectPath)) {
                         console.info(chalk.gray(`⏩ Not commiting because nothings changed`));
@@ -217,7 +221,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                         command: `git push --quiet`,
                     });
 
-                    isCommitted = true;
+                    projectWasChanged();
                 }
 
                 await workflow({
@@ -234,6 +238,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     modifyJsonFiles,
                     modifyPackage,
                     commit,
+                    projectWasChanged,
                 });
 
                 if (!(await isWorkingTreeClean(projectPath))) {
@@ -245,9 +250,15 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     process.exit();
                 }
 
-                if (isCommitted) {
-                    if (!changedProjects.some(({ projectTitle: projectTitle2 }) => projectTitle === projectTitle2)) {
-                        changedProjects.push({ projectTitle, projectUrl });
+                if (isProjectChanged) {
+                    const project = changedProjects.find(
+                        ({ projectTitle: projectTitle2 }) => projectTitle === projectTitle2,
+                    );
+
+                    if (project) {
+                        project.workflowNames.push(workflow.name);
+                    } else {
+                        changedProjects.push({ projectTitle, projectUrl, workflowNames: [workflow.name] });
                     }
                 }
             } catch (error) {
@@ -258,10 +269,23 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
         }
     }
 
-    console.info(chalk.bgGreen(`Changed ${changedProjects.length} projects:`));
+    // Note: Making space above the result
+    console.info(``);
+    console.info(``);
+    console.info(``);
+    console.info(
+        changedProjects.length === 0
+            ? chalk.bgCyan(`No project has changed.`)
+            : chalk.bgGreen(`Changed ${changedProjects.length} projects:`),
+    );
 
-    for (const { projectTitle, projectUrl } of changedProjects) {
-        console.info(chalk.bgGreen(` ${projectTitle} `) + ' ' + chalk.gray(projectUrl.href));
+    for (const { projectTitle, projectUrl, workflowNames } of changedProjects) {
+        console.info(
+            `${chalk.bgGreen(` ${projectTitle} `)} ${chalk.green(workflowNames.join(', '))} ${chalk.gray(
+                projectUrl.href,
+            )}`,
+        );
+        // TODO: Show workflow by emojis not loooong names
     }
 
     for (const { tag, projectTitle, workflowName, error } of errors) {

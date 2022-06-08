@@ -65,4 +65,5 @@ async function main() {
     } else {
         console.info(chalk.bgRed(`No action specified`));
     }
+    process.exit(0);
 }

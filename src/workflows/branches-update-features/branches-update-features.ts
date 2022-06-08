@@ -12,6 +12,7 @@ export async function branchesUpdateFeatures({
     projectTitle,
     commit,
     runCommand,
+    projectWasChanged,
     mainBranch,
     projectPath,
 }: IWorkflowOptions): Promise<void> {
@@ -39,20 +40,31 @@ export async function branchesUpdateFeatures({
         });
 
         await runCommand('git pull');
-        await runCommand(`git merge ${mainBranch}`).catch(async (error) => {
-            // Automatic merge failed; fix conflicts and then commit the result.
-            if (/Automatic merge failed/i.test(error.message)) {
-                console.info(
-                    chalk.gray(`⏩ Opening project ${projectTitle} in vscode because automatic merge failed.`),
-                );
+        await runCommand(`git merge ${mainBranch}`)
+            .catch((error) => {
+                return error.message as string;
+            })
+            .then(async (result) => {
+                // Automatic merge failed; fix conflicts and then commit the result.
+                if (/Automatic merge failed/i.test(result)) {
+                    console.info(
+                        chalk.gray(`⏩ Opening project ${projectTitle} in vscode because automatic merge failed.`),
+                    );
 
-                spawn(await locateVSCode(), [projectPath]);
-                throw error;
-            } else {
-                return;
-            }
-        });
+                    spawn(await locateVSCode(), [projectPath]);
+                    throw new Error(result);
+                } else if (/Already up to date/i.test(result)) {
+                    return;
+                } else {
+                    // Merge made by the 'recursive' strategy.
+                    projectWasChanged();
+                    return;
+                }
+            });
 
-        await commit(`🍴 Update ${localBranch} with latest commit from ${mainBranch}`);
+        // Note: Here is already merge commit commited, now just push it.
+        // await commit(`🍴 Update ${localBranch} with latest commit from ${mainBranch}`);
+
+        await runCommand(`git push --quiet`);
     }
 }
