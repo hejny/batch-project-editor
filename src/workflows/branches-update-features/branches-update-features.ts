@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { spawn } from 'child_process';
+import { locateVSCode } from 'locate-app';
 import { IWorkflowOptions } from '../IWorkflow';
 
 /**
@@ -44,8 +45,8 @@ export async function branchesUpdateFeatures({
                 console.info(
                     chalk.gray(`⏩ Opening project ${projectTitle} in vscode because automatic merge failed.`),
                 );
-                // TODO: [〽️] Use locate-app library to open project in vscode
-                spawn(`C:/Users/me/AppData/Local/Programs/Microsoft VS Code/Code.exe`, [projectPath]);
+
+                spawn(await locateVSCode(), [projectPath]);
                 throw error;
             } else {
                 return;

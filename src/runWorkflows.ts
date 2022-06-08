@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import { spawn } from 'child_process';
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
+import { locateVSCode } from 'locate-app';
 import { basename, dirname, join } from 'path';
 import spaceTrim from 'spacetrim';
 import { PackageJson, Promisable } from 'type-fest';
@@ -69,8 +70,8 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                             ),
                         );
 
-                        // TODO: [〽️] Use locate-app library to open project in vscode
-                        spawn(`C:/Users/me/AppData/Local/Programs/Microsoft VS Code/Code.exe`, [projectPath]);
+              
+                        spawn(await locateVSCode(), [projectPath]);
                     }
                     continue;
                 }
