@@ -22,8 +22,8 @@ export async function branchesUpdateFeatures({
         const lastCommitDateRaw = (await runCommand(`git log -1 --format=%ct ${branch}`)).trim();
         const lastCommitDate = new Date(parseInt(lastCommitDateRaw, 10) * 1000);
 
-        // Filter last two months
-        return lastCommitDate > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 2);
+        // Filter last two months - TODO: To some config
+        return lastCommitDate > new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 4 /* months */);
     });
 
     console.info(recentFeatureRemoteBranches);
