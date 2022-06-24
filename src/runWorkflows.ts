@@ -199,8 +199,11 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     modifyJsonFiles,
                     modifyPackage,
                     async commit(message: string) {
-                        await commit({ projectPath, message });
-                        projectWasChanged();
+                        const isCommited = await commit({ projectPath, message });
+
+                        if (isCommited) {
+                            projectWasChanged();
+                        }
                     },
                     projectWasChanged,
                 });

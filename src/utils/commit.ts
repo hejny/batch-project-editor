@@ -10,10 +10,10 @@ interface ICommitOptions {
     message: string;
 }
 
-export async function commit({ projectPath, message }: ICommitOptions): Promise<void> {
+export async function commit({ projectPath, message }: ICommitOptions): Promise<boolean> {
     if (await isWorkingTreeClean(projectPath)) {
         console.info(chalk.gray(`⏩ Not commiting because nothings changed`));
-        return;
+        return false;
     }
 
     await execCommand({
@@ -45,4 +45,6 @@ export async function commit({ projectPath, message }: ICommitOptions): Promise<
         crashOnError: false,
         command: `git push --quiet`,
     });
+
+    return true;
 }
