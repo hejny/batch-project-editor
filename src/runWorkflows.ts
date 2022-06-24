@@ -16,7 +16,7 @@ import { forPlay } from './utils/forPlay';
 import { isFileExisting } from './utils/isFileExisting';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
 import { isWorkingTreeInMergeProgress } from './utils/isWorkingTreeInMergeProgress';
-import { randomEmoji } from './utils/random/randomEmoji';
+import { colorSquare } from './utils/random/getColorSquare';
 import { WORKFLOWS } from './workflows/workflows';
 
 interface IRunWorkflowsOptions {
@@ -226,10 +226,22 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     }
                 }
             } catch (error) {
-                const tag = `[${randomEmoji()}]`;
+                const tag = `[${colorSquare.next()}]`;
+                console.info(tag);
                 console.error(error);
                 errors.push({ tag, projectTitle, workflowName: workflow.name, error });
             }
+        }
+    }
+
+    if (errors.length > 0) {
+        // Note: Making space above the full error report
+        console.info(``);
+        console.info(``);
+        console.info(``);
+        for (const { tag, projectTitle, workflowName, error } of errors) {
+            console.info(tag);
+            console.error(error);
         }
     }
 
@@ -254,10 +266,11 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
 
     for (const { tag, projectTitle, workflowName, error } of errors) {
         console.info(
-            chalk.bgRed(`${error.name}:`) +
+            tag +
+                chalk.bgRed(error.name) +
                 chalk.red(` ${projectTitle} - ${workflowName} `) +
                 ' ' +
-                chalk.gray(`${tag}  ${error.message.split('\n')[0]}`),
+                chalk.gray(error.message.split('\n')[0]),
         );
     }
 }
