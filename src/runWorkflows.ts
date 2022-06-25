@@ -229,7 +229,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     }
                 }
             } catch (error) {
-                const tag = `[${colorSquare.next()}]`;
+                const tag = `[${colorSquare.next().value}]`;
                 console.info(tag);
                 console.error(error);
                 errors.push({ tag, projectTitle, workflowName: workflow.name, error });
