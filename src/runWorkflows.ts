@@ -243,7 +243,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
         console.info(``);
         console.info(``);
         for (const { tag, projectTitle, workflowName, error } of errors) {
-            console.info(tag);
+            console.info(tag + chalk.bgRed(error.name) + chalk.red(` ${projectTitle} - ${workflowName} `));
             console.error(error);
         }
     }
