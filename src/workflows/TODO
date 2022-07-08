@@ -4,3 +4,4 @@ TODO: Add editorconfig and vscode config
 TODO: Order package json
 TODO: Recommandations for development - Like https://github.com/hejny/writer#develop
 TODO: Each section of README should have emoji
+TODO: Replace foo={foo} with {...{foo}} in react jsx/tsx files /([a-zA-Z]+)={\1}/
