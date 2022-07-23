@@ -4,11 +4,16 @@ import { execCommand } from './execCommand';
 import { IExecCommandOptionsAdvanced } from './IExecCommandOptions';
 
 export async function execGitCommit(
-    options: { message: string; isAllAdded?: boolean; isPushed?: boolean } & Partial<
-        Pick<IExecCommandOptionsAdvanced, 'args' | 'cwd' | 'timeout'>
-    >,
+    options: {
+        messageTitle: string;
+        messageDescription: string;
+        isAllAdded?: boolean;
+        isPushed?: boolean;
+        isEmptyCommitAllowed?: boolean;
+    } & Partial<Pick<IExecCommandOptionsAdvanced, 'args' | 'cwd' | 'timeout'>>,
 ): Promise<boolean> {
-    const { message, isAllAdded, isPushed, args, cwd, timeout } = options;
+    const { messageTitle, messageDescription, isAllAdded, isPushed, isEmptyCommitAllowed, args, cwd, timeout } =
+        options;
 
     const messageFilePath = join(process.cwd(), '.tmp', 'COMMIT_MESSAGE');
 
@@ -23,14 +28,14 @@ export async function execGitCommit(
         }
 
         await mkdir(dirname(messageFilePath), { recursive: true });
-        await writeFile(messageFilePath, message, 'utf8');
+        await writeFile(messageFilePath, messageTitle + '\n\n' + messageDescription, 'utf8');
 
         await execCommand({
             cwd,
             args,
             timeout,
             crashOnError: false,
-            command: `git commit --file ${messageFilePath}`,
+            command: `git commit${isEmptyCommitAllowed ? ` --allow-empty` : ``} --file ${messageFilePath}`,
         });
 
         if (isPushed) {
