@@ -24,6 +24,12 @@ export async function execGitCommit(
                 timeout,
                 crashOnError: false,
                 command: `git add .`,
+            }).catch((error) => {
+                if (error instanceof Error && error.message.includes('CRLF will be replaced by LF')) {
+                    return;
+                } else {
+                    throw error;
+                }
             });
         }
 
