@@ -14,6 +14,8 @@ import { findProjectName } from './utils/findProjectName';
 import { findProjectTitle } from './utils/findProjectTitle';
 import { forPlay } from './utils/forPlay';
 import { isFileExisting } from './utils/isFileExisting';
+import { isProjectArchived } from './utils/isProjectArchived';
+import { isProjectFork } from './utils/isProjectFork';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
 import { isWorkingTreeInMergeProgress } from './utils/isWorkingTreeInMergeProgress';
 import { colorSquare } from './utils/random/getColorSquare';
@@ -42,8 +44,10 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
         }
 
         for (const workflow of WORKFLOWS) {
-            // console.log({ workflows: workflow.name }, runWorkflows !== true && !runWorkflows.includes(workflow.name));
-            if (runWorkflows !== true && !runWorkflows.includes(workflow.name)) {
+            const workflowName = workflow.name;
+
+            // console.log({ workflows: workflowName }, runWorkflows !== true && !runWorkflows.includes(workflowName));
+            if (runWorkflows !== true && !runWorkflows.includes(workflowName)) {
                 continue;
             }
 
@@ -53,6 +57,20 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
             const { name: projectName, org: projectOrg, url: projectUrl } = await findProjectName(projectPath);
 
             try {
+                if (await isProjectArchived(projectUrl)) {
+                    console.info(
+                        chalk.gray(`⏩ Skipping project ${projectTitle} because the project is archved on GitHub`),
+                    );
+                    continue;
+                }
+
+                if (await isProjectFork(projectUrl)) {
+                    console.info(
+                        chalk.gray(`⏩ Skipping project ${projectTitle} because the project is just a fork on GitHub`),
+                    );
+                    continue;
+                }
+
                 let currentBranch = await execCommand({
                     command: 'git branch --show-current',
                     cwd: projectPath,
@@ -106,7 +124,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     continue;
                 }
 
-                console.info(`🔼 Running workflow ${workflow.name} for project ${projectTitle}`);
+                console.info(`🔼 Running workflow ${workflowName} for project ${projectTitle}`);
 
                 await execCommand({
                     command: 'git pull',
@@ -118,10 +136,10 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 if (await isFileExisting(configPath)) {
                     const config = require(configPath);
                     if (config.ignoreWorkflows) {
-                        if (config.ignoreWorkflows.includes(workflow.name)) {
+                        if (config.ignoreWorkflows.includes(workflowName)) {
                             console.info(
                                 chalk.gray(
-                                    `⏩ Skipping workflow ${workflow.name} for project ${projectTitle} because projects config ignores this workflow`,
+                                    `⏩ Skipping workflow ${workflowName} for project ${projectTitle} because projects config ignores this workflow`,
                                 ),
                             );
                             continue;
@@ -181,7 +199,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
 
                 let isProjectChanged = false;
                 function projectWasChanged(): void {
-                    console.info(chalk.bgGray(`Project ${projectTitle} was changed with workflow ${workflow.name}`));
+                    console.info(chalk.bgGray(`Project ${projectTitle} was changed with workflow ${workflowName}`));
                     isProjectChanged = true;
                 }
 
@@ -199,7 +217,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     modifyJsonFiles,
                     modifyPackage,
                     async commit(message: string) {
-                        const isCommited = await commit({ projectPath, message });
+                        const isCommited = await commit({ projectPath, message, workflowName });
 
                         if (isCommited) {
                             projectWasChanged();
@@ -211,7 +229,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                 if (!(await isWorkingTreeClean(projectPath))) {
                     console.info(
                         chalk.red(
-                            `❗ Workflow ${workflow.name} for the project ${projectTitle} ended with dirty working dir`,
+                            `❗ Workflow ${workflowName} for the project ${projectTitle} ended with dirty working dir`,
                         ),
                     );
                     process.exit();
@@ -223,16 +241,16 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     );
 
                     if (project) {
-                        project.workflowNames.push(workflow.name);
+                        project.workflowNames.push(workflowName);
                     } else {
-                        changedProjects.push({ projectTitle, projectUrl, workflowNames: [workflow.name] });
+                        changedProjects.push({ projectTitle, projectUrl, workflowNames: [workflowName] });
                     }
                 }
             } catch (error) {
                 const tag = `[${colorSquare.next().value}]`;
                 console.info(tag);
                 console.error(error);
-                errors.push({ tag, projectTitle, workflowName: workflow.name, error });
+                errors.push({ tag, projectTitle, workflowName: workflowName, error });
             }
         }
     }

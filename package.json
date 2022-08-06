@@ -2,11 +2,6 @@
     "name": "batch-project-editor",
     "version": "0.1.0",
     "license": "SEE LICENSE IN LICENSE",
-    "scripts": {
-        "list": "ts-node ./src/index.ts --list",
-        "clone": "ts-node ./src/index.ts --clone",
-        "workflows": "ts-node ./src/index.ts --workflows"
-    },
     "dependencies": {
         "@octokit/rest": "18.12.0",
         "@types/node-fetch": "2.5.7",

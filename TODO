@@ -1,5 +1,4 @@
-TODO: Do not push to archived repositories
-    > ts-node ./src/index.ts --workflows all  --projects collboard-watch
+
 
 TODO: Fix zigzag
-    > ts-node ./src/index.ts --workflows all  --projects art-tool-attribute-module
+    > ts-node ./src/index.ts --edit --workflows all  --projects art-tool-attribute-module

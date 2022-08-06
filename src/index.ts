@@ -10,34 +10,49 @@ import { runWorkflows } from './runWorkflows';
 import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjectsRemote } from './utils/findAllProjectsRemote';
 import { isDirectoryExisting } from './utils/isDirectoryExisting';
+import { isProjectArchived } from './utils/isProjectArchived';
+import { isProjectFork } from './utils/isProjectFork';
 
 declareGlobals();
 main();
 
 async function main() {
     const program = new commander.Command();
-    program.option('--list', `List all projects`);
-    program.option('--clone', `Clone all projects`);
-    program.option('--workflows <workflows>', `Run the workflows`, 'all');
-    program.option('--projects <projects>', `Run the projects`, 'all');
+    program.option('--list-remote', `List all projects from GitHub`, false);
+    program.option('--flags', `Modificator to list all projects from GitHub – listing with flags`, false);
+    program.option('--clone', `Clone all projects`, false);
+    program.option('--edit', `Run batch edit of projects; Note: Specify --workflows and --projects`, false);
+    program.option('--workflows <workflows>', `Which of thr workflows to run during --edit`, 'all');
+    program.option('--projects <projects>', `Which of the projects to run during --edit`, 'all');
 
     program.parse(process.argv);
-    const { list, clone, workflows, projects } = program.opts();
-    // console.log({ list, clone, workflows, projects });
+    const { listRemote, flags, clone, edit, workflows, projects } = program.opts();
 
-    if (list) {
+    //----------------------------------
+    if (listRemote) {
         for (const [org, projectUrls] of Object.entries(await findAllProjectsRemote())) {
             console.info(chalk.bgYellowBright(org));
             for (const projectUrl of projectUrls) {
-                console.info(chalk.bgGreen(projectUrl));
+                const isArchived = flags && (await isProjectArchived(projectUrl));
+                const isFork = flags && (await isProjectFork(projectUrl));
+                // !!! Is private
+                console.info(
+                    chalk.cyan(projectUrl) +
+                        (!isArchived ? '' : ' ' + chalk.bgRed('ARCHIVED')) +
+                        (!isFork ? '' : ' ' + chalk.bgRed('FORK')),
+                );
             }
         }
-    } else if (clone) {
+    }
+    //----------------------------------
+
+    //----------------------------------
+    if (clone) {
         for (const [org, projectUrls] of Object.entries(await findAllProjectsRemote())) {
             const cwd = join(BASE_PATH, org);
             await mkdir(cwd, { recursive: true });
             for (const projectUrl of projectUrls) {
-                const projectName = basename(projectUrl);
+                const projectName = basename(projectUrl.href);
                 if (await isDirectoryExisting(join(cwd, projectName))) {
                     console.info(
                         chalk.gray(`⏩ Skipping clonning of project ${projectName} because it already exists`),
@@ -45,25 +60,32 @@ async function main() {
                     continue;
                 }
 
+                // !!! Skip archived
+                // !!! Skip forks
+
                 await execCommand({
                     cwd,
                     command: `git clone ${projectUrl}`,
                     crashOnError: false,
                 });
                 await execCommand({
-                    cwd: join(cwd, projectUrl.split('/').pop()!),
+                    cwd: join(cwd, projectUrl.href.split('/').pop()!),
                     command: `npm ci`,
                     crashOnError: false,
                 });
             }
         }
-    } else if (workflows) {
+    }
+    //----------------------------------
+
+    //----------------------------------
+    if (edit) {
         await runWorkflows({
             runWorkflows: workflows === 'all' ? true : workflows.split(','),
             runProjects: projects === 'all' ? true : projects.split(','),
         });
-    } else {
-        console.info(chalk.bgRed(`No action specified`));
     }
+    //----------------------------------
+
     process.exit(0);
 }

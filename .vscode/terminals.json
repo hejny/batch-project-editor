@@ -6,7 +6,7 @@
             "name": "🔼 Run",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --workflows all --projects all"
+                "ts-node ./src/index.ts --edit --workflows all --projects all"
             ],
             "onlySingle": false,
             "focus": true
@@ -19,19 +19,25 @@
         },
         {
             "name": "🔼 Run workflows",
-            "command": "ts-node ./src/index.ts --workflows all --projects all",
+            "command": "ts-node ./src/index.ts --edit --workflows all --projects all",
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🔼🧪👨🏽‍💻 Run one workflow on one project",
-            "command": "ts-node ./src/index.ts --workflows badges --projects spacetrim",
+            "command": "ts-node ./src/index.ts --edit --workflows badges --projects spacetrim",
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "📋🧪👨🏽‍💻 List",
-            "command": "ts-node ./src/index.ts --list",
+            "command": "ts-node ./src/index.ts --list-remote",
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "📋🧪👨🏽‍💻🚩 List with flags",
+            "command": "ts-node ./src/index.ts --list-remote --flags",
             "onlySingle": true,
             "focus": true
         },
