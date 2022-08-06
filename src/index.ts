@@ -35,11 +35,11 @@ async function main() {
             for (const projectUrl of projectUrls) {
                 const isArchived = flags && (await isProjectArchived(projectUrl));
                 const isFork = flags && (await isProjectFork(projectUrl));
-                // !!! Is private
                 console.info(
                     chalk.cyan(projectUrl) +
-                        (!isArchived ? '' : ' ' + chalk.bgRed('ARCHIVED')) +
-                        (!isFork ? '' : ' ' + chalk.bgRed('FORK')),
+                        // TODO: Obtain information with findAllProjectsRemote> (!isPrivate ? '' : ' ' + chalk.bgGray(' PRIVATE ')) +
+                        (!isArchived ? '' : ' ' + chalk.bgGray(' ARCHIVED ')) +
+                        (!isFork ? '' : ' ' + chalk.bgBlue(' FORK ')),
                 );
             }
         }
@@ -60,8 +60,19 @@ async function main() {
                     continue;
                 }
 
-                // !!! Skip archived
-                // !!! Skip forks
+                if (await isProjectArchived(projectUrl)) {
+                    console.info(
+                        chalk.gray(`⏩ Skipping project ${projectName} because the project is archved on GitHub`),
+                    );
+                    continue;
+                }
+
+                if (await isProjectFork(projectUrl)) {
+                    console.info(
+                        chalk.gray(`⏩ Skipping project ${projectName} because the project is just a fork on GitHub`),
+                    );
+                    continue;
+                }
 
                 await execCommand({
                     cwd,
