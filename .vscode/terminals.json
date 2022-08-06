@@ -43,7 +43,7 @@
             "command": "ts-node ./src/index.ts --list-remote",
             "onlySingle": true,
             "focus": true
-        }
+        },
         {
             "name": "🔼👑 Release major version",
             "command": "npm version major",
