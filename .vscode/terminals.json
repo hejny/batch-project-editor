@@ -12,6 +12,15 @@
             "focus": true
         },
         {
+            "name": "🔼🖼️ Run AI generated wallpapers",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --workflows ai-generated-wallpaper --projects all"
+            ],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
             "name": "🔽 Clone",
             "command": "ts-node ./src/index.ts --clone",
             "onlySingle": true,
@@ -34,13 +43,7 @@
             "command": "ts-node ./src/index.ts --list-remote",
             "onlySingle": true,
             "focus": true
-        },
-        {
-            "name": "📋🧪👨🏽‍💻🚩 List with flags",
-            "command": "ts-node ./src/index.ts --list-remote --flags",
-            "onlySingle": true,
-            "focus": true
-        },
+        }
         {
             "name": "🔼👑 Release major version",
             "command": "npm version major",

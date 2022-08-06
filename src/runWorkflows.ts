@@ -59,7 +59,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
             try {
                 if (await isProjectArchived(projectUrl)) {
                     console.info(
-                        chalk.gray(`⏩ Skipping project ${projectTitle} because the project is archved on GitHub`),
+                        chalk.gray(`⏩ Skipping project ${projectTitle} because the project is archived on GitHub`),
                     );
                     continue;
                 }

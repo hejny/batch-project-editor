@@ -12,6 +12,7 @@ import { findAllProjectsRemote } from './utils/findAllProjectsRemote';
 import { isDirectoryExisting } from './utils/isDirectoryExisting';
 import { isProjectArchived } from './utils/isProjectArchived';
 import { isProjectFork } from './utils/isProjectFork';
+import { isProjectPrivate } from './utils/isProjectPrivate';
 
 declareGlobals();
 main();
@@ -19,27 +20,28 @@ main();
 async function main() {
     const program = new commander.Command();
     program.option('--list-remote', `List all projects from GitHub`, false);
-    program.option('--flags', `Modificator to list all projects from GitHub – listing with flags`, false);
     program.option('--clone', `Clone all projects`, false);
     program.option('--edit', `Run batch edit of projects; Note: Specify --workflows and --projects`, false);
     program.option('--workflows <workflows>', `Which of thr workflows to run during --edit`, 'all');
     program.option('--projects <projects>', `Which of the projects to run during --edit`, 'all');
 
     program.parse(process.argv);
-    const { listRemote, flags, clone, edit, workflows, projects } = program.opts();
+    const { listRemote, clone, edit, workflows, projects } = program.opts();
 
     //----------------------------------
     if (listRemote) {
         for (const [org, projectUrls] of Object.entries(await findAllProjectsRemote())) {
-            console.info(chalk.bgYellowBright(org));
+            console.info(chalk.bgYellowBright(` 🏛️  ${org} `));
             for (const projectUrl of projectUrls) {
-                const isArchived = flags && (await isProjectArchived(projectUrl));
-                const isFork = flags && (await isProjectFork(projectUrl));
+                const isPrivate = await isProjectPrivate(projectUrl);
+                const isArchived = await isProjectArchived(projectUrl);
+                const isFork = await isProjectFork(projectUrl);
                 console.info(
                     chalk.cyan(projectUrl) +
-                        // TODO: Obtain information with findAllProjectsRemote> (!isPrivate ? '' : ' ' + chalk.bgGray(' PRIVATE ')) +
-                        (!isArchived ? '' : ' ' + chalk.bgGray(' ARCHIVED ')) +
-                        (!isFork ? '' : ' ' + chalk.bgBlue(' FORK ')),
+                        ' ' +
+                        (!isPrivate ? '' : chalk.bgMagenta(' 🔒  PRIVATE ')) +
+                        (!isArchived ? '' : chalk.bgGray(' 🗃️  ARCHIVED ')) +
+                        (!isFork ? '' : chalk.bgBlue(' 🍴  FORK ')),
                 );
             }
         }
@@ -62,7 +64,7 @@ async function main() {
 
                 if (await isProjectArchived(projectUrl)) {
                     console.info(
-                        chalk.gray(`⏩ Skipping project ${projectName} because the project is archved on GitHub`),
+                        chalk.gray(`⏩ Skipping project ${projectName} because the project is archived on GitHub`),
                     );
                     continue;
                 }
@@ -98,5 +100,5 @@ async function main() {
     }
     //----------------------------------
 
-    process.exit(0);
+    /// !!! process.exit(0);
 }
