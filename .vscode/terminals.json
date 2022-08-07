@@ -15,7 +15,7 @@
             "name": "🔼🖼️ Run AI generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows ai-generated-wallpaper --projects all"
+                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaper --projects all"
             ],
             "onlySingle": true,
             "focus": true

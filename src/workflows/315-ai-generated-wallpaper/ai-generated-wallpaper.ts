@@ -30,9 +30,12 @@ export async function aiGeneratedWallpaper({ packageJson }: IWorkflowOptions): P
         await forTime(1000 * 15);
     }
 
+    /*
     await page.goto(`https://discord.com/channels/@me/994943513500336138`, {
         waitUntil: 'networkidle2',
     });
+
+    */
 
     // TODO: Maybe> await setDiscordCookies(...)
 
@@ -51,8 +54,10 @@ export async function aiGeneratedWallpaper({ packageJson }: IWorkflowOptions): P
     // !!! Remove> console.log((await page.$(DISCORD_MESSAGE_QUERYSELECTOR))?.asElement());
 
     // !!! Solve this big delay better
-    console.log(chalk.gray(`Waiting for 2 minutes...`));
-    await forTime(1000 * 60 * 2);
+    //console.log(chalk.gray(`Waiting for 2 minutes...`));
+    //await forTime(1000 * 60 * 2);
+
+    await forTime(1000 * 10 * Math.random());
 
     //await browser.close();
 }
