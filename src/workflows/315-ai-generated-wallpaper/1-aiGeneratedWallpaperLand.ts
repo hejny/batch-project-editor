@@ -9,7 +9,7 @@ let page: puppeteer.Page | null = null;
 
 export async function aiGeneratedWallpaperLand({ packageJson }: IWorkflowOptions): Promise<void> {
 
-  // TODO: !!! Test if already landed
+  // TODO: !!! Test if already landed with searchMidjourney
 
 
     if (!page) {
