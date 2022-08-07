@@ -4,7 +4,11 @@ import { auditDependencies } from './100-auditDependencies/auditDependencies';
 import { libraryBoilerplate } from './200-libraryBoilerplate/libraryBoilerplate';
 import { license } from './300-license/license';
 import { description } from './310-description/description';
-import { aiGeneratedWallpaper } from './315-ai-generated-wallpaper/ai-generated-wallpaper';
+import { aiGeneratedWallpaperPrepare } from './315-ai-generated-wallpaper/0-aiGeneratedWallpaperPrepare';
+import { aiGeneratedWallpaperLand } from './315-ai-generated-wallpaper/1-aiGeneratedWallpaperLand';
+import { aiGeneratedWallpaperHarvest } from './315-ai-generated-wallpaper/2-aiGeneratedWallpaperHarvest';
+import { aiGeneratedWallpaperUseInGithub } from './315-ai-generated-wallpaper/3-aiGeneratedWallpaperUseInGithub';
+import { aiGeneratedWallpaperUseInReadme } from './315-ai-generated-wallpaper/3-aiGeneratedWallpaperUseInReadme';
 import { authors } from './320-authors/authors';
 import { repository } from './325-repository/repository';
 import { normalizePackage } from './330-normalizePackage/normalizePackage';
@@ -24,7 +28,11 @@ export const WORKFLOWS: IWorkflow[] = [
     libraryBoilerplate,
     license,
     description,
-    aiGeneratedWallpaper,
+    aiGeneratedWallpaperPrepare,
+    aiGeneratedWallpaperLand,
+    aiGeneratedWallpaperHarvest,
+    aiGeneratedWallpaperUseInGithub,
+    aiGeneratedWallpaperUseInReadme,
     authors,
     repository,
     normalizePackage,

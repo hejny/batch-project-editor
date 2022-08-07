@@ -13,6 +13,7 @@ import { isDirectoryExisting } from './utils/isDirectoryExisting';
 import { isProjectArchived } from './utils/isProjectArchived';
 import { isProjectFork } from './utils/isProjectFork';
 import { isProjectPrivate } from './utils/isProjectPrivate';
+import { patternToRegExp } from './utils/patternToRegExp';
 
 declareGlobals();
 main();
@@ -22,8 +23,8 @@ async function main() {
     program.option('--list-remote', `List all projects from GitHub`, false);
     program.option('--clone', `Clone all projects`, false);
     program.option('--edit', `Run batch edit of projects; Note: Specify --workflows and --projects`, false);
-    program.option('--workflows <workflows>', `Which of thr workflows to run during --edit`, 'all');
-    program.option('--projects <projects>', `Which of the projects to run during --edit`, 'all');
+    program.option('--workflows <workflows>', `Which of thr workflows to run during --edit`, '*');
+    program.option('--projects <projects>', `Which of the projects to run during --edit`, '*');
 
     program.parse(process.argv);
     const { listRemote, clone, edit, workflows, projects } = program.opts();
@@ -93,9 +94,10 @@ async function main() {
 
     //----------------------------------
     if (edit) {
+        // TODO: !!! Test that wildcards are working
         await runWorkflows({
-            runWorkflows: workflows === 'all' ? true : workflows.split(','),
-            runProjects: projects === 'all' ? true : projects.split(','),
+            runWorkflows: patternToRegExp(...workflows.split(',')),
+            runProjects: patternToRegExp(projects.split(',')),
         });
     }
     //----------------------------------

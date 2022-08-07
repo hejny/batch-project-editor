@@ -7,8 +7,13 @@ import { IWorkflowOptions } from '../IWorkflow';
 const DISCORD_MESSAGE_QUERYSELECTOR = `div[role='textbox']`;
 let page: puppeteer.Page | null = null;
 
-export async function aiGeneratedWallpaper({ packageJson }: IWorkflowOptions): Promise<void> {
+export async function aiGeneratedWallpaperLand({ packageJson }: IWorkflowOptions): Promise<void> {
+
+  // TODO: !!! Test if already landed
+
+
     if (!page) {
+        // TODO: !!! At the start of the app
         const browser = await puppeteer.launch({
             executablePath: await locateChrome(),
             headless: false,

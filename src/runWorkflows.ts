@@ -22,8 +22,8 @@ import { colorSquare } from './utils/random/getColorSquare';
 import { WORKFLOWS } from './workflows/workflows';
 
 interface IRunWorkflowsOptions {
-    runWorkflows: string[] | true;
-    runProjects: string[] | true;
+    runWorkflows: RegExp;
+    runProjects: RegExp;
 }
 
 export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsOptions) {
@@ -36,10 +36,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
 
     for (const projectPath of await findAllProjects()) {
         // console.log({ project: basename(projectPath /* TODO: Match more things in projects */) });
-        if (
-            runProjects !== true &&
-            !runProjects.includes(basename(projectPath /* TODO: Match more things in projects */))
-        ) {
+        if (!runProjects.test(basename(projectPath))) {
             continue;
         }
 
@@ -47,7 +44,8 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
             const workflowName = workflow.name;
 
             // console.log({ workflows: workflowName }, runWorkflows !== true && !runWorkflows.includes(workflowName));
-            if (runWorkflows !== true && !runWorkflows.includes(workflowName)) {
+
+            if (!runWorkflows.test(workflowName)) {
                 continue;
             }
 
