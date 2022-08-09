@@ -18,9 +18,7 @@ export async function aiGeneratedWallpaperPrepare({
 
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
 
-    let imagineSentence = packageJson.description;
-    imagineSentence = imagineSentence.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
-    // !!! Remove links and markdown features from plain text
+    const imagineSentence = packageJson.description.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
 
     const imagineFlags = `--aspect 2:1  --quality 2 --stylize 1250 --version 3`; /* <- Note: Default flags to config */ /* <- Note: [🎏] More on flags here */
     const imagineFlagsSeed = `--seed ${randomInteger(1111111, 9999999)}`;
