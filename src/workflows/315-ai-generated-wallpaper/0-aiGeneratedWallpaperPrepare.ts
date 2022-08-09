@@ -10,15 +10,18 @@ export async function aiGeneratedWallpaperPrepare({
     commit,
     skippingBecauseOf,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // !!! Detect manual change and if than do not regenerate
+    // TODO: Detect manual change and if than do not regenerate
+    //       @see https://stackoverflow.com/questions/3701404/how-to-list-all-commits-that-changed-a-specific-file
 
     if (!packageJson.description) {
         return skippingBecauseOf(`no description in package.json`);
     }
 
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
+    const wallpaperImaginePath = join(wallpaperPath, 'imagine');
 
-    const imagineSentence = packageJson.description.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
+    const descriptionSentence = packageJson.description.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
+    const imagineSentence = `Banner for ${descriptionSentence}`;
 
     const imagineFlags = `--aspect 2:1  --quality 2 --stylize 1250 --version 3`; /* <- Note: Default flags to config */ /* <- Note: [🎏] More on flags here */
     const imagineFlagsSeed = `--seed ${randomInteger(1111111, 9999999)}`;
@@ -28,9 +31,8 @@ export async function aiGeneratedWallpaperPrepare({
 
     await mkdir(wallpaperPath, { recursive: true });
     await writeFile(
-        join(wallpaperPath, 'imagine'),
+        wallpaperImaginePath,
         spaceTrim(`
-
             ${imagineSentence}
             ${imagineFlags}
             ${imagineFlagsSeed}

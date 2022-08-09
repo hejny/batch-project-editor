@@ -31,10 +31,17 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
     const errors: { tag: string; projectTitle: string; workflowName: string; error: Error }[] = [];
     const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
 
-    // !!!
-    console.log({ runWorkflows, runProjects });
-    // console.log(await findAllProjects());
-    // await forEver();
+    for (const workflow of WORKFLOWS) {
+        const workflowName = workflow.name;
+        if (!runWorkflows.test(workflowName)) {
+            continue;
+        }
+
+        if (workflow.initialize) {
+            console.info(chalk.bgMagenta(` 🚀  Initializing ${workflowName} `));
+            await workflow.initialize();
+        }
+    }
 
     for (const projectPath of await findAllProjects()) {
         // console.log({ project: basename(projectPath /* TODO: Match more things in projects */) });
@@ -233,7 +240,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     process.exit();
                 }
 
-                if (result === WorkflowResult.Change) {
+                if (result === WorkflowResult.Change || result === WorkflowResult.SideEffect) {
                     console.info(chalk.bgGray(`Project ${projectTitle} was changed with workflow ${workflowName}`));
 
                     const project = changedProjects.find(

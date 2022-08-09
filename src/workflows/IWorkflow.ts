@@ -32,4 +32,5 @@ export interface IWorkflowOptions {
 
 export interface IWorkflow {
     (options: IWorkflowOptions): Promisable<WorkflowResult>;
+    initialize?(): Promisable<void>;
 }
