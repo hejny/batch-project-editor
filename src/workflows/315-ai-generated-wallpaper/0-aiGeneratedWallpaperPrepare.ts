@@ -23,6 +23,9 @@ export async function aiGeneratedWallpaperPrepare({
     const imagineFlags = `--aspect 2:1  --quality 2 --stylize 1250 --version 3`; /* <- Note: Default flags to config */ /* <- Note: [🎏] More on flags here */
     const imagineFlagsSeed = `--seed ${randomInteger(1111111, 9999999)}`;
 
+    // !!! Remove
+    console.log('/imagine ', imagineSentence);
+
     await mkdir(wallpaperPath, { recursive: true });
     await writeFile(
         join(wallpaperPath, 'imagine'),

@@ -31,7 +31,8 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
     const errors: { tag: string; projectTitle: string; workflowName: string; error: Error }[] = [];
     const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
 
-    // console.log({ runProjects, runWorkflows });
+    // !!!
+    console.log({ runWorkflows, runProjects });
     // console.log(await findAllProjects());
     // await forEver();
 

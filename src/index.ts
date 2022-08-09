@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import commander from 'commander';
 import { mkdir } from 'fs/promises';
 import { basename, join } from 'path';
+import spaceTrim from 'spacetrim';
 import { BASE_PATH } from './config';
 import { declareGlobals } from './globals';
 import { runWorkflows } from './runWorkflows';
@@ -23,8 +24,24 @@ async function main() {
     program.option('--list-remote', `List all projects from GitHub`, false);
     program.option('--clone', `Clone all projects`, false);
     program.option('--edit', `Run batch edit of projects; Note: Specify --workflows and --projects`, false);
-    program.option('--workflows <workflows>', `Which of thr workflows to run during --edit`, '*');
-    program.option('--projects <projects>', `Which of the projects to run during --edit`, '*');
+    program.option(
+        '--workflows <workflows>',
+        spaceTrim(`
+            Which of thr workflows to run during --edit
+            Use % as a wildcard
+            Note: [🥀] Using % not * as a wildcard char because of strange behavior of (probably) commander.js
+        `),
+        '%',
+    );
+    program.option(
+        '--projects <projects>',
+        spaceTrim(`
+            Which of the projects to run during --edit
+            Use % as a wildcard
+            Note: [🥀] Using % not * as a wildcard char because of strange behavior of (probably) commander.js
+        `),
+        '%',
+    );
 
     program.parse(process.argv);
     const { listRemote, clone, edit, workflows, projects } = program.opts();
@@ -94,10 +111,9 @@ async function main() {
 
     //----------------------------------
     if (edit) {
-        // TODO: !!! Test that wildcards are working
         await runWorkflows({
             runWorkflows: patternToRegExp(...workflows.split(',')),
-            runProjects: patternToRegExp(projects.split(',')),
+            runProjects: patternToRegExp(...projects.split(',')),
         });
     }
     //----------------------------------
