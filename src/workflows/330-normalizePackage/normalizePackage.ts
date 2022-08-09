@@ -1,6 +1,6 @@
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function normalizePackage({ commit }: IWorkflowOptions): Promise<void> {
+export async function normalizePackage({ commit }: IWorkflowOptions): Promise<WorkflowResult> {
     // TODO: Implement
-    await commit('🗃️ Ordering package.json');
+    return commit('🗃️ Ordering package.json');
 }

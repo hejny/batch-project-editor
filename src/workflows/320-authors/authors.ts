@@ -1,6 +1,6 @@
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function authors({ commit }: IWorkflowOptions): Promise<void> {
+export async function authors({ commit }: IWorkflowOptions): Promise<WorkflowResult> {
     // TODO: Implement
-    await commit('🤸⛹️ Authors in package.json');
+    return commit('🤸⛹️ Authors in package.json');
 }

@@ -1,7 +1,7 @@
 import markdownToTxt from 'markdown-to-txt';
 import fetch from 'node-fetch';
 import { GITHUB_TOKEN } from '../../config';
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 const DESCRIPTION_IN_MARKDOWN =
     /(?<heading>^#[^\n]*$)(\s*)((<!--Badges-->(?<badges>.*)<!--\/Badges-->)?)(\s*)(?<description>^.*?$)?(\n{2,})/ims;
@@ -12,23 +12,22 @@ export async function description({
     readFile,
     modifyPackage,
     commit,
-}: IWorkflowOptions): Promise<void> {
+    skippingBecauseOf,
+}: IWorkflowOptions): Promise<WorkflowResult> {
     const description = (await readFile('README.md')).match(DESCRIPTION_IN_MARKDOWN)?.groups?.description;
 
     if (!description) {
-        return;
+        return skippingBecauseOf(`No description extracted from README.md`);
     }
 
     let descriptionText = markdownToTxt(description).split('\n').join(' ');
 
-    descriptionText = descriptionText
-        .split(' created via @collboard/modules-sdk.')
-        .join('');
+    descriptionText = descriptionText.split(' created via @collboard/modules-sdk.').join('');
 
     await modifyPackage((packageJson) => {
         packageJson.description = descriptionText;
     });
-    await commit('✍🏻 Description of the project into package.json');
+    return commit('✍🏻 Description of the project into package.json');
 
     // TODO: !!! Probbably call it only if there is an unupdated description
     const response = await fetch(`https://api.github.com/repos/${projectOrg}/${projectName}`, {

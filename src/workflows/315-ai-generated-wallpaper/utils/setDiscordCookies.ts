@@ -11,7 +11,7 @@ export async function setDiscordCookies(
     page: Page,
     discordCookies: /*IDiscordCookies*/ any,
     discordLocalStorage: any,
-): Promise<void> {
+): Promise<WorkflowResult> {
     for (const [name, value] of Object.entries(discordCookies)) {
         await page.setCookie({
             domain: '.discord.com',

@@ -1,5 +1,7 @@
 ## Testing of flags
 
+_Note: [🎏] Usage of flags here_
+
 -   **Version** `--version 1` vs `--version 2` vs `--version 3`
 -   **Size** **`--aspect 2:1`** vs `--w 1280 --h 640`
 -   **HD** Use `--hd` or not

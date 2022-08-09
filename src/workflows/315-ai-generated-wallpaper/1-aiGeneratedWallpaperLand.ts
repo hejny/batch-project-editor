@@ -2,15 +2,13 @@ import chalk from 'chalk';
 import { locateChrome } from 'locate-app';
 import puppeteer from 'puppeteer-core';
 import { forTime } from 'waitasecond';
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 const DISCORD_MESSAGE_QUERYSELECTOR = `div[role='textbox']`;
 let page: puppeteer.Page | null = null;
 
-export async function aiGeneratedWallpaperLand({ packageJson }: IWorkflowOptions): Promise<void> {
-
-  // TODO: !!! Test if already landed with searchMidjourney
-
+export async function aiGeneratedWallpaperLand({ packageJson }: IWorkflowOptions): Promise<WorkflowResult> {
+    // TODO: !!! Test if already landed with searchMidjourney
 
     if (!page) {
         // TODO: !!! At the start of the app
@@ -47,10 +45,10 @@ export async function aiGeneratedWallpaperLand({ packageJson }: IWorkflowOptions
     // TODO: !!! Also PDF reports await page.pdf({path: 'hn.pdf', format: 'a4'});
 
     // TODO: Maybe some prefixes like "wallpaper for project..."
-    const midjourneyCommand = `/imagine ${packageJson.description} --w 1280 --h 640`;
-    console.log(chalk.blue(midjourneyCommand));
+    const prompt = `${packageJson.description} --w 1280 --h 640`;
+    console.log(chalk.blue(prompt));
     // !!! Remove> await page.click(DISCORD_MESSAGE_QUERYSELECTOR);
-    await page.type(DISCORD_MESSAGE_QUERYSELECTOR, midjourneyCommand, { delay: 50 });
+    await page.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + prompt, { delay: 50 });
     await page.keyboard.press('Enter');
 
     // !!! Remove> await forTime(1000 * 20);
@@ -65,4 +63,7 @@ export async function aiGeneratedWallpaperLand({ packageJson }: IWorkflowOptions
     await forTime(1000 * 10 * Math.random());
 
     //await browser.close();
+
+
+    return WorkflowResult.SideEffect;
 }

@@ -1,0 +1,48 @@
+[
+    {
+        "current_status": "completed",
+        "enqueue_time": "2022-08-07 21:23:54.1023",
+        "event": {
+            "height": 1024,
+            "textPrompt": ["The vector simple vector manipulation class."],
+            "imagePrompts": null,
+            "width": 2048,
+            "batchSize": 1,
+            "seedImageURL": "https://storage.googleapis.com/dream-machines-output/a7ba9ba8-dd82-4581-a3b7-d894aa50999a/0_1.png"
+        },
+        "flagged": false,
+        "followed_by_user": true,
+        "full_command": "<https://s.mj.run/aokkxpNYs4g> The vector simple vector manipulation class. --w 1280 --h 640",
+        "grid_cells": 0,
+        "grid_id": null,
+        "grid_num": null,
+        "guild_id": null,
+        "hidden": false,
+        "id": "fd6d1192-498c-45b1-a33f-55c9c75dfb77",
+        "image_paths": [
+            "https://storage.googleapis.com/dream-machines-output/fd6d1192-498c-45b1-a33f-55c9c75dfb77/0_0.png"
+        ],
+        "is_published": true,
+        "like_count": 0,
+        "liked_by_user": false,
+        "liked_timestamp": null,
+        "low_priority": true,
+        "mod_hidden": false,
+        "platform": "discord",
+        "platform_channel": null,
+        "platform_channel_id": null,
+        "platform_message_id": null,
+        "platform_thread_id": null,
+        "prompt": "The vector simple vector manipulation class.",
+        "ranked_by_user": false,
+        "ranked_timestamp": null,
+        "ranking_by_user": null,
+        "reference_image_num": "1",
+        "reference_job_id": "a7ba9ba8-dd82-4581-a3b7-d894aa50999a",
+        "type": "yfcc_upsample",
+        "user_id": "310540068588879872",
+        "user_ranking_count": 0,
+        "user_ranking_score": 0,
+        "username": "Pavol Hejný"
+    }
+]

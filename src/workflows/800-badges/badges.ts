@@ -5,7 +5,7 @@ import YAML from 'yaml';
 import { findPackagePublished } from '../../utils/findPackagePublished';
 import { isFileExisting } from '../../utils/isFileExisting';
 import { isUrlExisting } from '../../utils/isUrlExisting';
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 const BADGES_IN_MARKDOWN = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
 
@@ -17,7 +17,7 @@ export async function badges({
     modifyFiles,
     commit,
     mainBranch,
-}: IWorkflowOptions): Promise<void> {
+}: IWorkflowOptions): Promise<WorkflowResult> {
     const badges: Array<{
         title: string;
         imageSrc: string;
@@ -150,7 +150,7 @@ export async function badges({
         }
     });
 
-    await commit('📛 Update badges');
+    return commit('📛 Update badges');
 }
 
 /**

@@ -2,9 +2,9 @@ import { copyFile } from 'fs/promises';
 import glob from 'glob-promise';
 import { join, relative } from 'path';
 import { execCommand } from '../../utils/execCommand/execCommand';
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function lines({ projectPath, commit }: IWorkflowOptions): Promise<void> {
+export async function lines({ projectPath, commit }: IWorkflowOptions): Promise<WorkflowResult> {
     for (const filePath of await glob(join(projectPath, '**/*'), {
         dot: true,
         ignore: ['**/node_modules/**', '**/.git/**'],
@@ -18,7 +18,7 @@ export async function lines({ projectPath, commit }: IWorkflowOptions): Promise<
         });
     }
 
-    await commit('⏎ Changing lines to unix');
+    return commit('⏎ Changing lines to unix');
 
     // TODO: Some util to copy boilerplate files
     for (const boilerplateFilePath of await glob(join(__dirname, 'boilerplate/**/*'), { dot: true })) {
@@ -26,5 +26,5 @@ export async function lines({ projectPath, commit }: IWorkflowOptions): Promise<
         await copyFile(boilerplateFilePath, projectFilePath);
     }
 
-    await commit('⏎ Adding rules for unix lines ');
+    return commit('⏎ Adding rules for unix lines ');
 }

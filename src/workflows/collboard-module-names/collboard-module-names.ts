@@ -1,6 +1,6 @@
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function collboardModuleNames({ commit }: IWorkflowOptions): Promise<void> {
+export async function collboardModuleNames({ commit }: IWorkflowOptions): Promise<WorkflowResult> {
     // TODO: Implement
-    await commit('📦 Propper package names for Collboard');
+    return commit('📦 Propper package names for Collboard');
 }

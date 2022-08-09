@@ -1,6 +1,7 @@
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function branchesRemoveMerged({ runCommand }: IWorkflowOptions): Promise<void> {
+export async function branchesRemoveMerged({ skippingBecauseOf }: IWorkflowOptions): Promise<WorkflowResult> {
+    return skippingBecauseOf(`This command makes no sence`);
     /*
     Note: This command makes no sence because the merged branchech will not be downloaded at the first place.
     TODO: Maybe also push the deletion to the remote?

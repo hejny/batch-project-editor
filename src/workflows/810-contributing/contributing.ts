@@ -1,5 +1,5 @@
 import spaceTrim from 'spacetrim';
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 const CONTRIBUTING_IN_MARKDOWN = /<!--Contributing-->(?<badges>.*)<!--\/Contributing-->/is;
 
@@ -9,7 +9,7 @@ export async function contributing({
     modifyFiles,
     commit,
     mainBranch,
-}: IWorkflowOptions): Promise<void> {
+}: IWorkflowOptions): Promise<WorkflowResult> {
     const contributingMarkdown =
         projectOrg !== 'hejny'
             ? ``
@@ -46,5 +46,5 @@ export async function contributing({
         }
     });
 
-    await commit('🖋️ Update contributing');
+    return commit('🖋️ Update contributing');
 }

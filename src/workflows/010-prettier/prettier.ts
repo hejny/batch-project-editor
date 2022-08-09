@@ -1,13 +1,14 @@
 import { join } from 'path';
 import { execCommand } from '../../utils/execCommand/execCommand';
 import { isFileExisting } from '../../utils/isFileExisting';
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function prettier({ projectPath, commit }: IWorkflowOptions): Promise<void> {
-    return; // TODO: !!! Make this workflow working
+export async function prettier({ projectPath, commit, skippingBecauseOf }: IWorkflowOptions): Promise<WorkflowResult> {
+    return skippingBecauseOf(`Not implemented yet`);
+    // TODO: !!! Make this workflow working
     if (await isFileExisting(join(projectPath, '.prettierrc'))) {
         // !!! Add prettier to the project
-        await commit('🧹 Configure prettier');
+        return commit('🧹 Configure prettier');
     }
 
     await execCommand({
@@ -16,7 +17,7 @@ export async function prettier({ projectPath, commit }: IWorkflowOptions): Promi
         cwd: projectPath,
     });
 
-    await commit('🧹 Prettier');
+    return commit('🧹 Prettier');
 
     await execCommand({
         command: 'npx organize-imports-cli',
@@ -24,5 +25,5 @@ export async function prettier({ projectPath, commit }: IWorkflowOptions): Promi
         cwd: projectPath,
     });
 
-    await commit('🧹 Organize imports');
+    return commit('🧹 Organize imports');
 }

@@ -1,6 +1,6 @@
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function aiGeneratedWallpaperUseInGithub({ packageJson }: IWorkflowOptions): Promise<void> {
-
-  // TODO: !!! Implement
+export async function aiGeneratedWallpaperUseInGithub({ packageJson,skippingBecauseOf }: IWorkflowOptions): Promise<WorkflowResult> {
+    // TODO: !!! Implement
+    return skippingBecauseOf(`Not implemented yet`);
 }

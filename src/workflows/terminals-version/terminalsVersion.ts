@@ -1,4 +1,4 @@
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 interface ITerminal {
     name: string;
@@ -7,7 +7,7 @@ interface ITerminal {
     focus: boolean;
 }
 
-export async function terminalsVersion({ commit, modifyJsonFiles }: IWorkflowOptions): Promise<void> {
+export async function terminalsVersion({ commit, modifyJsonFiles }: IWorkflowOptions): Promise<WorkflowResult> {
     await modifyJsonFiles<{ terminals: ITerminal[] }>('.vscode/terminals.json', (fileJson) => {
         function addTerminal(newTerminal: ITerminal) {
             if (fileJson.terminals.some((existingTerminal) => existingTerminal.name === newTerminal.name)) {
@@ -15,8 +15,8 @@ export async function terminalsVersion({ commit, modifyJsonFiles }: IWorkflowOpt
             }
 
             if (fileJson.terminals.some((existingTerminal) => existingTerminal.command === newTerminal.command)) {
-              return;
-          }
+                return;
+            }
 
             fileJson.terminals.push(newTerminal);
         }
@@ -43,5 +43,5 @@ export async function terminalsVersion({ commit, modifyJsonFiles }: IWorkflowOpt
         return fileJson;
     });
 
-    await commit('🔼 Add terminals for versioning');
+    return commit('🔼 Add terminals for versioning');
 }

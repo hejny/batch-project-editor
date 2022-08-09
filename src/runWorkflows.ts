@@ -19,6 +19,7 @@ import { isProjectFork } from './utils/isProjectFork';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
 import { isWorkingTreeInMergeProgress } from './utils/isWorkingTreeInMergeProgress';
 import { colorSquare } from './utils/random/getColorSquare';
+import { WorkflowResult } from './workflows/IWorkflow';
 import { WORKFLOWS } from './workflows/workflows';
 
 interface IRunWorkflowsOptions {
@@ -195,13 +196,7 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     });
                 }
 
-                let isProjectChanged = false;
-                function projectWasChanged(): void {
-                    console.info(chalk.bgGray(`Project ${projectTitle} was changed with workflow ${workflowName}`));
-                    isProjectChanged = true;
-                }
-
-                await workflow({
+                const result = await workflow({
                     projectTitle,
                     projectPath,
                     projectName,
@@ -214,14 +209,18 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     modifyFiles,
                     modifyJsonFiles,
                     modifyPackage,
+                    skippingBecauseOf(message) {
+                        console.info(
+                            chalk.gray(
+                                `⏩ Skipping workflow ${workflowName} on project ${projectTitle} because of ${message}`,
+                            ),
+                        );
+                        return WorkflowResult.Skip;
+                    },
                     async commit(message: string) {
                         const isCommited = await commit({ projectPath, message, workflowName });
-
-                        if (isCommited) {
-                            projectWasChanged();
-                        }
+                        return isCommited ? WorkflowResult.Change : WorkflowResult.NoChange;
                     },
-                    projectWasChanged,
                 });
 
                 if (!(await isWorkingTreeClean(projectPath))) {
@@ -233,7 +232,9 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
                     process.exit();
                 }
 
-                if (isProjectChanged) {
+                if (result === WorkflowResult.Change) {
+                    console.info(chalk.bgGray(`Project ${projectTitle} was changed with workflow ${workflowName}`));
+
                     const project = changedProjects.find(
                         ({ projectTitle: projectTitle2 }) => projectTitle === projectTitle2,
                     );

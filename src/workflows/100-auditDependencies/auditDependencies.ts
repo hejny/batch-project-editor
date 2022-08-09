@@ -1,13 +1,13 @@
 import spaceTrim from 'spacetrim';
 import { execCommand } from '../../utils/execCommand/execCommand';
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 export async function auditDependencies({
     projectPath,
     modifyPackage,
     runCommand,
     commit,
-}: IWorkflowOptions): Promise<void> {
+}: IWorkflowOptions): Promise<WorkflowResult> {
     await execCommand({ cwd: projectPath, crashOnError: false, command: 'npm install' });
     await execCommand({ cwd: projectPath, crashOnError: false, command: 'npm audit fix' });
 
@@ -37,7 +37,7 @@ export async function auditDependencies({
         return packageContent;
     });
 
-    await commit(
+    return commit(
         spaceTrim(`
           🔺 Removing dependencies prefixes
 
@@ -46,3 +46,7 @@ export async function auditDependencies({
     `),
     );
 }
+
+/**
+ * TODO: !!! Workflows with multiple commits split into multiple functions
+ */

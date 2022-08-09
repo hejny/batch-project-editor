@@ -1,5 +1,5 @@
 import spaceTrim from 'spacetrim';
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { pickPartnersForProject } from './organizations';
 
 const PARTNERS_IN_MARKDOWN = /<!--Partners-->(?<badges>.*)<!--\/Partners-->/is;
@@ -11,7 +11,7 @@ export async function partners({
     modifyFiles,
     commit,
     mainBranch,
-}: IWorkflowOptions): Promise<void> {
+}: IWorkflowOptions): Promise<WorkflowResult> {
     const organizations = pickPartnersForProject({
         projectUrl,
         projectOrg,
@@ -67,5 +67,5 @@ export async function partners({
         }
     });
 
-    await commit('✨ Update partners');
+    return commit('✨ Update partners');
 }

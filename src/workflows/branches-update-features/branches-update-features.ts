@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { spawn } from 'child_process';
 import { locateVSCode } from 'locate-app';
-import { IWorkflowOptions } from '../IWorkflow';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 /**
  * Go through not merged branches and update them with the latest commit the main.
@@ -12,10 +12,9 @@ export async function branchesUpdateFeatures({
     projectTitle,
     commit,
     runCommand,
-    projectWasChanged,
     mainBranch,
     projectPath,
-}: IWorkflowOptions): Promise<void> {
+}: IWorkflowOptions): Promise<WorkflowResult> {
     const remoteBranches = (await runCommand(`git branch --remotes --no-merged ${mainBranch}`)).split('\n');
     const fetureRemoteBranches = remoteBranches.filter((branch) => /(origin\/)?feature\//.test(branch));
     const recentFeatureRemoteBranches = await fetureRemoteBranches.filterAsync(async (branch) => {
@@ -27,6 +26,8 @@ export async function branchesUpdateFeatures({
     });
 
     console.info(recentFeatureRemoteBranches);
+
+    let isChanged = false;
 
     for (const remoteBranch of recentFeatureRemoteBranches) {
         const localBranch = remoteBranch.replace(/^origin\//, '');
@@ -40,31 +41,34 @@ export async function branchesUpdateFeatures({
         });
 
         await runCommand('git pull');
-        await runCommand(`git merge ${mainBranch}`)
-            .catch((error) => {
-                return error.message as string;
-            })
-            .then(async (result) => {
-                // Automatic merge failed; fix conflicts and then commit the result.
-                if (/Automatic merge failed/i.test(result)) {
-                    console.info(
-                        chalk.gray(`⏩ Opening project ${projectTitle} in vscode because automatic merge failed.`),
-                    );
+        isChanged =
+            isChanged ||
+            (await runCommand(`git merge ${mainBranch}`)
+                .catch((error) => {
+                    return error.message as string;
+                })
+                .then(async (result) => {
+                    // Automatic merge failed; fix conflicts and then commit the result.
+                    if (/Automatic merge failed/i.test(result)) {
+                        console.info(
+                            chalk.gray(`⏩ Opening project ${projectTitle} in vscode because automatic merge failed.`),
+                        );
 
-                    spawn(await locateVSCode(), [projectPath]);
-                    throw new Error(result);
-                } else if (/Already up to date/i.test(result)) {
-                    return;
-                } else {
-                    // Merge made by the 'recursive' strategy.
-                    projectWasChanged();
-                    return;
-                }
-            });
+                        spawn(await locateVSCode(), [projectPath]);
+                        throw new Error(result);
+                    } else if (/Already up to date/i.test(result)) {
+                        return false;
+                    } else {
+                        // Merge made by the 'recursive' strategy.
+                        return true;
+                    }
+                }));
 
         // Note: Here is already merge commit commited, now just push it.
-        // await commit(`🍴 Update ${localBranch} with latest commit from ${mainBranch}`);
+        // return commit(`🍴 Update ${localBranch} with latest commit from ${mainBranch}`);
 
         await runCommand(`git push --quiet`);
     }
+
+    return isChanged ? WorkflowResult.Change : WorkflowResult.NoChange;
 }
