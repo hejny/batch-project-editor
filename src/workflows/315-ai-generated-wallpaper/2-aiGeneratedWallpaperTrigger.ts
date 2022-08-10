@@ -54,8 +54,9 @@ export async function aiGeneratedWallpaperTrigger({
     // TODO: Maybe some prefixes like "wallpaper for project..."
 
     console.log(chalk.blue(imagine));
-    await page.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagine, { delay: 50 });
-    await page.keyboard.press('Enter');
+    /* !!! page! -> page */
+    await page!.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagine, { delay: 50 });
+    await page!.keyboard.press('Enter');
 
     await forTime(1000 * 60 * Math.random());
 
