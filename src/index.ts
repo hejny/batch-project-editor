@@ -24,6 +24,7 @@ async function main() {
     program.option('--list-remote', `List all projects from GitHub`, false);
     program.option('--clone', `Clone all projects`, false);
     program.option('--edit', `Run batch edit of projects; Note: Specify --workflows and --projects`, false);
+    program.option('--loop', `Should be looping after few minutes during --edit`, false);
     program.option(
         '--workflows <workflows>',
         spaceTrim(`
@@ -44,7 +45,7 @@ async function main() {
     );
 
     program.parse(process.argv);
-    const { listRemote, clone, edit, workflows, projects } = program.opts();
+    const { listRemote, clone, edit,loop, workflows, projects } = program.opts();
 
     //----------------------------------
     if (listRemote) {
@@ -112,6 +113,7 @@ async function main() {
     //----------------------------------
     if (edit) {
         await runWorkflows({
+          isLooping: loop,
             runWorkflows: patternToRegExp(...workflows.split(',')),
             runProjects: patternToRegExp(...projects.split(',')),
         });

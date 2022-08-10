@@ -7,6 +7,8 @@ import glob from 'glob-promise';
 import { locateVSCode } from 'locate-app';
 import { basename, join } from 'path';
 import { PackageJson, Promisable } from 'type-fest';
+import { forTime } from 'waitasecond';
+import { LOOP_INTERVAL } from './config';
 import { commit } from './utils/commit';
 import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjects } from './utils/findAllProjects';
@@ -23,14 +25,12 @@ import { WorkflowResult } from './workflows/IWorkflow';
 import { WORKFLOWS } from './workflows/workflows';
 
 interface IRunWorkflowsOptions {
+    isLooping: boolean;
     runWorkflows: RegExp;
     runProjects: RegExp;
 }
 
-export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsOptions) {
-    const errors: { tag: string; projectTitle: string; workflowName: string; error: Error }[] = [];
-    const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
-
+export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRunWorkflowsOptions) {
     for (const workflow of WORKFLOWS) {
         const workflowName = workflow.name;
         if (!runWorkflows.test(workflowName)) {
@@ -43,263 +43,279 @@ export async function runWorkflows({ runWorkflows, runProjects }: IRunWorkflowsO
         }
     }
 
-    for (const projectPath of await findAllProjects()) {
-        // console.log({ project: basename(projectPath /* TODO: Match more things in projects */) });
-        if (!runProjects.test(basename(projectPath))) {
-            continue;
-        }
+    const errors: { tag: string; projectTitle: string; workflowName: string; error: Error }[] = [];
+    const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
 
-        for (const workflow of WORKFLOWS) {
-            const workflowName = workflow.name;
-
-            // console.log({ workflows: workflowName }, runWorkflows !== true && !runWorkflows.includes(workflowName));
-
-            if (!runWorkflows.test(workflowName)) {
+    while (true) {
+        for (const projectPath of await findAllProjects()) {
+            // console.log({ project: basename(projectPath /* TODO: Match more things in projects */) });
+            if (!runProjects.test(basename(projectPath))) {
                 continue;
             }
 
-            await forPlay();
+            for (const workflow of WORKFLOWS) {
+                const workflowName = workflow.name;
 
-            const projectTitle = await findProjectTitle(projectPath);
-            const { name: projectName, org: projectOrg, url: projectUrl } = await findProjectName(projectPath);
+                // console.log({ workflows: workflowName }, runWorkflows !== true && !runWorkflows.includes(workflowName));
 
-            try {
-                if (await isProjectArchived(projectUrl)) {
-                    console.info(
-                        chalk.gray(`⏩ Skipping project ${projectTitle} because the project is archived on GitHub`),
-                    );
+                if (!runWorkflows.test(workflowName)) {
                     continue;
                 }
 
-                if (await isProjectFork(projectUrl)) {
-                    console.info(
-                        chalk.gray(`⏩ Skipping project ${projectTitle} because the project is just a fork on GitHub`),
-                    );
-                    continue;
-                }
+                await forPlay();
 
-                let currentBranch = await execCommand({
-                    command: 'git branch --show-current',
-                    cwd: projectPath,
-                });
+                const projectTitle = await findProjectTitle(projectPath);
+                const { name: projectName, org: projectOrg, url: projectUrl } = await findProjectName(projectPath);
 
-                if (!(await isWorkingTreeClean(projectPath))) {
-                    if (!(await isWorkingTreeInMergeProgress(projectPath))) {
+                try {
+                    if (await isProjectArchived(projectUrl)) {
                         console.info(
-                            chalk.gray(`⏩ Skipping project ${projectTitle} because working dir is not clean`),
-                        );
-                    } else {
-                        console.info(
-                            chalk.gray(
-                                `⏩ Opening project ${projectTitle} in vscode because there is merge in progress`,
-                            ),
-                        );
-
-                        spawn(await locateVSCode(), [projectPath]);
-                    }
-                    continue;
-                }
-
-                if (currentBranch !== 'main' && currentBranch !== 'master') {
-                    console.info(`👉 Switching from branch ${currentBranch} to main.`);
-
-                    const result = await execCommand({
-                        command: 'git switch main',
-                        cwd: projectPath,
-                        crashOnError: false,
-                    });
-
-                    if (!result.includes(`Switched to branch 'main'`)) {
-                        console.info(
-                            chalk.gray(`⏩ Skipping project ${projectTitle} because can not switch to main branch`),
+                            chalk.gray(`⏩ Skipping project ${projectTitle} because the project is archived on GitHub`),
                         );
                         continue;
                     }
 
-                    currentBranch = 'main';
+                    if (await isProjectFork(projectUrl)) {
+                        console.info(
+                            chalk.gray(
+                                `⏩ Skipping project ${projectTitle} because the project is just a fork on GitHub`,
+                            ),
+                        );
+                        continue;
+                    }
 
-                    /*
-                    console.info(
-                        `⏩ Skipping project ${projectTitle} because current branch is not main (or master) but ${currentBranch}.`,
-                    );
-                    continue;
-                    */
-                }
+                    let currentBranch = await execCommand({
+                        command: 'git branch --show-current',
+                        cwd: projectPath,
+                    });
 
-                if (!(await isFileExisting(join(projectPath, 'package.json')))) {
-                    console.info(chalk.gray(`⏩ Skipping project ${projectTitle} because package.json does not exist`));
-                    continue;
-                }
-
-                console.info(`🔼 Running workflow ${workflowName} for project ${projectTitle}`);
-
-                await execCommand({
-                    command: 'git pull',
-                    crashOnError: false,
-                    cwd: projectPath,
-                });
-
-                const configPath = join(projectPath, 'batch-project-editor.js');
-                if (await isFileExisting(configPath)) {
-                    const config = require(configPath);
-                    if (config.ignoreWorkflows) {
-                        if (config.ignoreWorkflows.includes(workflowName)) {
+                    if (!(await isWorkingTreeClean(projectPath))) {
+                        if (!(await isWorkingTreeInMergeProgress(projectPath))) {
+                            console.info(
+                                chalk.gray(`⏩ Skipping project ${projectTitle} because working dir is not clean`),
+                            );
+                        } else {
                             console.info(
                                 chalk.gray(
-                                    `⏩ Skipping workflow ${workflowName} for project ${projectTitle} because projects config ignores this workflow`,
+                                    `⏩ Opening project ${projectTitle} in vscode because there is merge in progress`,
                                 ),
+                            );
+
+                            spawn(await locateVSCode(), [projectPath]);
+                        }
+                        continue;
+                    }
+
+                    if (currentBranch !== 'main' && currentBranch !== 'master') {
+                        console.info(`👉 Switching from branch ${currentBranch} to main.`);
+
+                        const result = await execCommand({
+                            command: 'git switch main',
+                            cwd: projectPath,
+                            crashOnError: false,
+                        });
+
+                        if (!result.includes(`Switched to branch 'main'`)) {
+                            console.info(
+                                chalk.gray(`⏩ Skipping project ${projectTitle} because can not switch to main branch`),
                             );
                             continue;
                         }
+
+                        currentBranch = 'main';
+
+                        /*
+                        console.info(
+                            `⏩ Skipping project ${projectTitle} because current branch is not main (or master) but ${currentBranch}.`,
+                        );
+                        continue;
+                        */
                     }
-                }
 
-                async function modifyFiles(
-                    globPattern: string,
-                    fileModifier: (fileContent: string) => Promisable<string>,
-                ): Promise<void> {
-                    for (const filePath of await glob(join(projectPath, globPattern), {
-                        dot: true,
-                        ignore: ['**/node_modules/**', '**/.git/**'],
-                    })) {
-                        const fileContent = await readFile(filePath, 'utf8');
-                        const newFileContent = await fileModifier(fileContent);
-
-                        if (fileContent !== newFileContent) {
-                            console.info(`💾 Changing file ${filePath}`);
-                            await writeFile(filePath, newFileContent);
-                        } else {
-                            // console.info(`⬜ Keeping file ${filePath}`);
-                        }
+                    if (!(await isFileExisting(join(projectPath, 'package.json')))) {
+                        console.info(
+                            chalk.gray(`⏩ Skipping project ${projectTitle} because package.json does not exist`),
+                        );
+                        continue;
                     }
-                }
 
-                function readProjectFile(filePath: string): Promise<string> {
-                    return readFile(join(projectPath, filePath), 'utf8');
-                }
+                    console.info(`🔼 Running workflow ${workflowName} for project ${projectTitle}`);
 
-                function modifyJsonFiles<T>(
-                    globPattern: string,
-                    fileModifier: (fileContent: T) => Promisable<T>,
-                ): Promise<void> {
-                    return modifyFiles(globPattern, async (fileContent) => {
-                        const fileJson = JSON.parse(fileContent);
-                        return JSON.stringify((await fileModifier(fileJson)) || fileJson, null, 4) + '\n';
-                    });
-                }
-
-                const packageJson = JSON.parse(await readFile(join(projectPath, 'package.json'), 'utf8'));
-
-                function modifyPackage(
-                    fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
-                ): Promise<void> {
-                    return modifyJsonFiles<PackageJson>('package.json', (packageJson) => fileModifier(packageJson));
-                }
-
-                // TODO: !!! Rename to execCommand
-                function runCommand(command: string) {
-                    return execCommand({
-                        command,
+                    await execCommand({
+                        command: 'git pull',
+                        crashOnError: false,
                         cwd: projectPath,
                     });
-                }
 
-                const result = await workflow({
-                    projectTitle,
-                    projectPath,
-                    projectName,
-                    projectUrl,
-                    projectOrg,
-                    packageJson,
-                    mainBranch: currentBranch as 'main' | 'master',
-                    runCommand,
-                    readFile: readProjectFile,
-                    modifyFiles,
-                    modifyJsonFiles,
-                    modifyPackage,
-                    skippingBecauseOf(message) {
+                    const configPath = join(projectPath, 'batch-project-editor.js');
+                    if (await isFileExisting(configPath)) {
+                        const config = require(configPath);
+                        if (config.ignoreWorkflows) {
+                            if (config.ignoreWorkflows.includes(workflowName)) {
+                                console.info(
+                                    chalk.gray(
+                                        `⏩ Skipping workflow ${workflowName} for project ${projectTitle} because projects config ignores this workflow`,
+                                    ),
+                                );
+                                continue;
+                            }
+                        }
+                    }
+
+                    async function modifyFiles(
+                        globPattern: string,
+                        fileModifier: (fileContent: string) => Promisable<string>,
+                    ): Promise<void> {
+                        for (const filePath of await glob(join(projectPath, globPattern), {
+                            dot: true,
+                            ignore: ['**/node_modules/**', '**/.git/**'],
+                        })) {
+                            const fileContent = await readFile(filePath, 'utf8');
+                            const newFileContent = await fileModifier(fileContent);
+
+                            if (fileContent !== newFileContent) {
+                                console.info(`💾 Changing file ${filePath}`);
+                                await writeFile(filePath, newFileContent);
+                            } else {
+                                // console.info(`⬜ Keeping file ${filePath}`);
+                            }
+                        }
+                    }
+
+                    function readProjectFile(filePath: string): Promise<string> {
+                        return readFile(join(projectPath, filePath), 'utf8');
+                    }
+
+                    function modifyJsonFiles<T>(
+                        globPattern: string,
+                        fileModifier: (fileContent: T) => Promisable<T>,
+                    ): Promise<void> {
+                        return modifyFiles(globPattern, async (fileContent) => {
+                            const fileJson = JSON.parse(fileContent);
+                            return JSON.stringify((await fileModifier(fileJson)) || fileJson, null, 4) + '\n';
+                        });
+                    }
+
+                    const packageJson = JSON.parse(await readFile(join(projectPath, 'package.json'), 'utf8'));
+
+                    function modifyPackage(
+                        fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
+                    ): Promise<void> {
+                        return modifyJsonFiles<PackageJson>('package.json', (packageJson) => fileModifier(packageJson));
+                    }
+
+                    // TODO: !!! Rename to execCommand
+                    function runCommand(command: string) {
+                        return execCommand({
+                            command,
+                            cwd: projectPath,
+                        });
+                    }
+
+                    const result = await workflow({
+                        projectTitle,
+                        projectPath,
+                        projectName,
+                        projectUrl,
+                        projectOrg,
+                        packageJson,
+                        mainBranch: currentBranch as 'main' | 'master',
+                        runCommand,
+                        readFile: readProjectFile,
+                        modifyFiles,
+                        modifyJsonFiles,
+                        modifyPackage,
+                        skippingBecauseOf(message) {
+                            console.info(
+                                chalk.gray(
+                                    `⏩ Skipping workflow ${workflowName} on project ${projectTitle} because of ${message}`,
+                                ),
+                            );
+                            return WorkflowResult.Skip;
+                        },
+                        async commit(message: string) {
+                            const isCommited = await commit({ projectPath, message, workflowName });
+                            return isCommited ? WorkflowResult.Change : WorkflowResult.NoChange;
+                        },
+                    });
+
+                    if (!(await isWorkingTreeClean(projectPath))) {
                         console.info(
-                            chalk.gray(
-                                `⏩ Skipping workflow ${workflowName} on project ${projectTitle} because of ${message}`,
+                            chalk.red(
+                                `❗ Workflow ${workflowName} for the project ${projectTitle} ended with dirty working dir`,
                             ),
                         );
-                        return WorkflowResult.Skip;
-                    },
-                    async commit(message: string) {
-                        const isCommited = await commit({ projectPath, message, workflowName });
-                        return isCommited ? WorkflowResult.Change : WorkflowResult.NoChange;
-                    },
-                });
-
-                if (!(await isWorkingTreeClean(projectPath))) {
-                    console.info(
-                        chalk.red(
-                            `❗ Workflow ${workflowName} for the project ${projectTitle} ended with dirty working dir`,
-                        ),
-                    );
-                    process.exit();
-                }
-
-                if (result === WorkflowResult.Change || result === WorkflowResult.SideEffect) {
-                    console.info(chalk.bgGray(`Project ${projectTitle} was changed with workflow ${workflowName}`));
-
-                    const project = changedProjects.find(
-                        ({ projectTitle: projectTitle2 }) => projectTitle === projectTitle2,
-                    );
-
-                    if (project) {
-                        project.workflowNames.push(workflowName);
-                    } else {
-                        changedProjects.push({ projectTitle, projectUrl, workflowNames: [workflowName] });
+                        process.exit();
                     }
+
+                    if (result === WorkflowResult.Change || result === WorkflowResult.SideEffect) {
+                        console.info(chalk.bgGray(`Project ${projectTitle} was changed with workflow ${workflowName}`));
+
+                        const project = changedProjects.find(
+                            ({ projectTitle: projectTitle2 }) => projectTitle === projectTitle2,
+                        );
+
+                        if (project) {
+                            project.workflowNames.push(workflowName);
+                        } else {
+                            changedProjects.push({ projectTitle, projectUrl, workflowNames: [workflowName] });
+                        }
+                    }
+                } catch (error) {
+                    const tag = `[${colorSquare.next().value}]`;
+                    console.info(tag);
+                    console.error(error);
+                    errors.push({ tag, projectTitle, workflowName: workflowName, error });
                 }
-            } catch (error) {
-                const tag = `[${colorSquare.next().value}]`;
-                console.info(tag);
-                console.error(error);
-                errors.push({ tag, projectTitle, workflowName: workflowName, error });
             }
         }
-    }
 
-    if (errors.length > 0) {
-        // Note: Making space above the full error report
-        console.info(``);
-        console.info(``);
-        console.info(``);
-        for (const { tag, projectTitle, workflowName, error } of errors) {
-            console.info(tag + chalk.bgRed(error.name) + chalk.red(` ${projectTitle} - ${workflowName} `));
-            console.error(error);
+        if (errors.length > 0) {
+            // Note: Making space above the full error report
+            console.info(``);
+            console.info(``);
+            console.info(``);
+            for (const { tag, projectTitle, workflowName, error } of errors) {
+                console.info(tag + chalk.bgRed(error.name) + chalk.red(` ${projectTitle} - ${workflowName} `));
+                console.error(error);
+            }
         }
-    }
 
-    // Note: Making space above the result
-    console.info(``);
-    console.info(``);
-    console.info(``);
-    console.info(
-        changedProjects.length === 0
-            ? chalk.bgCyan(`No project has changed.`)
-            : chalk.bgGreen(`Changed ${changedProjects.length} projects:`),
-    );
-
-    for (const { projectTitle, projectUrl, workflowNames } of changedProjects) {
+        // Note: Making space above the result
+        console.info(``);
+        console.info(``);
+        console.info(``);
         console.info(
-            `${chalk.bgGreen(` ${projectTitle} `)} ${chalk.green(workflowNames.join(', '))} ${chalk.gray(
-                projectUrl.href,
-            )}`,
+            changedProjects.length === 0
+                ? chalk.bgCyan(`No project has changed.`)
+                : chalk.bgGreen(`Changed ${changedProjects.length} projects:`),
         );
-        // TODO: Show workflow by emojis not loooong names
-    }
 
-    for (const { tag, projectTitle, workflowName, error } of errors) {
-        console.info(
-            tag +
-                chalk.bgRed(error.name) +
-                chalk.red(` ${projectTitle} - ${workflowName} `) +
-                ' ' +
-                chalk.gray(error.message.split('\n')[0]),
-        );
+        for (const { projectTitle, projectUrl, workflowNames } of changedProjects) {
+            console.info(
+                `${chalk.bgGreen(` ${projectTitle} `)} ${chalk.green(workflowNames.join(', '))} ${chalk.gray(
+                    projectUrl.href,
+                )}`,
+            );
+            // TODO: Show workflow by emojis not loooong names
+        }
+
+        for (const { tag, projectTitle, workflowName, error } of errors) {
+            console.info(
+                tag +
+                    chalk.bgRed(error.name) +
+                    chalk.red(` ${projectTitle} - ${workflowName} `) +
+                    ' ' +
+                    chalk.gray(error.message.split('\n')[0]),
+            );
+        }
+
+        if (!isLooping) {
+            return;
+        } else {
+            console.info(chalk.gray(`➰ Looping again in ${LOOP_INTERVAL / 1000} seconds`));
+            await forTime(LOOP_INTERVAL);
+        }
     }
 }
 

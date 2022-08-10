@@ -6,6 +6,8 @@ import path from 'path';
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 const config = ConfigChecker.from(process.env);
 
+export const LOOP_INTERVAL = config.get('LOOP_INTERVAL').number().required().value;
+
 export const BASE_PATH = config.get('BASE_PATH').required().value;
 
 export const GITHUB_USERNAME = config.get('GITHUB_USERNAME').required().value;
