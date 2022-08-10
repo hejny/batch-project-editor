@@ -6,18 +6,31 @@ import puppeteer from 'puppeteer-core';
 import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
+import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 
 const DISCORD_MESSAGE_QUERYSELECTOR = `div[role='textbox']`;
 let page: puppeteer.Page | null = null;
 
 export async function aiGeneratedWallpaperLand({
+    skippingBecauseOf,
     projectPath,
     packageJson,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // TODO: !!! Test if already landed with searchMidjourney
-
+    // !!! Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
+    const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
+    const imagine = spaceTrim(wallpaperImagineContents).split('\n\n')[0].split('\n').join(' ').split('  ').join(' ');
+    const imagineSentence = imagine
+        .split(/--[a-zA-Z]+\s+[^\s]+\s*/g)
+        .join()
+        .trim();
+
+    // Note: Test if already landed
+    const searchResult = await searchMidjourney({ prompt: imagineSentence });
+    if (searchResult.length > 0) {
+        return skippingBecauseOf(`Already landed`);
+    }
 
     if (!page) {
         throw new Error(`aiGeneratedWallpaperLand not initialized`);
@@ -35,9 +48,6 @@ export async function aiGeneratedWallpaperLand({
     // TODO: !!! Also PDF reports await page.pdf({path: 'hn.pdf', format: 'a4'});
 
     // TODO: Maybe some prefixes like "wallpaper for project..."
-
-    const imagineContents = await readFile(wallpaperImaginePath, 'utf8');
-    const imagine = spaceTrim(imagineContents).split('\n\n')[0].split('\n').join(' ').split('  ').join(' ');
 
     console.log(chalk.blue(imagine));
     await page.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagine, { delay: 50 });

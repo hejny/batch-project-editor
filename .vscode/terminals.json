@@ -9,7 +9,7 @@
             "focus": true
         },
         {
-            "name": "🔼🖼️ Run AI generated wallpapers",
+            "name": "🔼🖼️ Run AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
                 "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaper* --projects *"

@@ -1,3 +1,4 @@
+import { MIDJOURNEY_COOKIES } from '../../../../config';
 import { IMidjourneyJob } from './IMidjourneyJob';
 
 interface ISearchMidjourneyOptions {
@@ -21,7 +22,16 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
     url.searchParams.set('dedupe', 'true' /* <- TODO: What this means? */);
     url.searchParams.set('refreshApi', '0' /* <- TODO: What this means? */);
 
-    const response = await fetch(url.href);
+    const cookie = Object.entries(MIDJOURNEY_COOKIES)
+        .map(([name, value]) => `${name}=${value}`)
+        .join('; ');
+
+    const response = await fetch(url.href, {
+        headers: {
+            cookie,
+        },
+    });
+
     const json = await response.json();
 
     if (!Array.isArray(json)) {

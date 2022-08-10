@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" href="/favicon.ico" />
+        <title>Midjourney</title>
+        <meta name="robots" content="index,follow" />
+        <meta name="googlebot" content="index,follow" />
+        <meta
+            name="description"
+            content="An independent research lab exploring new mediums of thought and expanding the imaginative powers of the human species."
+        />
+        <meta property="og:title" content="Midjourney" />
+        <meta
+            property="og:description"
+            content="An independent research lab exploring new mediums of thought and expanding the imaginative powers of the human species."
+        />
+        <meta property="og:locale" content="en" />
+        <meta property="og:site_name" content="Midjourney" />
+        <meta name="next-head-count" content="14" />
+        <meta content="dark" name="color-scheme" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preload" href="/_next/static/css/54c435947b65dcaf.css" as="style" />
+        <link rel="stylesheet" href="/_next/static/css/54c435947b65dcaf.css" data-n-g="" />
+        <noscript data-n-css=""></noscript>
+        <script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script>
+        <script src="/_next/static/chunks/webpack-dcf38eaad0d77df0.js" defer=""></script>
+        <script src="/_next/static/chunks/framework-a070cbfff3c750c5.js" defer=""></script>
+        <script src="/_next/static/chunks/main-6afcb5d02ff3637d.js" defer=""></script>
+        <script src="/_next/static/chunks/pages/_app-6631390a106a695b.js" defer=""></script>
+        <script src="/_next/static/chunks/2962-1f7815f0e33f4725.js" defer=""></script>
+        <script src="/_next/static/chunks/pages/home-f79bcbf5f8346032.js" defer=""></script>
+        <script src="/_next/static/sJtWjGtWFyidBOiOg74v2/_buildManifest.js" defer=""></script>
+        <script src="/_next/static/sJtWjGtWFyidBOiOg74v2/_ssgManifest.js" defer=""></script>
+        <script src="/_next/static/sJtWjGtWFyidBOiOg74v2/_middlewareManifest.js" defer=""></script>
+        <style
+            data-href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Mono&display=swap"
+        >
+            @font-face {
+                font-family: 'DM Sans';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriOZc.woff) format('woff');
+            }
+            @font-face {
+                font-family: 'DM Sans';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/dmsans/v11/rP2Cp2ywxg089UriAWCrOBw.woff) format('woff');
+            }
+            @font-face {
+                font-family: 'DM Sans';
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/dmsans/v11/rP2Cp2ywxg089UriASitOBw.woff) format('woff');
+            }
+            @font-face {
+                font-family: 'Fira Mono';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/firamono/v14/N0bX2SlFPv1weGeLZDtQIg.woff) format('woff');
+            }
+            @font-face {
+                font-family: 'DM Sans';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZ2IHTWEBlwu8Q.woff2) format('woff2');
+                unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F,
+                    U+A720-A7FF;
+            }
+            @font-face {
+                font-family: 'DM Sans';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHTWEBlw.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
+                    U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            @font-face {
+                font-family: 'DM Sans';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/dmsans/v11/rP2Cp2ywxg089UriAWCrCBamC3YU-CnE6Q.woff2)
+                    format('woff2');
+                unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F,
+                    U+A720-A7FF;
+            }
+            @font-face {
+                font-family: 'DM Sans';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/dmsans/v11/rP2Cp2ywxg089UriAWCrCBimC3YU-Ck.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
+                    U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            @font-face {
+                font-family: 'DM Sans';
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/dmsans/v11/rP2Cp2ywxg089UriASitCBamC3YU-CnE6Q.woff2)
+                    format('woff2');
+                unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F,
+                    U+A720-A7FF;
+            }
+            @font-face {
+                font-family: 'DM Sans';
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/dmsans/v11/rP2Cp2ywxg089UriASitCBimC3YU-Ck.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
+                    U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            @font-face {
+                font-family: 'Fira Mono';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/firamono/v14/N0bX2SlFPv1weGeLZDtgK_7Ss9XZYalI.woff2)
+                    format('woff2');
+                unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+            }
+            @font-face {
+                font-family: 'Fira Mono';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/firamono/v14/N0bX2SlFPv1weGeLZDtgIv7Ss9XZYalI.woff2)
+                    format('woff2');
+                unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+            }
+            @font-face {
+                font-family: 'Fira Mono';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/firamono/v14/N0bX2SlFPv1weGeLZDtgKv7Ss9XZYalI.woff2)
+                    format('woff2');
+                unicode-range: U+1F00-1FFF;
+            }
+            @font-face {
+                font-family: 'Fira Mono';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/firamono/v14/N0bX2SlFPv1weGeLZDtgJf7Ss9XZYalI.woff2)
+                    format('woff2');
+                unicode-range: U+0370-03FF;
+            }
+            @font-face {
+                font-family: 'Fira Mono';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/firamono/v14/N0bX2SlFPv1weGeLZDtgKP7Ss9XZYalI.woff2)
+                    format('woff2');
+                unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F,
+                    U+A720-A7FF;
+            }
+            @font-face {
+                font-family: 'Fira Mono';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(https://fonts.gstatic.com/s/firamono/v14/N0bX2SlFPv1weGeLZDtgJv7Ss9XZYQ.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
+                    U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="__next" data-reactroot="">
+            <div class="overflow-x-hidden relative z-20 h-auto font-mono bg-[#0700d8] scanlines">
+                <head>
+                    <style>
+                        html {
+                            background: #0700d8;
+                            scrollbar-gutter: unset;
+                        }
+                    </style>
+                </head>
+                <nav
+                    class="flex [@media(min-aspect-ratio:1/2)]:absolute inset-x-0 top-0 z-[1] flex-col justify-between items-center p-2 pb-2 bg-[#0700d8]"
+                >
+                    <h1 class="block [@media(min-aspect-ratio:1/2)]:hidden py-4 text-xl italic tracking-wider">
+                        Midjourney
+                    </h1>
+                    <div class="flex justify-center [@media(min-aspect-ratio:1/2)]:justify-end w-full">
+                        <div class="flex flex-wrap gap-2">
+                            <a href="#about" class="py-2 px-3 hover:underline underline-offset-2">#<!-- -->about</a
+                            ><a href="#careers" class="py-2 px-3 hover:underline underline-offset-2">#<!-- -->careers</a
+                            ><a href="#contact" class="py-2 px-3 hover:underline underline-offset-2">#<!-- -->contact</a
+                            ><a
+                                class="py-2 hidden sm:flex px-3 cursor-pointer hover:underline underline-offset-2 italic"
+                                href="/auth/signin/"
+                                >Sign In -&gt;</a
+                            >
+                        </div>
+                    </div>
+                    <p class="overflow-hidden max-w-full whitespace-nowrap opacity-90">
+                        ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+                    </p>
+                </nav>
+                <main class="-z-10">
+                    <div class="flex flex-col justify-start items-center">
+                        <div class="relative w-screen h-screen min-h-screen">
+                            <div
+                                class="grid absolute [@media(min-aspect-ratio:1/2)]:!top-3/4 flex-col gap-8 min-w-max md:grid-cols-2 centerAbs"
+                            >
+                                <a
+                                    href="https://discord.gg/midjourney"
+                                    target="#"
+                                    class="basis-1 p-4 px-6 min-w-max text-sm font-bold text-center text-[#0700d8] bg-[#f2f4ff]/95 backdrop-blur-sm hover:bg-white outline-[#0700d8]/50 hover:bg-opacity-100 hover:outline-white outline hover:outline-offset-4 active:outline-offset-2 active:bg-opacity-90 transition-all md:text-base"
+                                    ><button class="font-bold">Join the beta</button></a
+                                ><button
+                                    class="basis-1 p-4 px-6 min-w-max text-sm font-bold text-center text-[#0700d8] bg-[#f2f4ff]/95 backdrop-blur-sm hover:bg-white outline-[#0700d8]/50 hover:bg-opacity-100 hover:outline-white outline hover:outline-offset-4 active:outline-offset-2 active:bg-opacity-90 transition-all md:text-base"
+                                >
+                                    Sign In with Discord
+                                </button>
+                            </div>
+                            <svg
+                                id="bannerSVG"
+                                xmlns="http://www.w3.org/2000/svg"
+                                version="1.1"
+                                viewBox="0 0 800 400"
+                                style="background: #0700d8"
+                            ></svg>
+                        </div>
+                        <div class="relative w-full h-auto">
+                            <div class="overflow-hidden absolute top-0 left-0 z-20 w-screen h-full opacity-50">
+                                <svg
+                                    id="bgSVG0"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    version="1.1"
+                                    viewBox="0 0 800 400"
+                                ></svg
+                                ><svg
+                                    id="bgSVG2"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    version="1.1"
+                                    viewBox="0
+  0 800 400"
+                                ></svg>
+                            </div>
+                            <div
+                                class="flex overflow-hidden relative z-40 z-10 flex-col gap-16 p-8 mx-auto w-full max-w-4xl leading-relaxed text-blue-100 md:p-16"
+                            >
+                                <section id="about" class="flex flex-col gap-16">
+                                    <div class="">
+                                        <h1 class="text-3xl leading-none">About</h1>
+                                        <p>-----------</p>
+                                        <br />
+                                        <p class="">
+                                            Midjourney is an independent research lab exploring new mediums of thought
+                                            and expanding the imaginative powers of the human species.
+                                        </p>
+                                        <br />
+                                        <p class="">
+                                            We are a small self-funded team focused on design, human infrastructure, and
+                                            AI. We have 11 full-time staff and an incredible set of advisors.
+                                        </p>
+                                    </div>
+                                    <div id="team" class="flex flex-col gap-12 opacity-95">
+                                        <div class="" id="executives">
+                                            <h2 class="text-xl leading-none">Executives</h2>
+                                            <p class="opacity-80">-------------</p>
+                                            <div class="flex flex-col gap-4">
+                                                <div>
+                                                    <h3 class="font-medium">David Holz</h3>
+                                                    <p class="italic opacity-80">
+                                                        Previously: Founder Leap Motion, Researcher at NASA, Max Planck
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="" id="advisors">
+                                            <h2 class="text-xl leading-none">Advisors</h2>
+                                            <p class="opacity-80">-----------</p>
+                                            <div class="flex flex-col gap-4">
+                                                <div>
+                                                    <h3 class="font-medium">Jim Keller</h3>
+                                                    <p class="italic opacity-80">
+                                                        Lead Silicon at Apple, AMD, Tesla, Intel, Coauthor X86-64, CTO
+                                                        Tenstorrent
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-medium">Nat Friedman</h3>
+                                                    <p class="italic opacity-80">
+                                                        CEO Github, Chairman of GNOME Foundation
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-medium">Philip Rosedale</h3>
+                                                    <p class="italic opacity-80">
+                                                        Founder of Second Life, CTO RealNetworks
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-medium">Bill Warner</h3>
+                                                    <p class="italic opacity-80">
+                                                        Founder of Avid Technology, inventor of nonlinear video editing
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-medium">Katherine Crowson</h3>
+                                                    <p class="italic opacity-80">
+                                                        Independent Researcher, creator of Clip-Guided diffusion
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="" id="research-engineering">
+                                            <h2 class="text-xl leading-none">Research and Engineering</h2>
+                                            <p class="opacity-80">-------------------------------</p>
+                                            <p class="">Daniel, Max, Jack, Thomas, Red, Sam, Nadir, Sebastian.</p>
+                                        </div>
+                                        <div class="" id="legal-finance">
+                                            <h2 class="text-xl leading-none">Legal and Finance</h2>
+                                            <p class="opacity-80">----------------------</p>
+                                            <p class="">Max Sills (legal advisor), Nadia Ali.</p>
+                                        </div>
+                                        <div class="" id="legal-finance">
+                                            <h2 class="text-xl leading-none">Discord Moderators and Guides</h2>
+                                            <p class="opacity-80">----------------------</p>
+                                            <p class="">
+                                                AmirKerr, Ancient Chaos, Arnicas, Bartek, ChrisViau, Cody Boy, Dezm0n,
+                                                Eikyuu, Fractl, Isaacq, Schofe, Shade, Sirkut, Spookydan, starshadowx2,
+                                                ajmars, Ameades, Blue Man, Bonnie Bear, Classpectanon, croakie,
+                                                Dafyomilimerick, Dudu, Eojin’s Reviews, Fab1an, Feonix, Flvmin, fnuckle,
+                                                gigglethumps, Goofball, Hoxxonia, Ippity, Jrdsctt, kav2k, Kevazy, Kyun,
+                                                Noodlecake, Reiko, Soar, SquireZed, Tallath, theo3, TwoDukes, Weaving
+                                                Light, Xaphedo.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </section>
+                                <p class="overflow-hidden max-w-full whitespace-nowrap">
+                                    ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+                                </p>
+                                <section id="careers" class="flex flex-col gap-8">
+                                    <div class="">
+                                        <h1 class="text-3xl leading-none">Careers</h1>
+                                        <p>--------------</p>
+                                        <br />
+                                        <p class="">
+                                            Hi! We&#x27;re a small, self-funded, fully-distributed team and we’re
+                                            actively hiring! Come help us scale, explore, and build humanist
+                                            infrastructure focused on amplifying the human mind and spirit.
+                                        </p>
+                                        <br />
+                                        <p class="">If you&#x27;re any of the following:</p>
+                                        <ul class="italic opacity-90">
+                                            <li class="">
+                                                <p class="">
+                                                    -
+                                                    <!-- -->AI researcher
+                                                </p>
+                                            </li>
+                                            <li class="">
+                                                <p class="">
+                                                    -
+                                                    <!-- -->AI engineer (JAX focus)
+                                                </p>
+                                            </li>
+                                            <li class="">
+                                                <p class="">
+                                                    -
+                                                    <!-- -->Data engineer
+                                                </p>
+                                            </li>
+                                            <li class="">
+                                                <p class="">
+                                                    -
+                                                    <!-- -->Fullstack developer
+                                                </p>
+                                            </li>
+                                            <li class="">
+                                                <p class="">
+                                                    -
+                                                    <!-- -->Frontend developer
+                                                </p>
+                                            </li>
+                                            <li class="">
+                                                <p class="">
+                                                    -
+                                                    <!-- -->Cloud infra engineer
+                                                </p>
+                                            </li>
+                                        </ul>
+                                        <br />
+                                        <p class="">
+                                            Please reach out to<!-- -->
+                                            <a
+                                                href="mailto:careers@midjourney.com"
+                                                class="underline hover:underline-offset-2"
+                                                >careers@midjourney.com</a
+                                            >
+                                            <!-- -->with your resume and any other useful information.
+                                        </p>
+                                        <br />
+                                        <p class="">
+                                            If none of the above things apply to you, but you still feel strongly you
+                                            can help, then of course, please reach out as well
+                                            <!-- -->&lt;3
+                                        </p>
+                                    </div>
+                                </section>
+                                <p class="overflow-hidden max-w-full whitespace-nowrap">
+                                    ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+                                </p>
+                                <section id="contact" class="flex flex-col gap-8">
+                                    <div class="">
+                                        <h1 class="text-3xl leading-none">Contact</h1>
+                                        <p>--------------</p>
+                                        <br />
+                                        <div class="">
+                                            <p>
+                                                For product support or questions please
+                                                <a
+                                                    href="https://discord.gg/midjourney"
+                                                    class="underline hover:underline-offset-2"
+                                                    >join our Discord</a
+                                                >
+                                                <!-- -->and ask questions in our #support chatrooms.
+                                            </p>
+                                        </div>
+                                        <br />
+                                        <div class="">
+                                            <p class="">For Journalist inquiries:</p>
+                                            <a
+                                                href="mailto:press@midjourney.com"
+                                                class="underline hover:underline-offset-2 transition-all"
+                                                >press@midjourney.com</a
+                                            >
+                                        </div>
+                                        <br />
+                                        <div class="">
+                                            <p class="">For Commercial inquiries:</p>
+                                            <a
+                                                href="mailto:commercial@midjourney.com"
+                                                class="underline hover:underline-offset-2"
+                                                >commercial@midjourney.com</a
+                                            >
+                                        </div>
+                                    </div>
+                                </section>
+                                <section id="contact" class="flex justify-center gap-8">
+                                    <a
+                                        class="text-sm opacity-70 hover:underline underline-offset-2"
+                                        href="https://midjourney.gitbook.io/docs/terms-of-service"
+                                        >Terms of Service</a
+                                    ><a
+                                        class="text-sm opacity-70 hover:underline underline-offset-2"
+                                        href="https://midjourney.gitbook.io/docs/privacy-policy"
+                                        >Privacy Policy</a
+                                    >
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <div
+                style="
+                    position: fixed;
+                    z-index: 9999;
+                    top: 16px;
+                    left: 16px;
+                    right: 16px;
+                    bottom: 16px;
+                    pointer-events: none;
+                "
+            ></div>
+        </div>
+        <script id="__NEXT_DATA__" type="application/json">
+            {
+                "props": { "pageProps": {}, "session": null },
+                "page": "/home",
+                "query": {
+                    "callbackUrl": "https://www.midjourney.com/account/?callbackUrl=%2Fapi%2Fapp%2Frecent-jobs%2F%3FuserId%3D310540068588879872%26prompt%3DBanner%2520for%2520Simple%2520sample%2520module%2520for%2520virtual%2520online%2520whiteboard%2520with%2520the%2520art%2520(object%2520on%2520the%2520board)%252C%2520tool%252C%2520and%2520attribute%2520%252C%252C%252C%252C%252C%26refreshApi%3D0%26jobType%3Dyfcc_upsample%26minRankingScore%3D0%26dedupe%3Dtrue%26jobStatus%3Dcompleted%26orderBy%3Dnew%26isPublished%3Dtrue%26amount%3D500"
+                },
+                "buildId": "sJtWjGtWFyidBOiOg74v2",
+                "isFallback": false,
+                "appGip": true,
+                "scriptLoader": []
+            }
+        </script>
+    </body>
+</html>

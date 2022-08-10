@@ -1,0 +1,22 @@
+import { Page } from 'puppeteer-core';
+import { forTime } from 'waitasecond';
+
+export interface IDiscordCookies {
+    // !!!
+    //c_user: number;
+    //xs: string;
+}
+
+export async function setMidjourneyCookies(
+    page: Page,
+    cookies: /*IDiscordCookies*/ any
+): Promise<void> {
+    for (const [name, value] of Object.entries(cookies)) {
+        await page.setCookie({
+            domain: 'www.midjourney.com',
+            name,
+            value: value as string,
+        });
+    }
+
+}
