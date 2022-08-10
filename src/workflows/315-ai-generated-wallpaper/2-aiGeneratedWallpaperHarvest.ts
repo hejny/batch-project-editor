@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import spaceTrim from 'spacetrim';
@@ -32,11 +33,14 @@ export async function aiGeneratedWallpaperHarvest({
 
             const imageBlob = await fetch(imageRemotePath);
 
-            const imageLocalPath = join(wallpaperGalleryPath, imageRemotePath.match(/[^/]+\/[^/]+$/)![0]);
+            const imageCommonPath = imageRemotePath.match(/[^/]+\/[^/]+$/)![0];
+            const imageLocalPath = join(wallpaperGalleryPath, imageCommonPath);
             await mkdir(dirname(imageLocalPath), { recursive: true });
             await writeFile(imageLocalPath, new DataView(await imageBlob.arrayBuffer()), 'binary');
+
+            console.info(chalk.green(`🤖🖼️🚜  ${imageLocalPath}`));
         }
     }
 
-    return commit(`🤖🖼️🌽 Harvesting AI–⁠generated wallpaper from the MidJourney`);
+    return commit(`🤖🖼️🚜 Harvesting AI–⁠generated wallpaper from the MidJourney`);
 }

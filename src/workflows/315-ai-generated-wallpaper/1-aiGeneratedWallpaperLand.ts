@@ -61,6 +61,10 @@ export async function aiGeneratedWallpaperLand({
 }
 
 aiGeneratedWallpaperLand.initialize = async function () {
+
+    // !!! Save session https://stackoverflow.com/questions/48608971/how-to-manage-log-in-session-through-headless-chrome
+
+    
     const browser = await puppeteer.launch({
         executablePath: await locateChrome(),
         headless: false,
