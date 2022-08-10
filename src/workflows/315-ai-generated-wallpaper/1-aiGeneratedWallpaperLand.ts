@@ -61,14 +61,13 @@ export async function aiGeneratedWallpaperLand({
 }
 
 aiGeneratedWallpaperLand.initialize = async function () {
-
     // !!! Save session https://stackoverflow.com/questions/48608971/how-to-manage-log-in-session-through-headless-chrome
 
-    
     const browser = await puppeteer.launch({
         executablePath: await locateChrome(),
         headless: false,
         defaultViewport: null,
+        userDataDir: join(process.cwd(), '.tmp', 'puppeteer', 'ai-user-data'),
         /*
         args: [
             '--user-data-dir=C:\\Users\\me\\AppData\\Local\\Google\\Chrome\\User Data',
@@ -82,5 +81,5 @@ aiGeneratedWallpaperLand.initialize = async function () {
 
     console.info(chalk.bgYellow(` 🚀  Please log in into Discord and then go to PM with MidJourney Bot `));
 
-    await page.waitForSelector(DISCORD_MESSAGE_QUERYSELECTOR);
+    await page.waitForSelector(DISCORD_MESSAGE_QUERYSELECTOR, { timeout: 1000 * 60 * 15 /* minutes */ });
 };
