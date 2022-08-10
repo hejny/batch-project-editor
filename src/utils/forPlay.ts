@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import readline from 'readline';
 
 let isInitialized = false;
@@ -24,17 +25,18 @@ export function initForPlay() {
             isPlaying = !isPlaying;
             if (isPlaying) {
                 if (resumeResolve) {
+                    console.info(chalk.bgGreen(`[ Resuming ]`));
                     resumeResolve();
                 }
             } else {
-                console.info(`[ Pausing ]`);
+                console.info(chalk.bgYellowBright(`[ Pausing ]`));
                 resume = new Promise((resolve) => {
                     resumeResolve = resolve;
                 });
             }
         } else if (key && key.name == 'c' && key.ctrl) {
             // Note: When set raw mode, Ctrl+C will not cause SIGINT so we need to do it manually
-            console.info(`[ Terminated ]`);
+            console.info(chalk.bgRed(`[ Terminated ]`));
             process.exit();
         }
         // TODO: Pause by [ space ]
@@ -56,7 +58,7 @@ export async function forPlay(): Promise<void> {
     initForPlay();
 
     if (!isPlaying) {
-        console.info(`[ Paused ]`);
+        console.info(chalk.bgYellow(`[ Paused ]`));
         await resume;
     }
 }
