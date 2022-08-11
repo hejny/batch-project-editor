@@ -1,8 +1,10 @@
+import chalk from 'chalk';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
+import { forTime } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { getDiscordPage, prepareDiscordPage } from './discordPage';
+import { DISCORD_MESSAGE_QUERYSELECTOR, getDiscordPage, prepareDiscordPage } from './discordPage';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 
 export async function aiGeneratedWallpaperLand({
@@ -28,24 +30,13 @@ export async function aiGeneratedWallpaperLand({
 
     const discordPage = getDiscordPage();
 
-    //aria-label="Hledat"
-    const search = `od: MidJourney Bot#9282 "Sample of tray module for virtual online whiteboard"`;
+    console.log(chalk.blue(imagine));
 
-    /*
-    !!! Implement
-    for(){
+    await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagine, { delay: 50 });
+    await discordPage.keyboard.press('Enter');
 
-    await forTime(1000 * 60 * 15 * Math.random());
-
-
-
-    }
-
-
+    await forTime(1000 * 60 * Math.random());
     return WorkflowResult.SideEffect;
-     */
-
-    return skippingBecauseOf(`Not implemented yet`);
 }
 
 aiGeneratedWallpaperLand.initialize = prepareDiscordPage;
