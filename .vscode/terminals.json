@@ -4,7 +4,7 @@
     "terminals": [
         {
             "name": "🔼 Run",
-            "commands": ["ts-node ./src/index.ts --clone", "ts-node ./src/index.ts --edit --workflows * --projects *"],
+            "commands": ["ts-node ./src/index.ts --clone", "ts-node ./src/index.ts --edit --workflows % --projects %"],
             "onlySingle": false,
             "focus": true
         },
@@ -12,7 +12,7 @@
             "name": "🔼🖼️ Run AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaper* --projects *"
+                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper% --projects %"
             ],
             "onlySingle": true,
             "focus": true
@@ -25,7 +25,7 @@
         },
         {
             "name": "🔼 Run workflows",
-            "command": "ts-node ./src/index.ts --edit --workflows * --projects *",
+            "command": "ts-node ./src/index.ts --edit --workflows % --projects %",
             "onlySingle": true,
             "focus": true
         },

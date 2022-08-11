@@ -320,6 +320,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 }
 
 /**
+ * TODO: !!! When looping DO not report some project 2x
  * TODO: Maybe use nodegit
  * TODO: !!! Auto clone repos before run
  */
