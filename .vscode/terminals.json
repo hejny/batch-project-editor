@@ -4,7 +4,10 @@
     "terminals": [
         {
             "name": "🔼 Run",
-            "commands": ["ts-node ./src/index.ts --clone", "ts-node ./src/index.ts --edit --workflows % --projects %"],
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --workflows % --projects %"
+            ],
             "onlySingle": false,
             "focus": true
         },
