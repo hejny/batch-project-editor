@@ -1,7 +1,8 @@
 import chalk from 'chalk';
-import { mkdir, readFile, writeFile } from 'fs/promises';
+import { mkdir, readFile, rmdir, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import spaceTrim from 'spacetrim';
+import { execCommand } from '../../utils/execCommand/execCommand';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 
@@ -27,19 +28,35 @@ export async function aiGeneratedWallpaperHarvest({
         return skippingBecauseOf(`Nothing to harvest yet`);
     }
 
+    // !!! This should be just temporary
+    await rmdir(wallpaperGalleryPath, { recursive: true });
+
+    const localDirs = new Set<string>();
+
     for (const result of searchResult) {
         for (const imageRemotePath of result.image_paths) {
             // Download image to gallery
 
             const imageBlob = await fetch(imageRemotePath);
 
-            const imageCommonPath = imageRemotePath.match(/[^/]+\/[^/]+$/)![0];
-            const imageLocalPath = join(wallpaperGalleryPath, imageCommonPath);
+            const { imageId, imageExtension } = imageRemotePath.match(
+                /(?<imageId>[^/]+)\/[^/]+\.(?<imageExtension>[^/]+)$/,
+            )!.groups!;
+            const imageLocalPath = join(wallpaperGalleryPath, `${imageId}.${imageExtension}`);
+
+            console.log({ imageRemotePath, imageLocalPath, imageId, imageExtension });
+
             await mkdir(dirname(imageLocalPath), { recursive: true });
             await writeFile(imageLocalPath, new DataView(await imageBlob.arrayBuffer()), 'binary');
 
+            localDirs.add(dirname(imageLocalPath));
+
             console.info(chalk.green(`🤖🖼️🚜  ${imageLocalPath}`));
         }
+    }
+
+    for (const localDir of localDirs) {
+        await execCommand({ command: `explorer ${localDir}`, crashOnError: false });
     }
 
     return commit(`🤖🖼️🚜 Harvesting AI–⁠generated wallpaper from the MidJourney`);
