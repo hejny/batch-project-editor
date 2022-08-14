@@ -1,6 +1,7 @@
 import glob from 'glob-promise';
 import { join, relative } from 'path';
 import spaceTrim from 'spacetrim';
+import { DESCRIPTION_IN_MARKDOWN } from '../310-description/description';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 const WALLPAPER_IN_MARKDOWN = /<!--Wallpaper-->(?<wallpaper>.*)<!--\/Wallpaper-->/is;
@@ -33,24 +34,25 @@ export async function aiGeneratedWallpaperUseInReadme({
         <!--/Wallpaper-->
     `);
 
-    await modifyFiles('README.md', async (readmeContent) => {
+    await modifyFiles('README.md', (readmeContent) => {
         if (WALLPAPER_IN_MARKDOWN.test(readmeContent)) {
             return readmeContent.replace(WALLPAPER_IN_MARKDOWN, wallpaperMarkdown);
         } else {
-            let added = false;
-            return readmeContent
-                .split('\n')
-                .map((line) => {
-                    if (!added && line.startsWith('#')) {
-                        added = true;
-                        return `${line}\n\n${wallpaperMarkdown}`;
-                    }
+            const descriptionMatch = readmeContent.match(DESCRIPTION_IN_MARKDOWN);
 
-                    return line;
-                })
-                .join('\n');
+            if (!descriptionMatch) {
+                return readmeContent;
+            }
+            const descriptionSection = descriptionMatch[0];
+
+            return readmeContent.replace(descriptionSection, descriptionSection + '\n\n' + wallpaperMarkdown + `\n\n`);
         }
     });
 
     return commit('🤖🖼️🌽 Update AI–⁠generated in README');
 }
+
+/**
+ * TODO: [🎸] Some common util to modify readme
+ * TODO: [🏨] Some common config to parse readme - WALLPAPER_IN_MARKDOWN
+ */

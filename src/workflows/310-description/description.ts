@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import { GITHUB_TOKEN } from '../../config';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-const DESCRIPTION_IN_MARKDOWN =
+export const DESCRIPTION_IN_MARKDOWN =
     /(?<heading>^#[^\n]*$)(\s*)((<!--Badges-->(?<badges>.*)<!--\/Badges-->)?)(\s*)(?<description>^.*?$)?(\n{2,})/ims;
 
 export async function description({
@@ -64,3 +64,7 @@ export async function description({
   });
 
 */
+
+/**
+ * TODO: [🏨] Some common config to parse readme - DESCRIPTION_IN_MARKDOWN
+ */

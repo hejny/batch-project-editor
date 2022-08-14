@@ -69,3 +69,8 @@ export async function partners({
 
     return commit('✨ Update partners');
 }
+
+/**
+ * TODO: [🎸] Some common util to modify readme
+ * TODO: [🏨] Some common config to parse readme - PARTNERS_IN_MARKDOWN
+ */
