@@ -4,8 +4,10 @@ import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
-import { DISCORD_SEARCHRESULTS_QUERYSELECTOR } from './utils/discordQuerySelectors';
+import { DISCORD_SEARCHRESULTS_QUERYSELECTOR, DISCORD_SEARCH_QUERYSELECTOR } from './utils/discordQuerySelectors';
 
+
+// !!! Not done yet
 export async function aiGeneratedWallpaperTrigger({
     skippingBecauseOf,
     projectPath,
@@ -29,8 +31,7 @@ export async function aiGeneratedWallpaperTrigger({
     // !!!!!!!!!!!!!! Restore>
     // const search = `6224401`;
 
-    //DISCORD_SEARCH_QUERYSELECTOR
-    await discordPage.type(`section[aria-label="Výsledky hledání"]`, search, { delay: 50 });
+    await discordPage.type(DISCORD_SEARCH_QUERYSELECTOR, search, { delay: 50 });
     await discordPage.keyboard.press('Enter');
 
     await discordPage.waitForSelector(DISCORD_SEARCHRESULTS_QUERYSELECTOR);
@@ -39,6 +40,8 @@ export async function aiGeneratedWallpaperTrigger({
     if (!searchResultsElement) {
         throw new Error(`No search results element found via selector "${DISCORD_SEARCHRESULTS_QUERYSELECTOR}"`);
     }
+
+    await searchResultsElement.waitForSelector(`li[aria-labelledby^="search-result-"]`);
 
     for (const searchResultsItemElement of await searchResultsElement.$$(`li[aria-labelledby^="search-result-"]`)) {
         await searchResultsItemElement.click({ offset: { x: 10, y: 10 } });

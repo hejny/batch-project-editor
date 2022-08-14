@@ -21,18 +21,21 @@ export async function prepareDiscordPage() {
         return;
     }
 
+    /*
+    TODO: [0] Maybe implement connecting to existing browser instance
+    const browser = await puppeteer.connect({
+        browserWSEndpoint: `ws://127.0.0.1:4779/devtools/browser/f4e44058-c97b-4f24-95af-31822ae0b04b`,
+        defaultViewport: null,
+    });
+    */
+
     const browser = await puppeteer.launch({
+        // TODO: [0]
         executablePath: await locateChrome(),
         headless: false,
         defaultViewport: null,
         userDataDir: join(process.cwd(), '.tmp', 'puppeteer', 'ai-user-data'),
         // TODO: Do not show "Restore" dialog
-        /*
-        args: [
-            '--user-data-dir=C:\\Users\\me\\AppData\\Local\\Google\\Chrome\\User Data',
-            '--profile-directory=Default',
-        ],
-        */
     });
 
     discordPage = await browser.newPage();
