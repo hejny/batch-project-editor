@@ -45,3 +45,8 @@ export async function prepareDiscordPage() {
 
     await discordPage.waitForSelector(DISCORD_MESSAGE_QUERYSELECTOR, { timeout: 1000 * 60 * 15 /* minutes */ });
 }
+
+
+/**
+ * TODO: [🏏] Common stuff for discordPage and githubPage
+ */
