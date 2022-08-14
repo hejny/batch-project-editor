@@ -17,10 +17,10 @@ export async function aiGeneratedWallpaperHarvest({
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
     const imagine = spaceTrim(wallpaperImagineContents).split('\n\n')[0].split('\n').join(' ').split('  ').join(' ');
-    const imagineSentence = imagine
-        .split(/--[a-zA-Z]+\s+[^\s]+\s*/g)
-        .join()
-        .trim();
+    const imagineSentence = spaceTrim(
+        imagine.split(/--[a-zA-Z]+\s+[^\s]+\s*/g).join(''),
+        // TODO: LIB spacetrim should be able to modify prototype of string and add there a .spaceTrim() method
+    );
 
     const searchResult = await searchMidjourney({ prompt: imagineSentence });
 
