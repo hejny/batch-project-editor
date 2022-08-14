@@ -4,7 +4,8 @@ import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { DISCORD_MESSAGE_QUERYSELECTOR, getDiscordPage, prepareDiscordPage } from './discordPage';
+import {  getDiscordPage, prepareDiscordPage } from './utils/discordPage';
+import { DISCORD_MESSAGE_QUERYSELECTOR } from './utils/discordQuerySelectors';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 
 export async function aiGeneratedWallpaperLand({

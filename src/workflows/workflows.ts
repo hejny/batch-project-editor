@@ -6,6 +6,7 @@ import { license } from './300-license/license';
 import { description } from './310-description/description';
 import { aiGeneratedWallpaperPrepare } from './315-ai-generated-wallpaper/0-aiGeneratedWallpaperPrepare';
 import { aiGeneratedWallpaperLand } from './315-ai-generated-wallpaper/1-aiGeneratedWallpaperLand';
+import { aiGeneratedWallpaperTrigger } from './315-ai-generated-wallpaper/2-aiGeneratedWallpaperTrigger';
 import { aiGeneratedWallpaperHarvest } from './315-ai-generated-wallpaper/3-aiGeneratedWallpaperHarvest';
 import { aiGeneratedWallpaperUseInGithub } from './315-ai-generated-wallpaper/4-aiGeneratedWallpaperUseInGithub';
 import { aiGeneratedWallpaperUseInReadme } from './315-ai-generated-wallpaper/4-aiGeneratedWallpaperUseInReadme';
@@ -30,7 +31,7 @@ export const WORKFLOWS: IWorkflow[] = [
     description,
     aiGeneratedWallpaperPrepare,
     aiGeneratedWallpaperLand,
-    // !!! aiGeneratedWallpaperTrigger,
+    aiGeneratedWallpaperTrigger,
     aiGeneratedWallpaperHarvest,
     aiGeneratedWallpaperUseInGithub,
     aiGeneratedWallpaperUseInReadme,

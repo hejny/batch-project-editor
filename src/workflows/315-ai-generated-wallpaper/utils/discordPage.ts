@@ -2,8 +2,7 @@ import chalk from 'chalk';
 import { locateChrome } from 'locate-app';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
-
-export const DISCORD_MESSAGE_QUERYSELECTOR = `div[role='textbox']`;
+import { DISCORD_MESSAGE_QUERYSELECTOR } from './discordQuerySelectors';
 
 /**
  * @private
@@ -27,12 +26,13 @@ export async function prepareDiscordPage() {
         headless: false,
         defaultViewport: null,
         userDataDir: join(process.cwd(), '.tmp', 'puppeteer', 'ai-user-data'),
+        // TODO: Do not show "Restore" dialog
         /*
-      args: [
-          '--user-data-dir=C:\\Users\\me\\AppData\\Local\\Google\\Chrome\\User Data',
-          '--profile-directory=Default',
-      ],
-      */
+        args: [
+            '--user-data-dir=C:\\Users\\me\\AppData\\Local\\Google\\Chrome\\User Data',
+            '--profile-directory=Default',
+        ],
+        */
     });
 
     discordPage = await browser.newPage();

@@ -7,7 +7,7 @@ import glob from 'glob-promise';
 import { locateVSCode } from 'locate-app';
 import { basename, join } from 'path';
 import { PackageJson, Promisable } from 'type-fest';
-import { forTime } from 'waitasecond';
+import { forEver, forTime } from 'waitasecond';
 import { LOOP_INTERVAL } from './config';
 import { commit } from './utils/commit';
 import { execCommand } from './utils/execCommand/execCommand';
@@ -279,6 +279,9 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                 console.info(tag + chalk.bgRed(error.name) + chalk.red(` ${projectTitle} - ${workflowName} `));
                 console.error(error);
             }
+
+            // !!!!!!!! Remove
+            await forEver();
         }
 
         // Note: Making space above the result
