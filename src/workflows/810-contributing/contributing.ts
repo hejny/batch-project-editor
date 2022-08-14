@@ -1,7 +1,7 @@
 import spaceTrim from 'spacetrim';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-const CONTRIBUTING_IN_MARKDOWN = /<!--Contributing-->(?<badges>.*)<!--\/Contributing-->/is;
+const CONTRIBUTING_IN_README = /<!--Contributing-->(?<badges>.*)<!--\/Contributing-->/is;
 
 export async function contributing({
     projectName,
@@ -30,8 +30,8 @@ export async function contributing({
 
     await modifyFiles('README.md', async (readmeContent) => {
         // TODO: Include prettier formatting
-        if (CONTRIBUTING_IN_MARKDOWN.test(readmeContent)) {
-            return readmeContent.replace(CONTRIBUTING_IN_MARKDOWN, contributingMarkdown);
+        if (CONTRIBUTING_IN_README.test(readmeContent)) {
+            return readmeContent.replace(CONTRIBUTING_IN_README, contributingMarkdown);
         } else {
             return spaceTrim(
                 (block) => `
@@ -49,8 +49,7 @@ export async function contributing({
     return commit('🖋️ Update contributing');
 }
 
-
 /**
  * TODO: [🎸] Some common util to modify readme
- * TODO: [🏨] Some common config to parse readme - CONTRIBUTING_IN_MARKDOWN
+ * TODO: [🏨] Some common config to parse readme - CONTRIBUTING_IN_README
  */

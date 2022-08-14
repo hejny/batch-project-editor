@@ -1,10 +1,10 @@
 import glob from 'glob-promise';
 import { join, relative } from 'path';
 import spaceTrim from 'spacetrim';
-import { DESCRIPTION_IN_MARKDOWN } from '../310-description/description';
+import { DESCRIPTION_IN_README } from '../310-description/description';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-const WALLPAPER_IN_MARKDOWN = /<!--Wallpaper-->(?<wallpaper>.*)<!--\/Wallpaper-->/is;
+const WALLPAPER_IN_README = /<!--Wallpaper-->(?<wallpaper>.*)<!--\/Wallpaper-->/is;
 
 export async function aiGeneratedWallpaperUseInReadme({
     projectTitle,
@@ -35,10 +35,10 @@ export async function aiGeneratedWallpaperUseInReadme({
     `);
 
     await modifyFiles('README.md', (readmeContent) => {
-        if (WALLPAPER_IN_MARKDOWN.test(readmeContent)) {
-            return readmeContent.replace(WALLPAPER_IN_MARKDOWN, wallpaperMarkdown);
+        if (WALLPAPER_IN_README.test(readmeContent)) {
+            return readmeContent.replace(WALLPAPER_IN_README, wallpaperMarkdown);
         } else {
-            const descriptionMatch = readmeContent.match(DESCRIPTION_IN_MARKDOWN);
+            const descriptionMatch = readmeContent.match(DESCRIPTION_IN_README);
 
             if (!descriptionMatch) {
                 return readmeContent;
@@ -54,5 +54,5 @@ export async function aiGeneratedWallpaperUseInReadme({
 
 /**
  * TODO: [🎸] Some common util to modify readme
- * TODO: [🏨] Some common config to parse readme - WALLPAPER_IN_MARKDOWN
+ * TODO: [🏨] Some common config to parse readme - WALLPAPER_IN_README
  */

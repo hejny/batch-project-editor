@@ -2,7 +2,7 @@ import spaceTrim from 'spacetrim';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { pickPartnersForProject } from './organizations';
 
-const PARTNERS_IN_MARKDOWN = /<!--Partners-->(?<badges>.*)<!--\/Partners-->/is;
+const PARTNERS_IN_README = /<!--Partners-->(?<badges>.*)<!--\/Partners-->/is;
 
 export async function partners({
     projectUrl,
@@ -51,8 +51,8 @@ export async function partners({
               );
 
     await modifyFiles('README.md', async (readmeContent) => {
-        if (PARTNERS_IN_MARKDOWN.test(readmeContent)) {
-            return readmeContent.replace(PARTNERS_IN_MARKDOWN, partnersMarkdown);
+        if (PARTNERS_IN_README.test(readmeContent)) {
+            return readmeContent.replace(PARTNERS_IN_README, partnersMarkdown);
         } else {
             return spaceTrim(
                 (block) => `
@@ -72,5 +72,5 @@ export async function partners({
 
 /**
  * TODO: [🎸] Some common util to modify readme
- * TODO: [🏨] Some common config to parse readme - PARTNERS_IN_MARKDOWN
+ * TODO: [🏨] Some common config to parse readme - PARTNERS_IN_README
  */

@@ -7,7 +7,7 @@ import { isFileExisting } from '../../utils/isFileExisting';
 import { isUrlExisting } from '../../utils/isUrlExisting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-const BADGES_IN_MARKDOWN = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
+const BADGES_IN_README = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
 
 export async function badges({
     projectTitle,
@@ -132,8 +132,8 @@ export async function badges({
     );
 
     await modifyFiles('README.md', async (readmeContent) => {
-        if (BADGES_IN_MARKDOWN.test(readmeContent)) {
-            return readmeContent.replace(BADGES_IN_MARKDOWN, badgesMarkdown);
+        if (BADGES_IN_README.test(readmeContent)) {
+            return readmeContent.replace(BADGES_IN_README, badgesMarkdown);
         } else {
             let added = false;
             return readmeContent
@@ -156,6 +156,5 @@ export async function badges({
 /**
  * TODO: Add priority and pick only first 7
  * TODO: [🎸] Some common util to modify readme
- * TODO: [🏨] Some common config to parse readme - BADGES_IN_MARKDOWN
+ * TODO: [🏨] Some common config to parse readme - BADGES_IN_README
  */
-

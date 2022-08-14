@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import { GITHUB_TOKEN } from '../../config';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export const DESCRIPTION_IN_MARKDOWN =
+export const DESCRIPTION_IN_README =
     /(?<heading>^#[^\n]*$)(\s*)((<!--Badges-->(?<badges>.*)<!--\/Badges-->)?)(\s*)(?<description>^.*?$)?(\n{2,})/ims;
 
 export async function description({
@@ -14,7 +14,7 @@ export async function description({
     commit,
     skippingBecauseOf,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    const description = (await readFile('README.md')).match(DESCRIPTION_IN_MARKDOWN)?.groups?.description;
+    const description = (await readFile('README.md')).match(DESCRIPTION_IN_README)?.groups?.description;
 
     if (!description) {
         return skippingBecauseOf(`No description extracted from README.md`);
@@ -66,5 +66,5 @@ export async function description({
 */
 
 /**
- * TODO: [🏨] Some common config to parse readme - DESCRIPTION_IN_MARKDOWN
+ * TODO: [🏨] Some common config to parse readme - DESCRIPTION_IN_README
  */
