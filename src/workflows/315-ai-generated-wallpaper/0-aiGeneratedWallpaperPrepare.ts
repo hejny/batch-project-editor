@@ -23,13 +23,15 @@ export async function aiGeneratedWallpaperPrepare({
 
     const descriptionSentence = packageJson.description.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
 
-    // Note: Maybe some prefix/suffix; Pick one of (or implement multiple):
-    // const imagineSentence = descriptionSentence;  ;
-    // const imagineSentence = `Banner for ${descriptionSentence}`;
-    const imagineSentence = `Wallpaper in minimalistic style for project that ${descriptionSentence}`;
+    // !!! const imagineSentencePrefix =
 
-    // !!!! Maybe use: --quality 2 --stylize 1250
-    const imagineFlags = `--aspect 2:1 --version 3`; /* <- Note: Default flags to config */ /* <- Note: [🎏] More on flags here */
+    // Note: Maybe some prefix/suffix; Pick one of (or implement multiple):
+    const imagineSentence = descriptionSentence;
+    // const imagineSentence = `Banner for ${descriptionSentence}`;
+    // const imagineSentence = `Wallpaper in minimalistic style for project that ${descriptionSentence}`;
+
+    // !!!! Maybe use: --aspect 2:1 --version 3 --quality 2 --stylize 1250
+    const imagineFlags = `--wallpaper`; /* <- Note: Default flags to config */ /* <- Note: [🎏] More on flags here */
     const imagineFlagsSeed = `--seed ${randomInteger(1111111, 9999999)}`;
 
     // !!! Remove

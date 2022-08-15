@@ -3,21 +3,17 @@ import { locateChrome } from 'locate-app';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
 import { DISCORD_MESSAGE_QUERYSELECTOR } from './discordQuerySelectors';
-
-/**
- * @private
- */
-let discordPage: puppeteer.Page | null = null;
+import { pageContainer } from './page';
 
 export function getDiscordPage(): puppeteer.Page {
-    if (!discordPage) {
+    if (!pageContainer.page) {
         throw new Error(`Discord page not initialized`);
     }
-    return discordPage;
+    return pageContainer.page;
 }
 
 export async function prepareDiscordPage() {
-    if (discordPage) {
+    if (pageContainer.page) {
         return;
     }
 
@@ -38,8 +34,8 @@ export async function prepareDiscordPage() {
         // TODO: Do not show "Restore" dialog
     });
 
-    discordPage = await browser.newPage();
-    await discordPage.goto(`https://discord.com/channels/@me/994943513500336138`);
+    pageContainer.page = await browser.newPage();
+    await pageContainer.page.goto(`https://discord.com/channels/@me/994943513500336138`);
 
     console.info(
         chalk.bgYellow(
@@ -47,7 +43,7 @@ export async function prepareDiscordPage() {
         ),
     );
 
-    await discordPage.waitForSelector(DISCORD_MESSAGE_QUERYSELECTOR, { timeout: 1000 * 60 * 15 /* minutes */ });
+    await pageContainer.page.waitForSelector(DISCORD_MESSAGE_QUERYSELECTOR, { timeout: 1000 * 60 * 15 /* minutes */ });
 }
 
 /**
