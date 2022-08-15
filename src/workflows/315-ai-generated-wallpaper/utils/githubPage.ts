@@ -32,7 +32,7 @@ export async function prepareGithubPage() {
     githubPage = await browser.newPage();
     await githubPage.goto(`https://github.com/hejny/hejny/settings`);
 
-    console.info(chalk.bgYellow(` 🚀  Please log in into Github `));
+    console.info(chalk.bgYellow(` 🚀  Please log in into Github (if not already logged) `));
 
     await githubPage.waitForSelector(`div[id="options_bucket"]`, { timeout: 1000 * 60 * 15 /* minutes */ });
 }

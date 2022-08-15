@@ -1,12 +1,54 @@
 import chalk from 'chalk';
 import readline from 'readline';
 
+/**
+ * @private
+ */
 let isInitialized = false;
-let isPlaying = false;
-let resume: Promise<void>;
-let resumeResolve: () => void;
 
-export function initForPlay() {
+/**
+ * @private
+ */
+let isPlaying = false;
+
+/**
+ * @private
+ */
+let resumePromise: Promise<void>;
+
+/**
+ * @private
+ */
+let resumePromiseResolve: () => void;
+
+/**
+ * @private
+ */
+function pause(isLogged = true) {
+    isPlaying = false;
+    if (isLogged) {
+        console.info(chalk.bgYellowBright(`[ Pausing ]`));
+    }
+    resumePromise = new Promise((resolve) => {
+        resumePromiseResolve = resolve;
+    });
+}
+
+/**
+ * @private
+ */
+function resume() {
+    isPlaying = true;
+    if (resumePromiseResolve) {
+        console.info(chalk.bgGreen(`[ Resuming ]`));
+        resumePromiseResolve();
+    }
+}
+
+/**
+ * @private
+ */
+function initForPlay() {
     if (isInitialized) {
         return;
     }
@@ -22,17 +64,10 @@ export function initForPlay() {
 
     process.stdin.on('keypress', (chunk, key) => {
         if (key && key.name == 'p') {
-            isPlaying = !isPlaying;
             if (isPlaying) {
-                if (resumeResolve) {
-                    console.info(chalk.bgGreen(`[ Resuming ]`));
-                    resumeResolve();
-                }
+                pause();
             } else {
-                console.info(chalk.bgYellowBright(`[ Pausing ]`));
-                resume = new Promise((resolve) => {
-                    resumeResolve = resolve;
-                });
+                resume();
             }
         } else if (key && key.name == 'c' && key.ctrl) {
             // Note: When set raw mode, Ctrl+C will not cause SIGINT so we need to do it manually
@@ -59,10 +94,20 @@ export async function forPlay(): Promise<void> {
 
     if (!isPlaying) {
         console.info(chalk.bgYellow(`[ Paused ]`));
-        await resume;
+        await resumePromise;
     }
 }
 
 /**
+ * Wait until user press key to continue
+ */
+
+export async function forKeyPress(): Promise<void> {
+    pause(false);
+    return forPlay();
+}
+
+/**
  * TODO: Probbably to waitasecond
+ * TODO: Split into multiple files
  */

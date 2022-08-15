@@ -41,11 +41,14 @@ export async function prepareDiscordPage() {
     discordPage = await browser.newPage();
     await discordPage.goto(`https://discord.com/channels/@me/994943513500336138`);
 
-    console.info(chalk.bgYellow(` 🚀  Please log in into Discord and then go to PM with MidJourney Bot `));
+    console.info(
+        chalk.bgYellow(
+            ` 🚀  Please log in into Discord (if not already logged) and then go to PM with MidJourney Bot `,
+        ),
+    );
 
     await discordPage.waitForSelector(DISCORD_MESSAGE_QUERYSELECTOR, { timeout: 1000 * 60 * 15 /* minutes */ });
 }
-
 
 /**
  * TODO: [🏏] Common stuff for discordPage and githubPage

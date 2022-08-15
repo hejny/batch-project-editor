@@ -40,8 +40,8 @@ export async function aiGeneratedWallpaperTrigger({
         throw new Error(`No search results element found via selector "${DISCORD_SEARCHRESULTS_QUERYSELECTOR}"`);
     }
 
-    // TODO: Debug with> await forConsoleKeyPress();
-    //       @see https://stackoverflow.com/questions/18193953/waiting-for-user-to-enter-input-in-node-jswindows 
+    // TODO: Debug with> await forKeyPress();
+    //       @see https://stackoverflow.com/questions/18193953/waiting-for-user-to-enter-input-in-node-jswindows
 
     await searchResultsElement.waitForSelector(`li[aria-labelledby^="search-result-"]`);
 

@@ -1,6 +1,7 @@
 import glob from 'glob-promise';
 import { join } from 'path';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
+import { clickOnText } from '../../utils/clickOnText';
 import { getGithubPage, prepareGithubPage } from './utils/githubPage';
 
 export async function aiGeneratedWallpaperUseInGithub({
@@ -21,12 +22,17 @@ export async function aiGeneratedWallpaperUseInGithub({
 
     const githubPage = await getGithubPage();
 
-    githubPage.goto(`${projectUrl}/settings`);
+    await githubPage.goto(`${projectUrl}/settings`, { waitUntil: 'networkidle0' });
 
-    await githubPage.click(`.avatar-upload`);
-    await githubPage.click(`label[for="repo-image-file-input"]`);
+    (async () => {
+        const fileChooser = await githubPage.waitForFileChooser();
+        await fileChooser.accept([wallpaperCurrentPath]);
+    })();
+
+    await clickOnText(githubPage, 'Edit');
+    await clickOnText(githubPage, 'Upload an image');
 
     return WorkflowResult.SideEffect;
 }
 
-aiGeneratedWallpaperUseInGithub.prepare = prepareGithubPage;
+aiGeneratedWallpaperUseInGithub.initialize = prepareGithubPage;
