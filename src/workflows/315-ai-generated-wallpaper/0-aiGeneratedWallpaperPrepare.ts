@@ -22,7 +22,11 @@ export async function aiGeneratedWallpaperPrepare({
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
 
     const descriptionSentence = packageJson.description.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
-    const imagineSentence = descriptionSentence; // Note: Maybe some prefix/suffix `Banner for ${descriptionSentence}`;
+
+    // Note: Maybe some prefix/suffix; Pick one of (or implement multiple):
+    // const imagineSentence = descriptionSentence;  ;
+    // const imagineSentence = `Banner for ${descriptionSentence}`;
+    const imagineSentence = `Wallpaper in minimalistic style for project that ${descriptionSentence}`;
 
     // !!!! Maybe use: --quality 2 --stylize 1250
     const imagineFlags = `--aspect 2:1 --version 3`; /* <- Note: Default flags to config */ /* <- Note: [🎏] More on flags here */
