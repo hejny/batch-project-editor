@@ -11,32 +11,42 @@ import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 export async function aiGeneratedWallpaperLand({
     skippingBecauseOf,
     projectPath,
-    packageJson,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     // !!! Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
-    const imagine = spaceTrim(wallpaperImagineContents).split('\n\n')[0].split('\n').join(' ').split('  ').join(' ');
-    const imagineSentence = spaceTrim(
-      imagine.split(/--[a-zA-Z]+\s+[^\s]+\s*/g).join(''),
-      // TODO: LIB spacetrim should be able to modify prototype of string and add there a .spaceTrim() method
-  );
 
-    // Note: Test if already landed
-    const searchResult = await searchMidjourney({ prompt: imagineSentence });
-    if (searchResult.length > 0) {
-        return skippingBecauseOf(`Already landed "${imagineSentence}"`);
+    // !!!!!!!!!!!!!!!!!!!! THIS VERSION FOR Dry to some util
+    const imagines = spaceTrim(wallpaperImagineContents)
+        .split('\n\n')
+        .map((row) => row.split('\n').join(' ').split('  ').join(' ').trim())
+        .filter((row) => row !== '' && !row.startsWith('#'))
+        .map((imagineSentenceWithFlags) => ({
+            imagineSentenceWithFlags,
+            imagineSentence: imagineSentenceWithFlags
+                .split(/--[a-zA-Z]+\s+[^\s]+\s*/g)
+                .join('')
+                .trim(),
+        }));
+
+    for (const { imagineSentence, imagineSentenceWithFlags } of imagines) {
+        // Note: Test if already landed
+        const searchResult = await searchMidjourney({ prompt: imagineSentence });
+        if (searchResult.length > 0) {
+            return skippingBecauseOf(`Already landed "${imagineSentence}"`);
+        }
+
+        const discordPage = getDiscordPage();
+
+        console.log(chalk.blue(imagineSentenceWithFlags));
+
+        await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagineSentenceWithFlags, { delay: 50 });
+        await discordPage.keyboard.press('Enter');
+
+        await forTime(1000 * 60 * Math.random());
     }
 
-    const discordPage = getDiscordPage();
-
-    console.log(chalk.blue(imagine));
-
-    await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagine, { delay: 50 });
-    await discordPage.keyboard.press('Enter');
-
-    await forTime(1000 * 60 * Math.random());
     return WorkflowResult.SideEffect;
 }
 
@@ -44,4 +54,5 @@ aiGeneratedWallpaperLand.initialize = prepareDiscordPage;
 
 /**
  * !!! ??? DigitalOcean Referral Badge
+ * TODO: LIB spacetrim should be able to modify prototype of string and add there a .spaceTrim() method
  */

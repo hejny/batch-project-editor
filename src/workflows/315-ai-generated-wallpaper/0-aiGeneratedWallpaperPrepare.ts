@@ -1,8 +1,10 @@
 import { mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
+import { createAllSubsetsOf } from '../../utils/createAllSubsetsOf';
 import { randomInteger } from '../../utils/random/randomInteger';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
+import { IMAGINE_OPTIONAL_FLAGS, IMAGINE_REQUIRED_FLAGS, IMAGINE_TEMPLATES } from './config';
 
 export async function aiGeneratedWallpaperPrepare({
     packageJson,
@@ -22,32 +24,38 @@ export async function aiGeneratedWallpaperPrepare({
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
 
     const descriptionSentence = packageJson.description.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
-
-    // !!! const imagineSentencePrefix =
-
-    // Note: Maybe some prefix/suffix; Pick one of (or implement multiple):
-    const imagineSentence = descriptionSentence;
-    // const imagineSentence = `Banner for ${descriptionSentence}`;
-    // const imagineSentence = `Wallpaper in minimalistic style for project that ${descriptionSentence}`;
-
-    // !!!! Maybe use: --aspect 2:1 --version 3 --quality 2 --stylize 1250
-    const imagineFlags = `--wallpaper`; /* <- Note: Default flags to config */ /* <- Note: [🎏] More on flags here */
     const imagineFlagsSeed = `--seed ${randomInteger(1111111, 9999999)}`;
 
-    // !!! Remove
-    console.log('/imagine ', imagineSentence);
+    const wallpaperImagineContents: string[] = [];
+    for (const imagineOptionalFlags of createAllSubsetsOf(...IMAGINE_OPTIONAL_FLAGS)) {
+        for (const imagineTemplate of IMAGINE_TEMPLATES) {
+            const imagineSentence = imagineTemplate.replace('%', descriptionSentence);
+            wallpaperImagineContents.push(
+                spaceTrim(
+                    (block) => `
+                        ${block(imagineSentence)}
+                        ${block([...IMAGINE_REQUIRED_FLAGS, ...imagineOptionalFlags].join(' '))}
+                        ${block(imagineFlagsSeed)}
+                    `,
+                )
+                    .split('\n\n')
+                    .join('\n'),
+            );
+        }
+    }
 
     await mkdir(wallpaperPath, { recursive: true });
     await writeFile(
         wallpaperImaginePath,
-        spaceTrim(`
-            ${imagineSentence}
-            ${imagineFlags}
-            ${imagineFlagsSeed}
+        spaceTrim(
+            (block) => `
+            # Note: Each part is new input for imagine command
+            #       And every first line will be searched during the harvesting phase
 
-            Note: All lines bellow (including this) are ignored.
+            ${block(wallpaperImagineContents.join('\n\n'))}
 
-        `),
+        `,
+        ),
         'utf8',
     );
 
@@ -55,8 +63,6 @@ export async function aiGeneratedWallpaperPrepare({
 
     // TODO: !!! Implement
     // /assets/ai/wallpaper/current
-    // /assets/ai/wallpaper/imagine
-    // /assets/ai/wallpaper/gallery/sgfsfsdf.png
 }
 
 /**

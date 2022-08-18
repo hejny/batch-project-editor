@@ -35,7 +35,7 @@ export async function prepareDiscordPage() {
     });
 
     pageContainer.page = await browser.newPage();
-    await pageContainer.page.goto(`https://discord.com/channels/@me/994943513500336138`);
+    await pageContainer.page.goto(`https://discord.com/channels/@me/994943513500336138` /* <- TODO: Unhardcode */);
 
     console.info(
         chalk.bgYellow(
