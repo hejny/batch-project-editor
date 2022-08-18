@@ -1,5 +1,34 @@
-Wallpaper in minimalistic style for project that Edits and commits changes to multiple projects automatically. It is designed for for [my @hejny`s](https://github.com/hejny?tab=repositories) projects management workflow. Feel free to fork and use it for yourself.
---aspect 2:1 --version 3
---seed 3870504
+# Note: Each part is new input for imagine command
+#       And every first line will be searched during the harvesting phase
 
-Note: All lines bellow (including this) are ignored.
+Edits and commits changes to multiple projects automatically. It is designed for for [my @hejny`s](https://github.com/hejny?tab=repositories) projects management workflow. Feel free to fork and use it for yourself.
+--aspect 2:1
+--seed 4030932
+
+Banner for Edits and commits changes to multiple projects automatically. It is designed for for [my @hejny`s](https://github.com/hejny?tab=repositories) projects management workflow. Feel free to fork and use it for yourself.
+--aspect 2:1
+--seed 4030932
+
+Edits and commits changes to multiple projects automatically. It is designed for for [my @hejny`s](https://github.com/hejny?tab=repositories) projects management workflow. Feel free to fork and use it for yourself.
+--aspect 2:1 --hd
+--seed 4030932
+
+Banner for Edits and commits changes to multiple projects automatically. It is designed for for [my @hejny`s](https://github.com/hejny?tab=repositories) projects management workflow. Feel free to fork and use it for yourself.
+--aspect 2:1 --hd
+--seed 4030932
+
+Edits and commits changes to multiple projects automatically. It is designed for for [my @hejny`s](https://github.com/hejny?tab=repositories) projects management workflow. Feel free to fork and use it for yourself.
+--aspect 2:1 --quality 2
+--seed 4030932
+
+Banner for Edits and commits changes to multiple projects automatically. It is designed for for [my @hejny`s](https://github.com/hejny?tab=repositories) projects management workflow. Feel free to fork and use it for yourself.
+--aspect 2:1 --quality 2
+--seed 4030932
+
+Edits and commits changes to multiple projects automatically. It is designed for for [my @hejny`s](https://github.com/hejny?tab=repositories) projects management workflow. Feel free to fork and use it for yourself.
+--aspect 2:1 --hd --quality 2
+--seed 4030932
+
+Banner for Edits and commits changes to multiple projects automatically. It is designed for for [my @hejny`s](https://github.com/hejny?tab=repositories) projects management workflow. Feel free to fork and use it for yourself.
+--aspect 2:1 --hd --quality 2
+--seed 4030932
