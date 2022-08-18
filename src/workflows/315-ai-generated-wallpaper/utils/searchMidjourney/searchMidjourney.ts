@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+import { forTime } from 'waitasecond';
 import { MIDJOURNEY_COOKIES } from '../../../../config';
 import { IMidjourneyJob } from './IMidjourneyJob';
 
@@ -33,6 +35,12 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
     });
 
     const json = await response.json();
+
+    if (json.msg === 'Internal server error') {
+        await forTime(1000 * 60 * 5);
+        console.info(chalk.gray('Internal server error on MidJourney, retrying after 5 minutes...'));
+        return searchMidjourney(options);
+    }
 
     if (!Array.isArray(json)) {
         throw new Error(`Expected array, got ${JSON.stringify(json)}`);
