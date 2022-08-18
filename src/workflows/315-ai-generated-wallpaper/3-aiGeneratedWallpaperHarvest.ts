@@ -49,6 +49,8 @@ export async function aiGeneratedWallpaperHarvest({
             await mkdir(dirname(imageLocalPath), { recursive: true });
             await writeFile(imageLocalPath, new DataView(await imageBlob.arrayBuffer()), 'binary');
 
+            // TODO: !!!! Test that the file is same if exist
+
             localDirs.add(dirname(imageLocalPath));
 
             console.info(chalk.green(`🤖🖼️🚜  ${imageLocalPath}`));

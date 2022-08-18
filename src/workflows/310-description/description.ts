@@ -1,7 +1,7 @@
-import markdownToTxt from 'markdown-to-txt';
 import fetch from 'node-fetch';
 import { GITHUB_TOKEN } from '../../config';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
+import { markdownToTxtEnhanced } from './markdownToTxtEnhanced';
 
 export const DESCRIPTION_IN_README =
     /(?<heading>^#[^\n]*$)(\s*)((<!--Badges-->(?<badges>.*)<!--\/Badges-->)?)(\s*)(?<description>^.*?$)?(\n{2,})/ims;
@@ -20,7 +20,9 @@ export async function description({
         return skippingBecauseOf(`No description extracted from README.md`);
     }
 
-    let descriptionText = markdownToTxt(description).split('\n').join(' ');
+    let descriptionText = markdownToTxtEnhanced(description).split('\n').join(' ');
+
+    console.log({ description, descriptionText });
 
     descriptionText = descriptionText.split(' created via @collboard/modules-sdk.').join('');
 
