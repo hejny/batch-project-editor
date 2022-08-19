@@ -1,8 +1,9 @@
 import chalk from 'chalk';
-import { access, mkdir, readFile, rmdir, writeFile } from 'fs/promises';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import spaceTrim from 'spacetrim';
 import { execCommand } from '../../utils/execCommand/execCommand';
+import { isFileExisting } from '../../utils/isFileExisting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 
@@ -28,9 +29,11 @@ export async function aiGeneratedWallpaperHarvest({
                 .trim(),
         }));
 
-    /**/
+    /*/
     // !!! This should be just temporary OR flagged
-    await rmdir(wallpaperGalleryPath, { recursive: true });
+    if(await isDirectoryExisting(wallpaperGalleryPath)){
+      await rmdir(wallpaperGalleryPath, { recursive: true });
+    }
     /**/
 
     const searchResult = (
@@ -57,11 +60,7 @@ export async function aiGeneratedWallpaperHarvest({
             // console.log({ imageRemotePath, imageLocalPath, imageId, imageSuffix, imageExtension });
 
             // [🖼️] Note: Check if file already exists...
-            if (
-                !(await access(imageLocalPath)
-                    .then(() => true)
-                    .catch(() => false))
-            ) {
+            if (!(await isFileExisting(imageLocalPath))) {
                 // [🖼️❌] Note: ... if it does not, make folder for it and just simply save
                 await mkdir(dirname(imageLocalPath), { recursive: true });
                 await writeFile(imageLocalPath, new DataView(await imageResponse.arrayBuffer()), 'binary');
