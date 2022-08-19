@@ -16,13 +16,21 @@ export async function aiGeneratedWallpaperTrigger({
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
-    const imagine = spaceTrim(wallpaperImagineContents).split('\n\n')[0].split('\n').join(' ').split('  ').join(' ');
-    const imagineSentence = spaceTrim(
-        imagine.split(/--[a-zA-Z]+\s+[^\s]+\s*/g).join(''),
-        // TODO: LIB spacetrim should be able to modify prototype of string and add there a .spaceTrim() method
-    );
+    const imagines = spaceTrim(wallpaperImagineContents)
+        .split('\n\n')
+        .map((row) => row.split('\n').join(' ').split('  ').join(' ').trim())
+        .filter((row) => row !== '' && !row.startsWith('#'))
+        .map((imagineSentenceWithFlags) => ({
+            imagineSentenceWithFlags,
+            imagineSentence: imagineSentenceWithFlags
+                .split(/--[a-zA-Z]+\s+[^\s]+\s*/g)
+                .join('')
+                .trim(),
+        }));
+
 
     const discordPage = getDiscordPage();
+
 
     //
     // !!! Comment why not> const search = `od: MidJourney Bot#9282 "${imagineSentence}"`; /* <- TODO: [🍷] Unhardcode Czech language */

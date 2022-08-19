@@ -16,8 +16,6 @@ export async function aiGeneratedWallpaperLand({
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
-
-    // !!!!!!!!!!!!!!!!!!!! THIS VERSION FOR Dry to some util
     const imagines = spaceTrim(wallpaperImagineContents)
         .split('\n\n')
         .map((row) => row.split('\n').join(' ').split('  ').join(' ').trim())

@@ -47,7 +47,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
     const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
 
     while (true) {
-        for (const projectPath of await findAllProjects()) {
+        for (const projectPath of await findAllProjects() /*.reverse( !!! Reverse + shuffle as CLI flag )*/) {
             // console.log({ project: basename(projectPath /* TODO: Match more things in projects */) });
             if (!runProjects.test(basename(projectPath))) {
                 continue;

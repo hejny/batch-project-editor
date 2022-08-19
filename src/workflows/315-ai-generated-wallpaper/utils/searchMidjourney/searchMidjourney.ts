@@ -43,6 +43,7 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
     }
 
     if (!Array.isArray(json)) {
+        // TODO: !!! This error should not occur on any project - TODO: Make some warning mechanism
         throw new Error(`Expected array, got ${JSON.stringify(json)}`);
     }
 
