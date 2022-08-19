@@ -42,7 +42,8 @@ export async function aiGeneratedWallpaperLand({
         await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagineSentenceWithFlags, { delay: 50 });
         await discordPage.keyboard.press('Enter');
 
-        await forTime(1000 * 60 * Math.random());
+        // !!! Configurable waiting time> await forTime(1000 * 60 * Math.random());
+        await forTime(1000 * 60 * 10 * Math.random());
     }
 
     return WorkflowResult.SideEffect;

@@ -7,7 +7,16 @@ export const IMAGINE_OPTIONAL_FLAGS = [
 
 export const IMAGINE_REQUIRED_FLAGS = ['--aspect 2:1'];
 export const IMAGINE_TEMPLATES = [
-    '%',
-    'Banner for %',
+    // '%',
+    // 'Banner for %',
     // 'Wallpaper in minimalistic style for project that %'
+    'Banner for social media for project that %',
+    '% in minimalistic style',
+    '% by Kazimir Malevich',
+    '% by Vincent van Gogh',
+    '% by Pablo Picasso',
+    '% by Leonardo da Vinci',
+    '% by Michelangelo',
+    '% as a realistic photography',
+    '% as a realistic painting',
 ];
