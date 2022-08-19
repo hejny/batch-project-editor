@@ -71,7 +71,7 @@ export async function aiGeneratedWallpaperHarvest({
                 const imageDownloadedContentsHex = buf2hex(await imageResponse.arrayBuffer());
 
                 if (imageLocalContentsHex !== imageDownloadedContentsHex) {
-                    // TODO: !!! This error should not occur on any project - TODO: Make some warning mechanism
+                    // TODO: !!!!!!!! This error should not occur on any project - TODO: Make some warning mechanism
                     console.error(
                         chalk.bgRed(
                             spaceTrim(`
