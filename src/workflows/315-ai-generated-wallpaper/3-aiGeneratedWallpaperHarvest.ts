@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import spaceTrim from 'spacetrim';
-import { execCommand } from '../../utils/execCommand/execCommand';
 import { isFileExisting } from '../../utils/isFileExisting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
@@ -97,9 +96,12 @@ export async function aiGeneratedWallpaperHarvest({
         }
     }
 
+    /*/
+   // TODO: !!! Allow this by some CLI flag
     for (const localDir of localDirs) {
         await execCommand({ command: `explorer ${localDir}`, crashOnError: false });
     }
+    /**/
 
     return commit(`🤖🖼️🚜 Harvesting AI–⁠generated wallpaper from the MidJourney`);
 }
