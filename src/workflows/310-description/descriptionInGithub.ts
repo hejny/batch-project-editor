@@ -1,5 +1,4 @@
 import { clickOnText } from '../../utils/clickOnText';
-import { forKeyPress } from '../../utils/forPlay';
 import { getGithubPage, prepareGithubPage } from '../315-ai-generated-wallpaper/utils/githubPage';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
@@ -25,8 +24,6 @@ export async function descriptionInGithub({
     await githubPage.keyboard.press('Backspace');
     await githubPage.keyboard.type(description, { delay: 50 });
     await clickOnText(githubPage, 'Save changes');
-
-    await forKeyPress();
 
     return WorkflowResult.SideEffect;
 }
