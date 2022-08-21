@@ -30,13 +30,23 @@ export async function aiGeneratedWallpaperUseInGithub({
 
     await githubPage.goto(`${projectUrl}/settings`, { waitUntil: 'networkidle0' });
 
+    /**
+     * !!! Describe
+     */
+    let isClickedOnUpload = false;
     (async () => {
+        const fileChooser = await githubPage.waitForFileChooser();
+
+        await forTime(100);
+
+        if (!isClickedOnUpload) {
+            return;
+        }
+
         const originalPath = wallpaperCurrentPath;
         const shrinkedPath = join(process.cwd(), '.tmp', 'shrikened.png');
 
         try {
-            const fileChooser = await githubPage.waitForFileChooser();
-
             for (let k = 1; true; k = k * 0.9) {
                 const width = Math.ceil(1280 * k);
                 const height = Math.ceil(640 * k);
@@ -50,8 +60,9 @@ export async function aiGeneratedWallpaperUseInGithub({
                 }
             }
 
+            await forTime(1000 /* To be ready to use from sharp */);
             await fileChooser.accept([shrinkedPath]);
-            await forTime(1000 * 15);
+            await forTime(1000 * 15 /* To be uploaded - to be able to unlink */);
         } finally {
             await unlink(shrinkedPath);
         }
@@ -59,6 +70,9 @@ export async function aiGeneratedWallpaperUseInGithub({
 
     await clickOnText(githubPage, 'Edit');
     await clickOnText(githubPage, 'Upload an image');
+    isClickedOnUpload = true;
+
+    await forTime(1000 * 15 /* To be uploaded - to everything to settle */);
 
     return WorkflowResult.SideEffect;
 }
