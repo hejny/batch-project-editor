@@ -6,7 +6,7 @@
             "name": "🔼 Run",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows % --projects %"
+                "ts-node ./src/index.ts --edit --workflows %,-aiGeneratedWallpaper% --projects %"
             ],
             "onlySingle": false,
             "focus": true
@@ -28,7 +28,7 @@
         },
         {
             "name": "🔼 Run workflows",
-            "command": "ts-node ./src/index.ts --edit --workflows % --projects %",
+            "command": "ts-node ./src/index.ts --edit --workflows %,-aiGeneratedWallpaper% --projects %",
             "onlySingle": true,
             "focus": true
         },

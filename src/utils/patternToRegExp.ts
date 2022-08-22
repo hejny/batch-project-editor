@@ -11,9 +11,24 @@ import escapeRegExp from 'lodash/escapeRegExp';
  * @collboard-modules-sdk
  */
 export function patternToRegExp(...patterns: Array<string>): RegExp {
-    if (patterns.length === 1) {
+    const positivePatterns = patterns.filter((pattern) => !pattern.startsWith('-'));
+    const negativePatterns = patterns
+        .filter((pattern) => pattern.startsWith('-'))
+        .map((pattern) => pattern.substring(1));
+
+    if (positivePatterns.length === 1 && negativePatterns.length === 0) {
         return new RegExp('^' + escapeRegExp(patterns[0]).split('%').join('.*') + '$');
-    } else {
-        return new RegExp(`^(${patterns.map((pattern) => escapeRegExp(pattern).split('%').join('.*')).join('|')})$`);
     }
+
+    let positivePatternsRegex = positivePatterns
+        .map((pattern) => escapeRegExp(pattern).split('%').join('.*'))
+        .join('|');
+    let negativePatternsRegex = negativePatterns
+        .map((pattern) => escapeRegExp(pattern).split('%').join('.*'))
+        .join('|');
+
+    positivePatternsRegex = positivePatterns.length === 0 ? `` : `(${positivePatternsRegex})`;
+    negativePatternsRegex = negativePatterns.length === 0 ? `` : `(?<!(${negativePatternsRegex}))`;
+
+    return new RegExp(`^${positivePatternsRegex}${negativePatternsRegex}$`);
 }

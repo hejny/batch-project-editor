@@ -31,11 +31,38 @@ interface IRunWorkflowsOptions {
 }
 
 export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRunWorkflowsOptions) {
-    for (const workflow of WORKFLOWS) {
+    const errors: { tag: string; projectTitle: string; workflowName: string; error: Error }[] = [];
+    const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
+
+    const allProjects = await findAllProjects();
+    const filteredProjects = allProjects.filter((project) => runProjects.test(basename(project)));
+    const sortedProjects = filteredProjects; /*.reverse( !!! Reverse + shuffle as CLI flag )*/
+
+    const filteredWorkflows = WORKFLOWS.filter((workflow) => runWorkflows.test(workflow.name));
+    const sortedWorkflows = filteredWorkflows;
+
+    //----------
+    // Log what is going to happen
+
+    console.info(``);
+    console.info(``);
+    console.info(chalk.bgGreen(` ⚙️  Running ${sortedWorkflows.length} workflows `));
+    for (const workflow of sortedWorkflows) {
+        console.info(chalk.green(` ${workflow.name} `));
+    }
+    console.info(``);
+    console.info(``);
+    console.info(chalk.bgBlue(` 🏤  Running ${sortedProjects.length} projects `));
+    for (const project of sortedProjects) {
+        console.info(chalk.blue(` ${basename(project)} `));
+    }
+    console.info(``);
+    console.info(``);
+    await forTime(1000 * 5);
+    //----------
+
+    for (const workflow of sortedWorkflows) {
         const workflowName = workflow.name;
-        if (!runWorkflows.test(workflowName)) {
-            continue;
-        }
 
         if (workflow.initialize) {
             console.info(chalk.bgMagenta(` 🚀  Initializing ${workflowName} `));
@@ -43,24 +70,10 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
         }
     }
 
-    const errors: { tag: string; projectTitle: string; workflowName: string; error: Error }[] = [];
-    const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
-
     while (true) {
-        for (const projectPath of await findAllProjects() /*.reverse( !!! Reverse + shuffle as CLI flag )*/) {
-            // console.log({ project: basename(projectPath /* TODO: Match more things in projects */) });
-            if (!runProjects.test(basename(projectPath))) {
-                continue;
-            }
-
-            for (const workflow of WORKFLOWS) {
+        for (const projectPath of sortedProjects) {
+            for (const workflow of sortedWorkflows) {
                 const workflowName = workflow.name;
-
-                // console.log({ workflows: workflowName }, runWorkflows !== true && !runWorkflows.includes(workflowName));
-
-                if (!runWorkflows.test(workflowName)) {
-                    continue;
-                }
 
                 await forPlay();
 
