@@ -4,8 +4,9 @@ import express, { Request, Response } from 'express';
 import { writeFile } from 'fs/promises';
 import glob from 'glob-promise';
 import { locateChrome } from 'locate-app';
-import { join } from 'path';
-import { randomInteger } from '../../utils/random/randomInteger';
+import { join, relative } from 'path';
+import serveStatic from 'serve-static';
+import sharp from 'sharp';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 export async function aiGeneratedWallpaperPick({
@@ -19,17 +20,59 @@ export async function aiGeneratedWallpaperPick({
 
     const wallpaperCurrentPaths = await glob(join(wallpaperGalleryPath, '*.png'));
 
-    const port = randomInteger(11111, 99999);
+    const port = 57704; // TODO: [0]> randomInteger(11111, 99999);
     const app = express();
 
     app.listen(port);
 
-    app.get('/', (request: Request, response: Response) => {
+    app.use('/gallery', serveStatic(wallpaperGalleryPath));
+    app.get('/', async (request: Request, response: Response) => {
         // !!! Timeout countdown and use skippingBecauseOf
-        response.send(`
+        return response.send(`
+
+            <div id="gallery">
+                ${(
+                    await wallpaperCurrentPaths
+                        .map((absolutePath) => ({
+                            absolutePath,
+                            relativePath: relative(wallpaperGalleryPath, absolutePath),
+                        }))
+                        .mapAsync(
+                            async ({ absolutePath, relativePath }) => `
+                                <a href="/pick/${relativePath}">
+                                    <img src="/gallery/${relativePath}" class="${await sharp(absolutePath)
+                                .metadata()
+                                .then(({ width, height }) => `width-${width} height-${height}`)}"/>
+                                </a>
+                            `,
+                        )
+                ).join('\n')}
+            </div>
 
 
-            ${wallpaperCurrentPaths.map((path) => `<a href="/pick/${path}"><img src="${path}"/></a>`).join('\n')}
+          <style>
+
+              html,body {
+                padding: 0;
+                margin: 0;
+              }
+
+              #gallery {
+                display: block;
+                padding: 0;
+                margin: 0;
+              }
+
+
+              #gallery img {
+                width: calc(20% - 5px);
+              }
+
+              img.width-512{
+                opacity: 0.5;
+              }
+
+          </style>
 
         `);
     });
@@ -38,11 +81,22 @@ export async function aiGeneratedWallpaperPick({
         app.get('/pick/:pickedImage', (request: Request, response: Response) => {
             const pickedImage = request.param('pickedImage');
             resolve(pickedImage);
+            return response.send(`
+                Picked!
+            `);
+            /*
+            TODO: There should be some mechanism to auto-close window after the picking
+            >  return response.send(`
+            >      <script>
+            >        window.close();
+            >      </script>
+            >  `);
+            */
         });
     });
 
-    const url = `http://localhost:${port}/pick`;
-    spawn(await locateChrome(), [`url`]);
+    const url = `http://localhost:${port}`;
+    spawn(await locateChrome(), [url]);
     console.info(chalk.bgGrey(` 👉  Pick wallpeper for ${projectName} on ${url}`));
 
     const pickedWallpaper = await pickedWallpaperPromise;
@@ -55,6 +109,6 @@ export async function aiGeneratedWallpaperPick({
 }
 
 /**
- * TODO: Allow paralelism
+ * TODO: [0] Allow paralelism
  * TODO: Picking already picked project
  */
