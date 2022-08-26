@@ -17,6 +17,7 @@ export async function aiGeneratedWallpaperPick({
     // !!! Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
+    const wallpaperCurrentPointerPath = join(wallpaperPath, 'current');
 
     const wallpaperCurrentPaths = await glob(join(wallpaperGalleryPath, '*.png'));
 
@@ -103,7 +104,7 @@ export async function aiGeneratedWallpaperPick({
 
     console.info(chalk.bgGrey(` 👉  You have picked ${pickedWallpaper} for project ${projectName}`));
 
-    await writeFile(join(wallpaperPath, 'current'), pickedWallpaper, 'utf8');
+    await writeFile(wallpaperCurrentPointerPath, pickedWallpaper, 'utf8');
 
     return commit(`🤖🖼️👉 Pick which AI–⁠generated wallpaper to use`);
 }
@@ -111,4 +112,5 @@ export async function aiGeneratedWallpaperPick({
 /**
  * TODO: [0] Allow paralelism
  * TODO: Picking already picked project
+ * TODO: Support for multiple wallpapers to be picked
  */

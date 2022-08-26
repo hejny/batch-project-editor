@@ -1,6 +1,7 @@
-import glob from 'glob-promise';
+import { readFile } from 'fs/promises';
 import { join, relative } from 'path';
 import spaceTrim from 'spacetrim';
+import { isFileExisting } from '../../utils/isFileExisting';
 import { DESCRIPTION_IN_README } from '../310-description/description';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
@@ -19,12 +20,13 @@ export async function aiGeneratedWallpaperUseInReadme({
     // !!! Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
-
-    // TODO: !!! Choose current better than just the first
-    const wallpaperCurrentPath = (await glob(join(wallpaperGalleryPath, '*.png')))[0];
-
-    if (!wallpaperCurrentPath) {
-        return skippingBecauseOf(`No wallpaper yet`);
+    const wallpaperCurrentPointerPath = join(wallpaperPath, 'current');
+    if (!(await isFileExisting(wallpaperCurrentPointerPath))) {
+        return skippingBecauseOf(`No wallpaper current pointer yet; run aiGeneratedWallpaperPick workflow`);
+    }
+    const wallpaperCurrentPath = join(wallpaperGalleryPath, await readFile(wallpaperCurrentPointerPath, 'utf8'));
+    if (!(await isFileExisting(wallpaperCurrentPath))) {
+        throw new Error(`Wrong wallpaper current pointer yet; re-run aiGeneratedWallpaperPick workflow`);
     }
 
     const wallpaperMarkdown = spaceTrim(`
