@@ -4,6 +4,7 @@ import { join } from 'path';
 import sharp from 'sharp';
 import { forTime } from 'waitasecond';
 import { clickOnText } from '../../utils/clickOnText';
+import { isFileExisting } from '../../utils/isFileExisting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { WALLPAPER_IN_README } from './5-aiGeneratedWallpaperUseInReadme';
 import { getGithubPage, prepareGithubPage } from './utils/githubPage';
@@ -32,6 +33,12 @@ export async function aiGeneratedWallpaperUseInGithub({
         throw new Error(`Corrupted wallpaper in README.md wallpaper section`);
     }
 
+    const wallpaperPath = join(projectPath, wallpaperSrc);
+
+    if (!(await isFileExisting(wallpaperPath))) {
+        throw new Error(`Wallpaper in README.md do not exist`);
+    }
+
     const githubPage = await getGithubPage();
 
     await githubPage.goto(`${projectUrl}/settings`, { waitUntil: 'networkidle0' });
@@ -49,7 +56,7 @@ export async function aiGeneratedWallpaperUseInGithub({
             return;
         }
 
-        const originalPath = wallpaperSrc;
+        const originalPath = wallpaperPath;
         const shrinkedPath = join(process.cwd(), '.tmp', 'shrikened.png');
 
         try {

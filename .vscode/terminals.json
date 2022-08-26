@@ -15,7 +15,16 @@
             "name": "🔼🖼️ Run AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper% --projects %"
+                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPick --projects %"
+            ],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "👉🖼️ Pick AI–⁠generated wallpapers",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaperPick --projects %"
             ],
             "onlySingle": true,
             "focus": true
