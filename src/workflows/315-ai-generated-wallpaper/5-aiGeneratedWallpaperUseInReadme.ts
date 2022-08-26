@@ -4,7 +4,7 @@ import spaceTrim from 'spacetrim';
 import { DESCRIPTION_IN_README } from '../310-description/description';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-const WALLPAPER_IN_README = /<!--Wallpaper-->(?<wallpaper>.*)<!--\/Wallpaper-->/is;
+export const WALLPAPER_IN_README = /<!--Wallpaper-->(?<wallpaper>.*)<!--\/Wallpaper-->/is;
 
 export async function aiGeneratedWallpaperUseInReadme({
     projectTitle,

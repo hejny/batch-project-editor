@@ -1,11 +1,11 @@
 import chalk from 'chalk';
-import { stat, unlink } from 'fs/promises';
-import glob from 'glob-promise';
+import { readFile, stat, unlink } from 'fs/promises';
 import { join } from 'path';
 import sharp from 'sharp';
 import { forTime } from 'waitasecond';
 import { clickOnText } from '../../utils/clickOnText';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
+import { WALLPAPER_IN_README } from './5-aiGeneratedWallpaperUseInReadme';
 import { getGithubPage, prepareGithubPage } from './utils/githubPage';
 
 export async function aiGeneratedWallpaperUseInGithub({
@@ -13,17 +13,23 @@ export async function aiGeneratedWallpaperUseInGithub({
     projectUrl,
     skippingBecauseOf,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // !!! Dry to some util
-    const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
-    const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
+    const readmeContent = await readFile(join(projectPath, `README.md`), 'utf8');
+    const match1 = WALLPAPER_IN_README.exec(readmeContent);
 
-    // TODO: !!! Choose current better than just the first
-    const wallpaperCurrentPath = (await glob(join(wallpaperGalleryPath, '*.png')))[0];
+    if (!match1) {
+        return skippingBecauseOf(`No wallpaper in README.md yet`);
+    }
 
-    // !!!!!! Take image from README
+    const match2 = /\!\[[^\]]+\]\((?<imageSrc>[^\)]+)\)/.exec(match1[0]);
 
-    if (!wallpaperCurrentPath) {
-        return skippingBecauseOf(`No wallpaper yet`);
+    if (!match2) {
+        throw new Error(`No wallpaper in README.md wallpaper section`);
+    }
+
+    const wallpaperSrc = match2?.groups?.imageSrc;
+
+    if (!wallpaperSrc) {
+        throw new Error(`Corrupted wallpaper in README.md wallpaper section`);
     }
 
     const githubPage = await getGithubPage();
@@ -43,7 +49,7 @@ export async function aiGeneratedWallpaperUseInGithub({
             return;
         }
 
-        const originalPath = wallpaperCurrentPath;
+        const originalPath = wallpaperSrc;
         const shrinkedPath = join(process.cwd(), '.tmp', 'shrikened.png');
 
         try {

@@ -8,8 +8,9 @@ import { descriptionInGithub } from './310-description/descriptionInGithub';
 import { aiGeneratedWallpaperPrepare } from './315-ai-generated-wallpaper/0-aiGeneratedWallpaperPrepare';
 import { aiGeneratedWallpaperLand } from './315-ai-generated-wallpaper/1-aiGeneratedWallpaperLand';
 import { aiGeneratedWallpaperHarvest } from './315-ai-generated-wallpaper/3-aiGeneratedWallpaperHarvest';
-import { aiGeneratedWallpaperUseInGithub } from './315-ai-generated-wallpaper/5-aiGeneratedWallpaperUseInGithub';
+import { aiGeneratedWallpaperPick } from './315-ai-generated-wallpaper/4-aiGeneratedWallpaperPick';
 import { aiGeneratedWallpaperUseInReadme } from './315-ai-generated-wallpaper/5-aiGeneratedWallpaperUseInReadme';
+import { aiGeneratedWallpaperUseInGithub } from './315-ai-generated-wallpaper/6-aiGeneratedWallpaperUseInGithub';
 import { authors } from './320-authors/authors';
 import { repository } from './325-repository/repository';
 import { normalizePackage } from './330-normalizePackage/normalizePackage';
@@ -34,8 +35,9 @@ export const WORKFLOWS: IWorkflow[] = [
     aiGeneratedWallpaperLand,
     // !!! aiGeneratedWallpaperTrigger,
     aiGeneratedWallpaperHarvest,
-    aiGeneratedWallpaperUseInGithub,
+    aiGeneratedWallpaperPick,
     aiGeneratedWallpaperUseInReadme,
+    aiGeneratedWallpaperUseInGithub,
     authors,
     repository,
     normalizePackage,
