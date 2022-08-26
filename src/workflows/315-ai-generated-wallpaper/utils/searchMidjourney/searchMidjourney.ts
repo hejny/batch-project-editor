@@ -34,11 +34,17 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
         },
     });
 
-    const json = await response.json();
+    const json = await response.text().then((jsonText) => {
+        try {
+            return JSON.parse(jsonText);
+        } catch (error) {
+            return { msg: 'Error: Internal server error', error, jsonText };
+        }
+    });
 
     if (json.msg === 'Error: Internal server error') {
         await forTime(1000 * 60 * 5);
-        console.info(chalk.gray('Internal server error on MidJourney, retrying after 5 minutes...'));
+        console.info(chalk.gray('Internal server error on MidJourney, retrying after 5 minutes...'), { json });
         return searchMidjourney(options);
     }
 
