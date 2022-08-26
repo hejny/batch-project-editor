@@ -1,12 +1,13 @@
 import chalk from 'chalk';
 import { spawn } from 'child_process';
 import express, { Request, Response } from 'express';
-import { writeFile } from 'fs/promises';
+import { unlink, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
 import { locateChrome } from 'locate-app';
 import { join, relative } from 'path';
 import serveStatic from 'serve-static';
 import sharp from 'sharp';
+import { isFileExisting } from '../../utils/isFileExisting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 export async function aiGeneratedWallpaperPick({
@@ -48,6 +49,8 @@ export async function aiGeneratedWallpaperPick({
                             `,
                         )
                 ).join('\n')}
+
+                <a href="/pick/none">Choose none</a>
             </div>
 
 
@@ -78,10 +81,16 @@ export async function aiGeneratedWallpaperPick({
         `);
     });
 
-    const pickedWallpaperPromise = new Promise<string>((resolve) => {
+    const pickedWallpaperPromise = new Promise<string | null>((resolve) => {
         app.get('/pick/:pickedImage', (request: Request, response: Response) => {
             const pickedImage = request.param('pickedImage');
-            resolve(pickedImage);
+
+            if (pickedImage !== 'none') {
+                resolve(pickedImage);
+            } else {
+                resolve(null);
+            }
+
             return response.send(`
                 Picked!
             `);
@@ -102,9 +111,15 @@ export async function aiGeneratedWallpaperPick({
 
     const pickedWallpaper = await pickedWallpaperPromise;
 
-    console.info(chalk.bgGrey(` 👉  You have picked ${pickedWallpaper} for project ${projectName}`));
-
-    await writeFile(wallpaperCurrentPointerPath, pickedWallpaper, 'utf8');
+    if (pickedWallpaper !== null) {
+        console.info(chalk.bgGrey(` 👉  You have picked ${pickedWallpaper} for project ${projectName}`));
+        await writeFile(wallpaperCurrentPointerPath, pickedWallpaper, 'utf8');
+    } else {
+        console.info(chalk.bgGrey(` 👉  You have unpicked wallpaper for project ${projectName}`));
+        if (await isFileExisting(wallpaperCurrentPointerPath)) {
+            await unlink(wallpaperCurrentPointerPath);
+        }
+    }
 
     return commit(`🤖🖼️👉 Pick which AI–⁠generated wallpaper to use`);
 }
