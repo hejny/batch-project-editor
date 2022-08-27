@@ -99,6 +99,7 @@ export async function aiGeneratedWallpaperHarvest({
     /*/
    // TODO: !!! Allow this by some CLI flag
     for (const localDir of localDirs) {
+        // !!! Use openFolder
         await execCommand({ command: `explorer ${localDir}`, crashOnError: false });
     }
     /**/
