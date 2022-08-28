@@ -1,20 +1,19 @@
 import chalk from 'chalk';
+import { isFolderExisting } from '../isFolderExisting';
 import { execCommand } from './execCommand';
 
 export async function openFolder(path: string) {
     path = path.split('\\').join('/');
+
+    if (!(await isFolderExisting(path))) {
+        throw new Error(`Folder "${path}" does not exist so cannot be opened in explorer`);
+    }
+
     console.info(chalk.bgGrey(` 📂  Opening ${path}`));
-    await execCommand({ command: `explorer ${path}`, crashOnError: false });
+
+    await execCommand({ cwd: path, command: `explorer .`, crashOnError: false });
 }
 
-/*
-
-
-
- 📂  Opening C:/Users/me/autowork/hejny/batch-project-editor/assets/ai/wallpaper/gallery
-C:\Users\me\work\hejny\batch-project-editor explorer C:/Users/me/autowork/hejny/batch-project-editor/assets/ai/wallpaper/gallery
-Command "explorer" exited with code 1
-Command "explorer" exited with code 1
-
-
-*/
+/**
+ * TODO: Is better way to run "explorer" or "Explorer.exe"?
+ */
