@@ -1,8 +1,9 @@
 import chalk from 'chalk';
-import { mkdir, readFile, writeFile } from 'fs/promises';
-import { dirname, join } from 'path';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 import spaceTrim from 'spacetrim';
-import { isFileExisting } from '../../utils/isFileExisting';
+import { stringToArrayBuffer } from '../../utils/stringToArrayBuffer';
+import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 
@@ -54,44 +55,16 @@ export async function aiGeneratedWallpaperHarvest({
             const { imageId, imageSuffix, imageExtension } = imageRemotePath.match(
                 /(?<imageId>[^/]+)\/(?<imageSuffix>[^/]+)\.(?<imageExtension>[^/]+)$/,
             )!.groups!;
+
             const imageLocalPath = join(wallpaperGalleryPath, `${imageId}-${imageSuffix}.${imageExtension}`);
+            const metaLocalPath = join(wallpaperGalleryPath, `${imageId}-${imageSuffix}.json`);
 
             // console.log({ imageRemotePath, imageLocalPath, imageId, imageSuffix, imageExtension });
 
-            // [🖼️] Note: Check if file already exists...
-            if (!(await isFileExisting(imageLocalPath))) {
-                // [🖼️❌] Note: ... if it does not, make folder for it and just simply save
-                await mkdir(dirname(imageLocalPath), { recursive: true });
-                await writeFile(imageLocalPath, new DataView(await imageResponse.arrayBuffer()), 'binary');
-            } else {
-                // [🖼️✔️] Note: ... if it does, compare the existing file with downloaded one ...
+            await writeFileWithoutOverwriting(imageLocalPath, await imageResponse.arrayBuffer(), imageRemotePath);
+            await writeFileWithoutOverwriting(metaLocalPath, stringToArrayBuffer(JSON.stringify(result, null, 4)));
 
-                const imageLocalContentsHex = await readFile(imageLocalPath, 'hex');
-                const imageDownloadedContentsHex = buf2hex(await imageResponse.arrayBuffer());
-
-                if (imageLocalContentsHex !== imageDownloadedContentsHex) {
-                    // TODO: !!!!!!!! This error should not occur on any project - TODO: Make some warning mechanism
-                    console.error(
-                        chalk.bgRed(
-                            spaceTrim(`
-                                Files which should be identical are different:
-
-                                ${imageLocalPath}
-                                ${imageLocalContentsHex.substring(0, 100)}...
-
-                                vs.
-
-                                ${imageRemotePath}
-                                ${imageDownloadedContentsHex.substring(0, 100)}...
-
-                            `),
-                        ),
-                    );
-                }
-            }
-
-            localDirs.add(dirname(imageLocalPath));
-
+            localDirs.add(wallpaperGalleryPath);
             console.info(chalk.green(`🤖🖼️🚜  ${imageLocalPath}`));
         }
     }
@@ -105,11 +78,6 @@ export async function aiGeneratedWallpaperHarvest({
     /**/
 
     return commit(`🤖🖼️🚜 Harvesting AI–⁠generated wallpaper from the MidJourney`);
-}
-
-function buf2hex(buffer: any): any {
-    // buffer is an ArrayBuffer
-    return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join('');
 }
 
 /**
