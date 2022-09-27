@@ -1,6 +1,7 @@
 import { lines } from './000-lines/lines';
 import { prettier } from './010-prettier/prettier';
-import { auditDependencies } from './100-auditDependencies/auditDependencies';
+import { updateCustomDependencies } from './105-updateCustomDependencies/updateCustomDependencies';
+import { auditDependencies } from './110-auditDependencies/auditDependencies';
 import { libraryBoilerplate } from './200-libraryBoilerplate/libraryBoilerplate';
 import { license } from './300-license/license';
 import { description } from './310-description/description';
@@ -26,6 +27,7 @@ import { terminalsVersion } from './terminals-version/terminalsVersion';
 export const WORKFLOWS: IWorkflow[] = [
     // ...RARE_WORKFLOWS
     prettier,
+    updateCustomDependencies,
     auditDependencies,
     libraryBoilerplate,
     license,
