@@ -8,7 +8,7 @@ export async function updateCustomDependencies({
     commit,
     skippingBecauseOf,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    const dependencyName = 'spacetrim';
+    const dependencyName = 'spacetrim'; /* <- TODO: More libraries */
     // TODO: [0] for (const libraryName of ['spacetrim']) {
 
     // TODO: Also for devDependencies and work if dependencies not defined
