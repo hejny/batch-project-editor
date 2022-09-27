@@ -11,8 +11,8 @@ export async function updateCustomDependencies({
     const dependencyName = 'spacetrim'; /* <- TODO: More libraries */
     // TODO: [0] for (const libraryName of ['spacetrim']) {
 
-    // TODO: Also for devDependencies and work if dependencies not defined
-    const dependencyUsedVersion = packageJson.dependencies![dependencyName];
+    const dependencyUsedVersion =
+        (packageJson.dependencies || {})[dependencyName] || (packageJson.devDependencies || {})[dependencyName];
 
     if (dependencyUsedVersion) {
         const dependencyCurrentVersion = await fetchPackageVersion(dependencyName);
