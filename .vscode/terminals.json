@@ -30,6 +30,15 @@
             "focus": true
         },
         {
+            "name": "🔼🐈 Run Github description",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --loop --workflows description,descriptionInGithub --projects %"
+            ],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
             "name": "🔽 Clone",
             "command": "ts-node ./src/index.ts --clone",
             "onlySingle": true,
