@@ -32,7 +32,14 @@ interface IRunWorkflowsOptions {
 
 export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRunWorkflowsOptions) {
     // TODO: DRY Interfaces
-    const errors: { tag: string; projectTitle: string; projectUrl: URL; workflowName: string; error: Error }[] = [];
+    const errors: {
+        tag: string;
+        projectTitle: string;
+        projectUrl: URL;
+        projectPath: string;
+        workflowName: string;
+        error: Error;
+    }[] = [];
     const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
 
     const allProjects = await findAllProjects();
@@ -279,7 +286,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     const tag = `[${colorSquare.next().value}]`;
                     console.info(tag);
                     console.error(error);
-                    errors.push({ tag, projectTitle, workflowName, projectUrl, error });
+                    errors.push({ tag, projectTitle, workflowName, projectUrl,projectPath, error });
                 }
             }
         }
@@ -314,7 +321,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
             // TODO: Show workflow by emojis not loooong names
         }
 
-        for (const { tag, projectTitle, projectUrl, workflowName, error } of errors) {
+        for (const { tag, projectTitle, projectPath, workflowName, error } of errors) {
             console.info(
                 tag +
                     chalk.bgRed(error.name) +
@@ -331,7 +338,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                             .trim(),
                     ) +
                     ' ' +
-                    chalk.gray(projectUrl),
+                    chalk.gray(projectPath),
             );
         }
 
