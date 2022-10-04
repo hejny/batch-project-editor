@@ -31,7 +31,9 @@ interface IRunWorkflowsOptions {
 }
 
 export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRunWorkflowsOptions) {
-    const errors: { tag: string; projectTitle: string; workflowName: string; error: Error }[] = [];
+
+  // TODO: DRY Interfaces
+    const errors: { tag: string; projectTitle: string; projectUrl: URL; workflowName: string; error: Error }[] = [];
     const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
 
     const allProjects = await findAllProjects();
@@ -278,7 +280,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     const tag = `[${colorSquare.next().value}]`;
                     console.info(tag);
                     console.error(error);
-                    errors.push({ tag, projectTitle, workflowName: workflowName, error });
+                    errors.push({ tag, projectTitle, workflowName, projectUrl, error });
                 }
             }
         }
@@ -313,13 +315,18 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
             // TODO: Show workflow by emojis not loooong names
         }
 
-        for (const { tag, projectTitle, workflowName, error } of errors) {
+        for (const { tag, projectTitle, projectUrl, workflowName, error } of errors) {
             console.info(
                 tag +
                     chalk.bgRed(error.name) +
-                    chalk.red(` ${projectTitle} - ${workflowName} `) +
                     ' ' +
-                    chalk.gray(error.message.split('\n')[0]),
+                    chalk.bold(chalk.blueBright(projectTitle)) +
+                    ' ' +
+                    chalk.blueBright(workflowName) +
+                    ' ' +
+                    chalk.red(error.message.split('\n')[0].split('Error').join('').trim()) +
+                    ' ' +
+                    chalk.gray(projectUrl),
             );
         }
 

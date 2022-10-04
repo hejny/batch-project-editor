@@ -95,6 +95,8 @@ async function main() {
                     continue;
                 }
 
+                // TODO: [🏴󠁧󠁢󠁥󠁮󠁧󠁿] Exclude projects 
+
                 await execCommand({
                     cwd,
                     command: `git clone ${projectUrl}`,

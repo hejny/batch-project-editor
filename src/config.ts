@@ -26,3 +26,5 @@ export const PROJECT_FLAGS: Record<string, { isPrivate: boolean; isArchived: boo
 
 
 export const githubOctokit = new Octokit({ auth: GITHUB_TOKEN });
+
+// TODO: [🏴󠁧󠁢󠁥󠁮󠁧󠁿] Exclude projects
