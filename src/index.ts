@@ -9,19 +9,23 @@ import { BASE_PATH } from './config';
 import { declareGlobals } from './globals';
 import { runWorkflows } from './runWorkflows';
 import { execCommand } from './utils/execCommand/execCommand';
+import { findAllProjects } from './utils/findAllProjects';
 import { findAllProjectsRemote } from './utils/findAllProjectsRemote';
 import { isDirectoryExisting } from './utils/isDirectoryExisting';
 import { isProjectArchived } from './utils/isProjectArchived';
 import { isProjectFork } from './utils/isProjectFork';
 import { isProjectPrivate } from './utils/isProjectPrivate';
 import { patternToRegExp } from './utils/patternToRegExp';
+import { WORKFLOWS } from './workflows/workflows';
 
 declareGlobals();
 main();
 
 async function main() {
     const program = new commander.Command();
-    program.option('--list-remote', `List all projects from GitHub`, false);
+    program.option('--list-remote-projects', `List all projects from GitHub`, false);
+    program.option('--list-projects', `List all local projects`, false);
+    program.option('--list-workflows', `List all workflows`, false);
     program.option('--clone', `Clone all projects`, false);
     program.option('--edit', `Run batch edit of projects; Note: Specify --workflows and --projects`, false);
     program.option('--loop', `Should be looping after few minutes during --edit`, false);
@@ -45,10 +49,10 @@ async function main() {
     );
 
     program.parse(process.argv);
-    const { listRemote, clone, edit,loop, workflows, projects } = program.opts();
+    const { listRemoteProjects, listProjects, listWorkflows, clone, edit, loop, workflows, projects } = program.opts();
 
     //----------------------------------
-    if (listRemote) {
+    if (listRemoteProjects) {
         for (const [org, projectUrls] of Object.entries(await findAllProjectsRemote())) {
             console.info(chalk.bgYellowBright(` 🏛️  ${org} `));
             for (const projectUrl of projectUrls) {
@@ -63,6 +67,22 @@ async function main() {
                         (!isFork ? '' : chalk.bgBlue(' 🍴  FORK ')),
                 );
             }
+        }
+    }
+    //----------------------------------
+
+    //----------------------------------
+    if (listProjects) {
+        for (const projectPath of await findAllProjects()) {
+            console.info(chalk.bgYellowBright(` 🏤  ${projectPath} `));
+        }
+    }
+    //----------------------------------
+
+    //----------------------------------
+    if (listWorkflows) {
+        for (const workflow of WORKFLOWS) {
+            console.info(chalk.bgYellowBright(` ⚙️  ${workflow.name} `));
         }
     }
     //----------------------------------
@@ -95,7 +115,7 @@ async function main() {
                     continue;
                 }
 
-                // TODO: [🏴󠁧󠁢󠁥󠁮󠁧󠁿] Exclude projects 
+                // TODO: [🏴󠁧󠁢󠁥󠁮󠁧󠁿] Exclude projects
 
                 await execCommand({
                     cwd,
@@ -115,7 +135,7 @@ async function main() {
     //----------------------------------
     if (edit) {
         await runWorkflows({
-          isLooping: loop,
+            isLooping: loop,
             runWorkflows: patternToRegExp(...workflows.split(',')),
             runProjects: patternToRegExp(...projects.split(',')),
         });

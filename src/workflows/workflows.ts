@@ -1,6 +1,6 @@
 import { lines } from './000-lines/lines';
 import { prettier } from './010-prettier/prettier';
-import { updateDependency } from './105-updateCustomDependencies/updateDependency';
+import { updateDependency } from './105-updateDependency/updateDependency';
 import { auditDependencies } from './110-auditDependencies/auditDependencies';
 import { libraryBoilerplate } from './200-libraryBoilerplate/libraryBoilerplate';
 import { license } from './300-license/license';

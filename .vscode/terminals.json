@@ -57,11 +57,23 @@
             "focus": true
         },
         {
-            "name": "📋🧪👨🏽‍💻 List",
-            "command": "ts-node ./src/index.ts --list-remote",
+            "name": "📋🏤 List remote projects",
+            "command": "ts-node ./src/index.ts --list-remote-projects",
             "onlySingle": true,
             "focus": true
         },
+        {
+          "name": "📋🏤 List local projects",
+          "command": "ts-node ./src/index.ts --list-projects",
+          "onlySingle": true,
+          "focus": true
+      },
+      {
+        "name": "📋⚙️ List workflows",
+        "command": "ts-node ./src/index.ts --list-workflows",
+        "onlySingle": true,
+        "focus": true
+    },
         {
             "name": "🔼👑 Release major version",
             "command": "npm version major",
