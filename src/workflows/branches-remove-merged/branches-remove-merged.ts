@@ -7,14 +7,14 @@ export async function branchesRemoveMerged({ skippingBecauseOf }: IWorkflowOptio
     TODO: Maybe also push the deletion to the remote?
 
 
-    const branches = (await runCommand('git branch --merged')).split('\n');
+    const branches = (await execCommandOnProject('git branch --merged')).split('\n');
 
     for (const branch of branches) {
         if (branch.startsWith('*')) {
             continue;
         }
 
-        await runCommand(`git branch -D ${branch}`);
+        await execCommandOnProject(`git branch -D ${branch}`);
     }
     */
 }

@@ -225,8 +225,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         return modifyJsonFiles<PackageJson>('package.json', (packageJson) => fileModifier(packageJson));
                     }
 
-                    // TODO: !!! Rename to execCommand
-                    function runCommand(command: string) {
+                    function execCommandOnProject(command: string) {
                         return execCommand({
                             command,
                             cwd: projectPath,
@@ -241,7 +240,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         projectOrg,
                         packageJson,
                         mainBranch: currentBranch as 'main' | 'master',
-                        runCommand,
+                        execCommandOnProject,
                         readFile: readProjectFile,
                         modifyFiles,
                         modifyJsonFiles,
@@ -286,7 +285,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     const tag = `[${colorSquare.next().value}]`;
                     console.info(tag);
                     console.error(error);
-                    errors.push({ tag, projectTitle, workflowName, projectUrl,projectPath, error });
+                    errors.push({ tag, projectTitle, workflowName, projectUrl, projectPath, error });
                 }
             }
         }

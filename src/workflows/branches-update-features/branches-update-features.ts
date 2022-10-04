@@ -11,14 +11,14 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 export async function branchesUpdateFeatures({
     projectTitle,
     commit,
-    runCommand,
+    execCommandOnProject,
     mainBranch,
     projectPath,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    const remoteBranches = (await runCommand(`git branch --remotes --no-merged ${mainBranch}`)).split('\n');
+    const remoteBranches = (await execCommandOnProject(`git branch --remotes --no-merged ${mainBranch}`)).split('\n');
     const fetureRemoteBranches = remoteBranches.filter((branch) => /(origin\/)?feature\//.test(branch));
     const recentFeatureRemoteBranches = await fetureRemoteBranches.filterAsync(async (branch) => {
-        const lastCommitDateRaw = (await runCommand(`git log -1 --format=%ct ${branch}`)).trim();
+        const lastCommitDateRaw = (await execCommandOnProject(`git log -1 --format=%ct ${branch}`)).trim();
         const lastCommitDate = new Date(parseInt(lastCommitDateRaw, 10) * 1000);
 
         // Filter last two months - TODO: To some config
@@ -32,7 +32,7 @@ export async function branchesUpdateFeatures({
     for (const remoteBranch of recentFeatureRemoteBranches) {
         const localBranch = remoteBranch.replace(/^origin\//, '');
 
-        await runCommand(`git switch ${localBranch}`).catch((error) => {
+        await execCommandOnProject(`git switch ${localBranch}`).catch((error) => {
             if (/Switched to( a new)? branch/i.test(error.message)) {
                 return;
             } else {
@@ -40,10 +40,10 @@ export async function branchesUpdateFeatures({
             }
         });
 
-        await runCommand('git pull');
+        await execCommandOnProject('git pull');
         isChanged =
             isChanged ||
-            (await runCommand(`git merge ${mainBranch}`)
+            (await execCommandOnProject(`git merge ${mainBranch}`)
                 .catch((error) => {
                     return error.message as string;
                 })
@@ -67,7 +67,7 @@ export async function branchesUpdateFeatures({
         // Note: Here is already merge commit commited, now just push it.
         // return commit(`🍴 Update ${localBranch} with latest commit from ${mainBranch}`);
 
-        await runCommand(`git push --quiet`);
+        await execCommandOnProject(`git push --quiet`);
     }
 
     return isChanged ? WorkflowResult.Change : WorkflowResult.NoChange;

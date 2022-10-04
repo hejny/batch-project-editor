@@ -12,7 +12,7 @@ export function updateDependency(dependencyName: string): IWorkflow {
             packageJson,
             projectPath,
             projectTitle,
-            runCommand,
+            execCommandOnProject,
             commit,
             skippingBecauseOf,
         }: IWorkflowOptions) {
@@ -40,8 +40,8 @@ export function updateDependency(dependencyName: string): IWorkflow {
             console.info(chalk.cyan(`Updating ${updateSingnature}`));
 
             try {
-                await runCommand(`npm install ${dependencyName}@${dependencyCurrentVersion}`);
-                await runCommand(`npm run test`);
+                await execCommandOnProject(`npm install ${dependencyName}@${dependencyCurrentVersion}`);
+                await execCommandOnProject(`npm run test`);
 
                 return await commit(
                     /* [0] */

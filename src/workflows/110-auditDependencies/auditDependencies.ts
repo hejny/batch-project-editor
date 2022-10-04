@@ -6,7 +6,7 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 export async function auditDependencies({
     projectPath,
     modifyPackage,
-    runCommand,
+    execCommandOnProject,
     commit,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     await execCommand({ cwd: projectPath, crashOnError: false, command: 'npm install' });
