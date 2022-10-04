@@ -1,6 +1,4 @@
 import chalk from 'chalk';
-import { spawn } from 'child_process';
-import { locateVSCode } from 'locate-app';
 import { capitalize } from 'lodash';
 import spaceTrim from 'spacetrim';
 import { fetchPackageVersion } from '../../utils/fetchPackageVersion';
@@ -45,12 +43,19 @@ export function updateDependency(dependencyName: string): IWorkflow {
                 return await commit(
                     /* [0] */
                     spaceTrim(`
-            🔼 Update library ${dependencyName} to ${dependencyCurrentVersion}
+                        🔼 Update library ${dependencyName} to ${dependencyCurrentVersion}
 
-            ${updateSingnature}
-        `),
+                        ${updateSingnature}
+                    `),
                 );
             } catch (error) {
+                /*
+                TODO: Make for this flag + IWorkflowOptions util
+
+                import { spawn } from 'child_process';
+                import { locateVSCode } from 'locate-app';
+
+
                 console.info(
                     chalk.gray(
                         `⏩ Opening project ${projectTitle} in VSCode because update ${updateSingnature} failed.`,
@@ -58,7 +63,9 @@ export function updateDependency(dependencyName: string): IWorkflow {
                 );
 
                 spawn(await locateVSCode(), [projectPath]);
-                throw new Error(error);
+
+                */
+                throw error;
             }
         },
     }[workflowName /* <- [0] */];
