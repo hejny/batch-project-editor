@@ -44,7 +44,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
     const allProjects = await findAllProjects();
     const filteredProjects = allProjects.filter((project) => runProjects.test(basename(project)));
-    const sortedProjects = filteredProjects; /*.reverse( !!! Reverse + shuffle as CLI flag )*/
+    const sortedProjects = filteredProjects; /* TODO: .reverse( Reverse + shuffle as CLI flag ) */
 
     const filteredWorkflows = WORKFLOWS.filter((workflow) => runWorkflows.test(workflow.name));
     const sortedWorkflows = filteredWorkflows;
