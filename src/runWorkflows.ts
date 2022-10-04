@@ -31,8 +31,7 @@ interface IRunWorkflowsOptions {
 }
 
 export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRunWorkflowsOptions) {
-
-  // TODO: DRY Interfaces
+    // TODO: DRY Interfaces
     const errors: { tag: string; projectTitle: string; projectUrl: URL; workflowName: string; error: Error }[] = [];
     const changedProjects: { projectTitle: string; projectUrl: URL; workflowNames: string[] }[] = [];
 
@@ -324,7 +323,13 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     ' ' +
                     chalk.blueBright(workflowName) +
                     ' ' +
-                    chalk.red(error.message.split('\n')[0].split('Error').join('').trim()) +
+                    chalk.red(
+                        error.message
+                            .split('\n')[0]
+                            .split(/Error:?/g)
+                            .join('')
+                            .trim(),
+                    ) +
                     ' ' +
                     chalk.gray(projectUrl),
             );
