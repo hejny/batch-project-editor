@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { capitalize } from 'lodash';
 import spaceTrim from 'spacetrim';
 import { fetchPackageVersion } from '../../utils/fetchPackageVersion';
+import { removeDependencyPrefix } from '../../utils/removeDependencyPrefix';
 import { IWorkflow, IWorkflowOptions } from '../IWorkflow';
 
 export function updateDependency(dependencyName: string): IWorkflow {
@@ -18,12 +19,14 @@ export function updateDependency(dependencyName: string): IWorkflow {
             const dependencyName = 'spacetrim'; /* <- TODO: More libraries */
             // TODO: [0] for (const libraryName of ['spacetrim']) {
 
-            const dependencyUsedVersion =
+            const dependencyUsedVersionWithPrefix =
                 (packageJson.dependencies || {})[dependencyName] || (packageJson.devDependencies || {})[dependencyName];
 
-            if (!dependencyUsedVersion) {
+            if (!dependencyUsedVersionWithPrefix) {
                 return /* [0] */ skippingBecauseOf(`Not using ${dependencyName}`);
             }
+
+            const dependencyUsedVersion = removeDependencyPrefix(dependencyUsedVersionWithPrefix);
 
             const dependencyCurrentVersion = await fetchPackageVersion(dependencyName);
 

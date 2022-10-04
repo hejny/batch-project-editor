@@ -9,7 +9,7 @@ describe('how conversion on wildcard patter to regexp works', () => {
     });
 
     it('works with escaping', () => {
-        expect(patternToRegExp('aaa/*')).toEqual(/^aaa\/.*$/);
+        expect(patternToRegExp('aaa/%')).toEqual(/^aaa\/.*$/);
         expect(patternToRegExp('a(a)a/%')).toEqual(/^a\(a\)a\/.*$/);
     });
 
