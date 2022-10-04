@@ -46,7 +46,7 @@ export function updateDependency(dependencyName: string): IWorkflow {
                 return await commit(
                     /* [0] */
                     spaceTrim(`
-                        🔼 Update library ${dependencyName} to ${dependencyCurrentVersion}
+                        🔼 Update ${dependencyName} to ${dependencyCurrentVersion}
 
                         ${updateSingnature}
                     `),
