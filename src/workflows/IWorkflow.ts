@@ -1,14 +1,29 @@
 import { PackageJson, Promisable } from 'type-fest';
 
-// !!! Anotate Skip vs NoChange
-// !!! Anotate Change vs SideEffect
-// !!! Anotate why there is no Error
-
 export enum WorkflowResult {
+    /**
+     * Workflow is skipping the project because of some internal reason
+     */
     Skip = 'SKIP',
+
+    /**
+     * There made and commited some changes
+     */
     Change = 'CHANGE',
+
+    /**
+     * Workflow made some changes but not via commit
+     */
     SideEffect = 'SIDE_EFFECT',
+
+    /**
+     * There was no change on the project during the workflow
+     */
     NoChange = 'NO_CHANGE',
+
+    /**
+     * Workflow ended unsuccessfully
+     */
     Error = 'ERROR',
 }
 
