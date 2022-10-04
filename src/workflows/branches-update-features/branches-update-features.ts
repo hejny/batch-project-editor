@@ -51,7 +51,7 @@ export async function branchesUpdateFeatures({
                     // Automatic merge failed; fix conflicts and then commit the result.
                     if (/Automatic merge failed/i.test(result)) {
                         console.info(
-                            chalk.gray(`⏩ Opening project ${projectTitle} in vscode because automatic merge failed.`),
+                            chalk.gray(`⏩ Opening project ${projectTitle} in VSCode because automatic merge failed.`),
                         );
 
                         spawn(await locateVSCode(), [projectPath]);
