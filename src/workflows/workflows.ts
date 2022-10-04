@@ -46,7 +46,7 @@ export const WORKFLOWS: IWorkflow[] = [
     descriptionInGithub,
     aiGeneratedWallpaperPrepare,
     aiGeneratedWallpaperLand,
-    // !!! aiGeneratedWallpaperTrigger,
+    // TODO: aiGeneratedWallpaperTrigger,
     aiGeneratedWallpaperHarvest,
     aiGeneratedWallpaperPick,
     aiGeneratedWallpaperUseInReadme,
