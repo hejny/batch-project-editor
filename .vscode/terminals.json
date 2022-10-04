@@ -12,6 +12,15 @@
             "focus": true
         },
         {
+            "name": "🔼📦 Run update & audit dependencies",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --workflows update%,auditDependencies --projects %"
+            ],
+            "onlySingle": false,
+            "focus": true
+        },
+        {
             "name": "🔼🖼️ Run AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
@@ -63,17 +72,17 @@
             "focus": true
         },
         {
-          "name": "📋🏤 List local projects",
-          "command": "ts-node ./src/index.ts --list-projects",
-          "onlySingle": true,
-          "focus": true
-      },
-      {
-        "name": "📋⚙️ List workflows",
-        "command": "ts-node ./src/index.ts --list-workflows",
-        "onlySingle": true,
-        "focus": true
-    },
+            "name": "📋🏤 List local projects",
+            "command": "ts-node ./src/index.ts --list-projects",
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "📋⚙️ List workflows",
+            "command": "ts-node ./src/index.ts --list-workflows",
+            "onlySingle": true,
+            "focus": true
+        },
         {
             "name": "🔼👑 Release major version",
             "command": "npm version major",

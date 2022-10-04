@@ -28,6 +28,7 @@ export const WORKFLOWS: IWorkflow[] = [
     // ...RARE_WORKFLOWS
     prettier,
     updateDependency('spacetrim'),
+    updateDependency('xyzt'),
     auditDependencies,
     libraryBoilerplate,
     license,
