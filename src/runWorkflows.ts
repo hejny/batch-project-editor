@@ -110,7 +110,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         } else {
                             console.info(
                                 chalk.gray(
-                                    `⏩ Opening project ${projectTitle} in vscode because there is merge in progress`,
+                                    `⏩ Opening project ${projectTitle} in VSCode because there is merge in progress`,
                                 ),
                             );
 
