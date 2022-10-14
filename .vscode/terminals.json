@@ -6,7 +6,7 @@
             "name": "🔼 Run",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows %,-descriptionInGithub,-aiGeneratedWallpaper% --projects %"
+                "ts-node ./src/index.ts --edit --workflows %,-branchesUpdateFeatures,-descriptionInGithub,-aiGeneratedWallpaper% --projects %"
             ],
             "onlySingle": false,
             "focus": true
@@ -16,6 +16,15 @@
             "commands": [
                 "ts-node ./src/index.ts --clone",
                 "ts-node ./src/index.ts --edit --workflows update%,auditDependencies --projects %"
+            ],
+            "onlySingle": false,
+            "focus": true
+        },
+        {
+            "name": "🔼🍴 Run update feature branches",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --workflows branchesUpdateFeatures --projects %"
             ],
             "onlySingle": false,
             "focus": true
