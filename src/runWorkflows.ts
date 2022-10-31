@@ -160,6 +160,13 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         continue;
                     }
 
+                    if (!(await isFileExisting(join(projectPath, 'README.md')))) {
+                        console.info(
+                            chalk.gray(`⏩ Skipping project ${projectTitle} because README.md does not exist`),
+                        );
+                        continue;
+                    }
+
                     console.info(`🔼 Running workflow ${workflowName} for project ${projectTitle}`);
 
                     await execCommand({
@@ -218,6 +225,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     }
 
                     const packageJson = JSON.parse(await readFile(join(projectPath, 'package.json'), 'utf8'));
+                    const readmeContent = await readFile(join(projectPath, 'README.md'), 'utf8');
 
                     function modifyPackage(
                         fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
@@ -239,6 +247,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         projectUrl,
                         projectOrg,
                         packageJson,
+                        readmeContent,
                         mainBranch: currentBranch as 'main' | 'master',
                         execCommandOnProject,
                         readFile: readProjectFile,
