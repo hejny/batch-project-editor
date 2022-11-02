@@ -60,11 +60,13 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
         const { name: projectName, org: projectOrg, url: projectUrl } = await findProjectName(projectPath);
 
         if (await isProjectArchived(projectUrl)) {
+            // !!! This skip does not make sence
             console.info(chalk.gray(`⏩ Skipping project ${projectTitle} because the project is archived on GitHub`));
             continue;
         }
 
         if (await isProjectFork(projectUrl)) {
+            // !!! This skip does not make sence
             console.info(
                 chalk.gray(`⏩ Skipping project ${projectTitle} because the project is just a fork on GitHub`),
             );
@@ -79,8 +81,10 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
         if (!(await isWorkingTreeClean(projectPath))) {
             // TODO: !!! Maybe not nessesary
             if (!(await isWorkingTreeInMergeProgress(projectPath))) {
+                // !!! This skip does MAYBE not make sence
                 console.info(chalk.gray(`⏩ Skipping project ${projectTitle} because working dir is not clean`));
             } else {
+                // !!! This OPEN does MAYBE not make sence
                 console.info(
                     chalk.gray(`⏩ Opening project ${projectTitle} in VSCode because there is merge in progress`),
                 );

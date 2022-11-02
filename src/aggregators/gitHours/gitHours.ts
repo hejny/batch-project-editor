@@ -55,7 +55,7 @@ export class gitHours implements IAggregator<IGitHoursResult> {
                     /* <- TODO: Configurable */
                     /* <- TODO: Add different limit through different daytimes (4h day, 2h night) */
                 ) {
-                    console.log('___');
+                    // console.info('___');
                     leadingCommitsCount++;
                     commitTime = moment.duration({
                         minutes: 30 /* <- !!! TODO: LERP average duration of commit according to additions/deletions */,
@@ -64,12 +64,9 @@ export class gitHours implements IAggregator<IGitHoursResult> {
 
                 time.add(commitTime);
 
-                // console.log(duration.asHours());
-                console.log(subject, ' took ', commitTime.humanize(), ` changed ${commit.files.length} file`, body);
+                // console.info(subject, ' took ', commitTime.humanize(), ` changed ${commit.files.length} file`, body);
 
                 // !!! TODO: Analyze that duration is not totally different (40%) from avarage
-
-                // console.log(commit);
             }
             lastDate = currentDate;
         }
@@ -105,6 +102,8 @@ export class gitHours implements IAggregator<IGitHoursResult> {
 }
 
 /**
+ * TODO: !!! Split by months
+ * TODO: !!! Split subprojects by purpose
  * TODO: !!! Check that here all all the commits
  * TODO: What is the difference between authorDate and committerDate
  */
