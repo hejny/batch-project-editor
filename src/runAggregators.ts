@@ -41,7 +41,7 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
 
     console.info(``);
     console.info(``);
-    console.info(chalk.bgBlue(` 🧑‍🤝‍🧑 Aggregating ${aggregatorName} for ${sortedProjects.length} projects `));
+    console.info(chalk.bgBlue(` ➕ Aggregating ${aggregatorName} for ${sortedProjects.length} projects `));
     for (const project of sortedProjects) {
         console.info(chalk.blue(` ${basename(project)} `));
     }
@@ -49,12 +49,8 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
     console.info(``);
     await forTime(1000 * 1);
 
-    // ----------------------- Initialize ---
-
-    let aggregated = aggregator.initial;
-
     // ----------------------- Do the aggregation ---
-
+    const projectResults: Array<{ projectTitle: string; result: any }> = [];
     for (const projectPath of sortedProjects) {
         await forPlay();
 
@@ -156,7 +152,7 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
 
         // ----------------------- Do the job ---
 
-        const current = await aggregator.run({
+        const result = await aggregator.run({
             projectTitle,
             projectPath,
             projectName,
@@ -169,18 +165,27 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
             readFile: readProjectFile,
         });
 
-        // TODO: [0] Maybe report result for one project
-
-        aggregated = await aggregator.join(aggregated, current);
+        projectResults.push({ projectTitle, result });
     }
+
+    const aggregated = projectResults
+        .map(({ result }) => result)
+        .reduce((aggregated, result) => aggregator.join(aggregated, result), aggregator.initial);
 
     // ----------------------- Show the result ---
 
     // Note: Making space above the result
+    console.info(`________________________`);
     console.info(``);
     console.info(``);
     console.info(``);
-    // TODO: [0] Maybe report result for one project
+
+    for (const { projectTitle, result } of projectResults) {
+        console.info(chalk.bgCyan(`  🏤  Project ${projectTitle}:  `));
+        console.info(aggregator.print(result));
+    }
+
+    console.info(chalk.bgGreen(`  ➕  Aggregated:  `));
     // TODO: Allow to save to file AND open HTML report page
     console.info(aggregator.print(aggregated));
 }

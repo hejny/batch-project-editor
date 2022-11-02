@@ -3,8 +3,16 @@ import moment from 'moment';
 import { BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE } from '../../config';
 import { IAggregator, IAggregatorOptions } from '../IAggregator';
 
-export class gitHours implements IAggregator<number> {
-    public initial = 0;
+interface IGitHoursResult {
+    allCommitsCount: number;
+    filteredCommitsCount: number;
+}
+
+export class gitHours implements IAggregator<IGitHoursResult> {
+    public initial = {
+        allCommitsCount: 0,
+        filteredCommitsCount: 0,
+    };
 
     public async run({ projectPath }: IAggregatorOptions) {
         /*
@@ -16,7 +24,7 @@ export class gitHours implements IAggregator<number> {
 
         */
 
-        const commits = await gitlog({
+        const allCommits = await gitlog({
             repo: projectPath,
             number: 100000 /* <- TODO: Want Infinite */,
             // author: "Dom Harrington",
@@ -35,7 +43,7 @@ export class gitHours implements IAggregator<number> {
 
         // !!! Exculude = skip BPE
 
-        const filteredCommits = commits.filter(({ body }) => !body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE));
+        const filteredCommits = allCommits.filter(({ body }) => !body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE));
 
         let lastDate: null | Date = null;
         for (const commit of filteredCommits) {
@@ -62,18 +70,26 @@ export class gitHours implements IAggregator<number> {
 
         //console.log(commits);
 
-        return filteredCommits.length /* <- !!! Exculude = skip BPE */;
+        return {
+            allCommitsCount: allCommits.length,
+            filteredCommitsCount: filteredCommits.length,
+        };
     }
 
-    public join(a: number, b: number) {
-        return a + b;
+    public join(a: IGitHoursResult, b: IGitHoursResult) {
+        return {
+            allCommitsCount: a.allCommitsCount + b.allCommitsCount,
+            filteredCommitsCount: a.filteredCommitsCount + b.filteredCommitsCount,
+        };
+        // TODO: return joinObjects(a,b);
     }
 
-    public print(value: number) {
+    public print(value: IGitHoursResult) {
         return value;
     }
 }
 
 /**
+ * TODO: !!! Check that here all all the commits
  * TODO: What is the difference between authorDate and committerDate
  */

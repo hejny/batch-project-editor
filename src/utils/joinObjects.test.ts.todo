@@ -1,0 +1,10 @@
+import { parsePackageName } from './parsePackageName';
+
+describe('how joining objects works', () => {
+    it('join objects', () => {
+        expect(parsePackageName({ packageName: 'foo' })).toEqual({ scope: null, name: 'foo' });
+        expect(parsePackageName({ packageName: 'foo_hoo' })).toEqual({ scope: null, name: 'foo_hoo' });
+        expect(parsePackageName({ packageName: 'foo-hoo' })).toEqual({ scope: null, name: 'foo-hoo' });
+    });
+
+});
