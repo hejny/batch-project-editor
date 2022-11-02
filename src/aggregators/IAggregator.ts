@@ -19,6 +19,7 @@ export interface IAggregator<T> {
     run(options: IAggregatorOptions): Promisable<T>;
     join(a: T, b: T): T;
     print(value: T): object | string | number | boolean;
+    // TODO: !!! toHtml
 }
 
 /**

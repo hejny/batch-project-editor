@@ -113,11 +113,11 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
             currentBranch = 'main';
 
             /*
-                        console.info(
-                            `⏩ Skipping project ${projectTitle} because current branch is not main (or master) but ${currentBranch}.`,
-                        );
-                        continue;
-                        */
+            console.info(
+                `⏩ Skipping project ${projectTitle} because current branch is not main (or master) but ${currentBranch}.`,
+            );
+            continue;
+            */
         }
 
         if (!(await isFileExisting(join(projectPath, 'package.json')))) {
@@ -169,7 +169,7 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
             readFile: readProjectFile,
         });
 
-        // TODO: Maybe report result for one project
+        // TODO: [0] Maybe report result for one project
 
         aggregated = await aggregator.join(aggregated, current);
     }
@@ -180,6 +180,8 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
     console.info(``);
     console.info(``);
     console.info(``);
+    // TODO: [0] Maybe report result for one project
+    // TODO: Allow to save to file AND open HTML report page
     console.info(aggregator.print(aggregated));
 }
 
