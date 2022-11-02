@@ -87,6 +87,15 @@
             "focus": true
         },
         {
+            "name": "🕤 Git hours",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --aggregate --aggregator gitHours --projects %"
+            ],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
             "name": "📋⚙️ List workflows",
             "command": "ts-node ./src/index.ts --list-workflows",
             "onlySingle": true,

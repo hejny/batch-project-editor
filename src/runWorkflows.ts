@@ -1,5 +1,3 @@
-#!/usr/bin/env ts-node
-
 import chalk from 'chalk';
 import { spawn } from 'child_process';
 import { readFile, writeFile } from 'fs/promises';
@@ -49,8 +47,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
     const filteredWorkflows = WORKFLOWS.filter((workflow) => runWorkflows.test(workflow.name));
     const sortedWorkflows = filteredWorkflows;
 
-    //----------
-    // Log what is going to happen
+    // ----------------------- Log what is going to happen ---
 
     console.info(``);
     console.info(``);
@@ -67,7 +64,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
     console.info(``);
     console.info(``);
     await forTime(1000 * 5);
-    //----------
+    // ----------------------- Initialize ---
 
     for (const workflow of sortedWorkflows) {
         const workflowName = workflow.name;
@@ -78,18 +75,23 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
         }
     }
 
+    // ----------------------- Do the job ---
+
     while (true) {
         for (const projectPath of sortedProjects) {
             for (const workflow of sortedWorkflows) {
-                const workflowName = workflow.name;
-
                 await forPlay();
+
+                // ----------------------- Prepare the utils ---
+
+                const workflowName = workflow.name;
 
                 const projectTitle = await findProjectTitle(projectPath);
                 const { name: projectName, org: projectOrg, url: projectUrl } = await findProjectName(projectPath);
 
                 try {
                     if (await isProjectArchived(projectUrl)) {
+                        // TODO: Probbably use standard skippingOfBecause
                         console.info(
                             chalk.gray(`⏩ Skipping project ${projectTitle} because the project is archived on GitHub`),
                         );
@@ -97,6 +99,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     }
 
                     if (await isProjectFork(projectUrl)) {
+                        // TODO: Probbably use standard skippingOfBecause
                         console.info(
                             chalk.gray(
                                 `⏩ Skipping project ${projectTitle} because the project is just a fork on GitHub`,
@@ -112,6 +115,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
                     if (!(await isWorkingTreeClean(projectPath))) {
                         if (!(await isWorkingTreeInMergeProgress(projectPath))) {
+                            // TODO: Probbably use standard skippingOfBecause
                             console.info(
                                 chalk.gray(`⏩ Skipping project ${projectTitle} because working dir is not clean`),
                             );
@@ -137,6 +141,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         });
 
                         if (!result.includes(`Switched to branch 'main'`)) {
+                            // TODO: Probbably use standard skippingOfBecause
                             console.info(
                                 chalk.gray(`⏩ Skipping project ${projectTitle} because can not switch to main branch`),
                             );
@@ -154,6 +159,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     }
 
                     if (!(await isFileExisting(join(projectPath, 'package.json')))) {
+                        // TODO: Probbably use standard skippingOfBecause
                         console.info(
                             chalk.gray(`⏩ Skipping project ${projectTitle} because package.json does not exist`),
                         );
@@ -161,6 +167,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     }
 
                     if (!(await isFileExisting(join(projectPath, 'README.md')))) {
+                        // TODO: Probbably use standard skippingOfBecause
                         console.info(
                             chalk.gray(`⏩ Skipping project ${projectTitle} because README.md does not exist`),
                         );
@@ -180,6 +187,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         const config = require(configPath);
                         if (config.ignoreWorkflows) {
                             if (config.ignoreWorkflows.includes(workflowName)) {
+                                // TODO: Probbably use standard skippingOfBecause
                                 console.info(
                                     chalk.gray(
                                         `⏩ Skipping workflow ${workflowName} for project ${projectTitle} because projects config ignores this workflow`,
@@ -240,6 +248,8 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         });
                     }
 
+                    // ----------------------- Do the job ---
+
                     const result = await workflow({
                         projectTitle,
                         projectPath,
@@ -268,7 +278,10 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         },
                     });
 
+                    // ----------------------- After the job ---
+
                     if (!(await isWorkingTreeClean(projectPath))) {
+                        // TODO: Probbably make as standard error
                         console.info(
                             chalk.red(
                                 `❗ Workflow ${workflowName} for the project ${projectTitle} ended with dirty working dir`,
@@ -298,6 +311,8 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                 }
             }
         }
+
+        // ----------------------- Show the result ---
 
         if (errors.length > 0) {
             // Note: Making space above the full error report
@@ -360,6 +375,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 }
 
 /**
+ * TODO: Simplyfy this file (maybe make some utils Class) and DRY runWorkflows + runAggregators
  * TODO: When looping DO not report some project 2x
  * TODO: Maybe use nodegit
  */

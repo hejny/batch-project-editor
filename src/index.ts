@@ -7,6 +7,7 @@ import { basename, join } from 'path';
 import spaceTrim from 'spacetrim';
 import { BASE_PATH } from './config';
 import { declareGlobals } from './globals';
+import { runAggregators } from './runAggregators';
 import { runWorkflows } from './runWorkflows';
 import { execCommand } from './utils/execCommand/execCommand';
 import { findAllProjects } from './utils/findAllProjects';
@@ -28,6 +29,7 @@ async function main() {
     program.option('--list-workflows', `List all workflows`, false);
     program.option('--clone', `Clone all projects`, false);
     program.option('--edit', `Run batch edit of projects; Note: Specify --workflows and --projects`, false);
+    program.option('--aggregate', `Run aggregation; Note: Specify --aggregators and --projects`, false);
     program.option('--loop', `Should be looping after few minutes during --edit`, false);
     program.option(
         '--workflows <workflows>',
@@ -41,15 +43,27 @@ async function main() {
     program.option(
         '--projects <projects>',
         spaceTrim(`
-            Which of the projects to run during --edit
+            Which of the projects to run during --edit or --aggregate
             Use % as a wildcard
             Note: [🥀] Using % not * as a wildcard char because of strange behavior of (probably) commander.js
         `),
         '%',
     );
+    program.option('--aggregator <aggregator>', `Which aggregator to run during --aggregate`, '%');
 
     program.parse(process.argv);
-    const { listRemoteProjects, listProjects, listWorkflows, clone, edit, loop, workflows, projects } = program.opts();
+    const {
+        listRemoteProjects,
+        listProjects,
+        listWorkflows,
+        clone,
+        edit,
+        aggregate,
+        loop,
+        workflows,
+        projects,
+        aggregator,
+    } = program.opts();
 
     //----------------------------------
     if (listRemoteProjects) {
@@ -137,6 +151,16 @@ async function main() {
         await runWorkflows({
             isLooping: loop,
             runWorkflows: patternToRegExp(...workflows.split(',')),
+            runProjects: patternToRegExp(...projects.split(',')),
+        });
+    }
+    //----------------------------------
+
+    //----------------------------------
+    if (aggregate) {
+        await runAggregators({
+            isLooping: loop,
+            runAggregator: aggregator,
             runProjects: patternToRegExp(...projects.split(',')),
         });
     }
