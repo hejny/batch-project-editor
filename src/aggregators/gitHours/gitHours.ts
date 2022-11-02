@@ -1,5 +1,6 @@
 import gitlog from 'gitlog';
 import moment from 'moment';
+import { BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE } from '../../config';
 import { IAggregator, IAggregatorOptions } from '../IAggregator';
 
 export class gitHours implements IAggregator<number> {
@@ -26,7 +27,7 @@ export class gitHours implements IAggregator<number> {
                 'authorName',
                 'authorDate',
                 'committerDate',
-                'rawBody',
+                'body',
                 /* <- TODO: Filter only needed */
             ],
             execOptions: { maxBuffer: 1000 * 1024 * 1024 * 1024 * 1024 /* <- TODO: Want Infinite */ },
@@ -34,9 +35,11 @@ export class gitHours implements IAggregator<number> {
 
         // !!! Exculude = skip BPE
 
+        const filteredCommits = commits.filter(({ body }) => !body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE));
+
         let lastDate: null | Date = null;
-        for (const commit of commits) {
-            const { subject, authorDate } = commit; /* <- TODO: Destruct in for loop */
+        for (const commit of filteredCommits) {
+            const { subject, authorDate, body } = commit; /* <- TODO: Destruct in for loop */
             const currentDate = new Date(authorDate);
 
             if (lastDate) {
@@ -48,7 +51,7 @@ export class gitHours implements IAggregator<number> {
                 }
 
                 // console.log(duration.asHours());
-                console.log(subject, ' took ', duration.humanize(), ` changed ${commit.files.length} file`);
+                console.log(subject, ' took ', duration.humanize(), ` changed ${commit.files.length} file`, body);
 
                 // !!! TODO: Analyze that duration is not totally different (40%) from avarage
 
@@ -59,7 +62,7 @@ export class gitHours implements IAggregator<number> {
 
         //console.log(commits);
 
-        return commits.length /* <- !!! Exculude = skip BPE */;
+        return filteredCommits.length /* <- !!! Exculude = skip BPE */;
     }
 
     public join(a: number, b: number) {
