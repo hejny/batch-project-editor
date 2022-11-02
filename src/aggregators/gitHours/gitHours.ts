@@ -1,4 +1,5 @@
 import gitlog from 'gitlog';
+import moment from 'moment';
 import { IAggregator, IAggregatorOptions } from '../IAggregator';
 
 export class gitHours implements IAggregator<number> {
@@ -25,20 +26,40 @@ export class gitHours implements IAggregator<number> {
                 'authorName',
                 'authorDate',
                 'committerDate',
+                'rawBody',
                 /* <- TODO: Filter only needed */
             ],
             execOptions: { maxBuffer: 1000 * 1024 * 1024 * 1024 * 1024 /* <- TODO: Want Infinite */ },
         });
 
-        for (const { authorDate } of commits) {
-            const date = new Date(authorDate);
+        // !!! Exculude = skip BPE
 
-            console.log(authorDate, date);
+        let lastDate: null | Date = null;
+        for (const commit of commits) {
+            const { subject, authorDate } = commit; /* <- TODO: Destruct in for loop */
+            const currentDate = new Date(authorDate);
+
+            if (lastDate) {
+                const duration = moment.duration({ milliseconds: lastDate.getTime() - currentDate.getTime() });
+
+                if (duration.asHours() > 2 /* <- TODO: Configurable */) {
+                    console.log('___');
+                    // !!! TODO: LERP average duration of commit according to additions/deletions
+                }
+
+                // console.log(duration.asHours());
+                console.log(subject, ' took ', duration.humanize(), ` changed ${commit.files.length} file`);
+
+                // !!! TODO: Analyze that duration is not totally different (40%) from avarage
+
+                // console.log(commit);
+            }
+            lastDate = currentDate;
         }
 
-        console.log(commits);
+        //console.log(commits);
 
-        return commits.length;
+        return commits.length /* <- !!! Exculude = skip BPE */;
     }
 
     public join(a: number, b: number) {
