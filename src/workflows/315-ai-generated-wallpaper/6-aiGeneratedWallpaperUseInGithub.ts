@@ -18,7 +18,7 @@ export async function aiGeneratedWallpaperUseInGithub({
     const match1 = WALLPAPER_IN_README.exec(readmeContent);
 
     if (!match1) {
-        return skippingBecauseOf(`No wallpaper in README.md yet`);
+        return skippingBecauseOf(`no wallpaper in README.md yet`);
     }
 
     const match2 = /\!\[[^\]]+\]\((?<imageSrc>[^\)]+)\)/.exec(match1[0]);

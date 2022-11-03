@@ -23,7 +23,7 @@ export function updateDependency(dependencyName: string): IWorkflow {
                 (packageJson.dependencies || {})[dependencyName] || (packageJson.devDependencies || {})[dependencyName];
 
             if (!dependencyUsedVersionWithPrefix) {
-                return /* [0] */ skippingBecauseOf(`Not using ${dependencyName}`);
+                return /* [0] */ skippingBecauseOf(`not using ${dependencyName}`);
             }
 
             const dependencyUsedVersion = removeDependencyPrefix(dependencyUsedVersionWithPrefix);
@@ -32,7 +32,7 @@ export function updateDependency(dependencyName: string): IWorkflow {
 
             if (dependencyUsedVersion === dependencyCurrentVersion) {
                 return /* [0] */ skippingBecauseOf(
-                    `Using ${dependencyName} in current version ${dependencyUsedVersion}`,
+                    `using ${dependencyName} in current version ${dependencyUsedVersion}`,
                 );
             }
 

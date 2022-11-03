@@ -8,7 +8,7 @@ export async function libraryBoilerplate({
     commit,
     skippingBecauseOf,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    return skippingBecauseOf(`Not implemented yet`);
+    return skippingBecauseOf(`not implemented yet`);
     // TODO: !! Combine files like JSONs and YML and give priority to existing project ones
     // TODO: !! Skip on non-lib projects
     // TODO: Some util to copy boilerplate files @see fca7572fcb4d834d3bba6b883439a8f81e052986

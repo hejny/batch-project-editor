@@ -15,7 +15,7 @@ export async function description({
     const description = (await readFile('README.md')).match(DESCRIPTION_IN_README)?.groups?.description;
 
     if (!description) {
-        return skippingBecauseOf(`No description extracted from README.md`);
+        return skippingBecauseOf(`no description extracted from README.md`);
     }
 
     let descriptionText = markdownToTxtEnhanced(description).split('\n').join(' ');
