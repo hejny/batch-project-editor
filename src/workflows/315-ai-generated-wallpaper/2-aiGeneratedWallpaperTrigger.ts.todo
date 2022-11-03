@@ -6,13 +6,13 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
 import { DISCORD_SEARCHRESULTS_QUERYSELECTOR, DISCORD_SEARCH_QUERYSELECTOR } from './utils/discordQuerySelectors';
 
-// !!! Not done yet
+// TODO: [🏯] Not done yet
 export async function aiGeneratedWallpaperTrigger({
     skippingBecauseOf,
     projectPath,
     packageJson,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // !!! Dry to some util
+    // TODO: [🏯] Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
@@ -33,9 +33,9 @@ export async function aiGeneratedWallpaperTrigger({
 
 
     //
-    // !!! Comment why not> const search = `od: MidJourney Bot#9282 "${imagineSentence}"`; /* <- TODO: [🍷] Unhardcode Czech language */
+    // TODO: [🏯] Comment why not> const search = `od: MidJourney Bot#9282 "${imagineSentence}"`; /* <- TODO: [🍷] Unhardcode Czech language */
     const search = `"${imagineSentence}"`;
-    // !!!!!!!!!!!!!! Restore>
+    // [🏯][🏯][🏯][🏯]!! Restore>
     // const search = `6224401`;
 
     await discordPage.type(DISCORD_SEARCH_QUERYSELECTOR, search, { delay: 50 });
@@ -56,12 +56,12 @@ export async function aiGeneratedWallpaperTrigger({
     for (const searchResultsItemElement of await searchResultsElement.$$(`li[aria-labelledby^="search-result-"]`)) {
         await searchResultsItemElement.click({ offset: { x: 10, y: 10 } });
 
-        // !!! Remove all console logs
+        // TODO: [🏯] Remove all console logs
         //console.log(searchResultsItemElement);
 
         const ariaLabelledby = await searchResultsItemElement.evaluate((node) => node.getAttribute('aria-labelledby'));
 
-        // !!! Remove const ariaLabelledby = await (await searchResultsItemElement.getProperty('aria-labelledby')).jsonValue();
+        // TODO: [🏯] Remove const ariaLabelledby = await (await searchResultsItemElement.getProperty('aria-labelledby')).jsonValue();
 
         if (!ariaLabelledby) {
             throw new Error(`Missing attribute aria-labelledby `);
@@ -69,7 +69,7 @@ export async function aiGeneratedWallpaperTrigger({
 
         const messageId = ariaLabelledby.split('-').pop();
 
-        //  !!! DRY
+        //  [🏯] DRY
         await discordPage.waitForSelector(`li[id="chat-messages-${messageId}"]`);
         const messageElement = await discordPage.$(`li[id="chat-messages-${messageId}"]`);
 
@@ -77,15 +77,15 @@ export async function aiGeneratedWallpaperTrigger({
             throw new Error(`No message element found for message id "${messageId}"`);
         }
 
-        // !!!
+        // [🏯]
         // console.log(await messageElement.evaluate((element) => element.outerHTML));
 
-        // !!!
+        // [🏯]
         messageElement.screenshot({ path: 'messageElement.png' });
         //console.log(messageElement.screenshot({ path: 'messageElement.png' }));
         //await forEver();
 
-        // !!! Note selector .component-ifCTxY not working !!! OR is it?
+        // TODO: [🏯] Note selector .component-ifCTxY not working [🏯] OR is it?
         // *[class*="component-ifCTxY"]
         const buttonElements = await messageElement.$$(`.component-ifCTxY`);
         console.log({ buttonElements });
@@ -100,14 +100,14 @@ export async function aiGeneratedWallpaperTrigger({
             }
         }
 
-        // !!!!!!!!!!!!!!!
+        // [🏯][🏯][🏯][🏯][🏯]
         // await forEver();
         /*
         for (const buttonText of ['U1', 'U2', 'U3', 'U4']) {
-            // !!! Only if not pressed
-            // !!! `div[contains(text(),"${buttonText}")]`
+            // TODO: [🏯] Only if not pressed
+            // TODO: [🏯] `div[contains(text(),"${buttonText}")]`
             const buttonElement = await messageElement.$();
-            // !!!
+            // [🏯]
             console.log({ buttonElement });
             //const [buttonElement] = xxx;
 
@@ -129,7 +129,7 @@ aiGeneratedWallpaperTrigger.initialize = prepareDiscordPage;
 
 /*
 
-    !!! Remove unused and better organize
+    [🏯] Remove unused and better organize
     DISCORD_SEARCHRESULTS_QUERYSELECTOR;
     DISCORD_SEARCHRESULTS_ITEM__QUERYSELECTOR;
     DISCORD_MESSAGE__QUERYSELECTOR;

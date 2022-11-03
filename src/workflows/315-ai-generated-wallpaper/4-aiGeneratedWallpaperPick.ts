@@ -20,7 +20,7 @@ export async function aiGeneratedWallpaperPick({
     commit,
     skippingBecauseOf,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // !!! Dry to some util
+    // TODO: [🏯] Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
     const wallpaperCurrentPointerPath = join(wallpaperPath, 'current');
@@ -48,7 +48,7 @@ export async function aiGeneratedWallpaperPick({
         `);
     });
     app.get('/', async (request: Request, response: Response) => {
-        // !!! Timeout countdown and use skippingBecauseOf
+        // TODO: [🏯] Timeout countdown and use skippingBecauseOf
         return response.send(`
 
             <h1>${projectTitle}</h1>

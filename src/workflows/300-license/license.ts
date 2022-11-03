@@ -223,5 +223,5 @@ export async function license({ projectPath, modifyPackage, commit }: IWorkflowO
 }
 
 /**
- * TODO: !!! Copyleft
+ * TODO: !! Copyleft
  */

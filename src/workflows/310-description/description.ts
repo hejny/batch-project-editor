@@ -31,7 +31,7 @@ export async function description({
 }
 
 // ✍🏾 ✍🏼 ✍🏿 ✍🏽 📓
-// !!! Fulltext rename projectOrg to projectOwner
+// TODO: !! Fulltext rename projectOrg to projectOwner
 
 /**
  * TODO: [🏨] Some common config to parse readme - DESCRIPTION_IN_README

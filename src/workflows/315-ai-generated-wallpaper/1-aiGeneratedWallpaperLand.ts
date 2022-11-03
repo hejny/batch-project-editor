@@ -12,7 +12,7 @@ export async function aiGeneratedWallpaperLand({
     skippingBecauseOf,
     projectPath,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // !!! Dry to some util
+    // TODO: [🏯] Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
@@ -42,7 +42,7 @@ export async function aiGeneratedWallpaperLand({
         await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagineSentenceWithFlags, { delay: 50 });
         await discordPage.keyboard.press('Enter');
 
-        // !!! Configurable waiting time> await forTime(1000 * 60 * Math.random());
+        // TODO: [🏯] Configurable waiting time> await forTime(1000 * 60 * Math.random());
         await forTime(1000 * 60 * 10 * Math.random());
     }
 
@@ -52,6 +52,6 @@ export async function aiGeneratedWallpaperLand({
 aiGeneratedWallpaperLand.initialize = prepareDiscordPage;
 
 /**
- * !!! ??? DigitalOcean Referral Badge
+ * [🏯] ??? DigitalOcean Referral Badge
  * TODO: LIB spacetrim should be able to modify prototype of string and add there a .spaceTrim() method
  */

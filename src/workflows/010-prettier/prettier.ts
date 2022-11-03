@@ -5,9 +5,8 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 export async function prettier({ projectPath, commit, skippingBecauseOf }: IWorkflowOptions): Promise<WorkflowResult> {
     return skippingBecauseOf(`Not implemented yet`);
-    // TODO: !!! Make this workflow working
     if (await isFileExisting(join(projectPath, '.prettierrc'))) {
-        // !!! Add prettier to the project
+        // TODO: !! Auto-add prettier to the project
         return commit('🧹 Configure prettier');
     }
 
@@ -27,3 +26,7 @@ export async function prettier({ projectPath, commit, skippingBecauseOf }: IWork
 
     return commit('🧹 Organize imports');
 }
+
+/**
+ * TODO: !! Make this workflow working
+ */

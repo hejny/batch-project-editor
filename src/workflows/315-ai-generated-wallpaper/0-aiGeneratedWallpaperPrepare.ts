@@ -19,7 +19,7 @@ export async function aiGeneratedWallpaperPrepare({
         return skippingBecauseOf(`no description in package.json`);
     }
 
-    // !!! Dry to some util
+    // TODO: [🏯] Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
 
@@ -61,10 +61,11 @@ export async function aiGeneratedWallpaperPrepare({
 
     return commit(`🤖🖼️ AI–⁠generated wallpaper prepare imagine entry`);
 
-    // TODO: !!! Implement
+    // TODO: [🏯] Implement
     // /assets/ai/wallpaper/current
 }
 
 /**
+ * Note: All important AI TODOs are marked with [🏯]
  * TODO: Maybe there should be /assets/ai/wallpaper/README.md # AI–⁠generated Wallpaper
  */

@@ -17,7 +17,7 @@ export async function aiGeneratedWallpaperUseInReadme({
     skippingBecauseOf,
     mainBranch,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // !!! Dry to some util
+    // TODO: [🏯] Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
     const wallpaperCurrentPointerPath = join(wallpaperPath, 'current');

@@ -41,5 +41,5 @@ export async function auditDependencies({
 }
 
 /**
- * TODO: !!! Workflows with multiple commits split into multiple functions
+ * TODO: !! Workflows with multiple commits split into multiple functions
  */

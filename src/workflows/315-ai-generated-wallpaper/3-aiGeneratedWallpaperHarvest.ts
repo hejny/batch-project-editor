@@ -12,7 +12,7 @@ export async function aiGeneratedWallpaperHarvest({
     skippingBecauseOf,
     commit,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // !!! Dry to some util
+    // TODO: [🏯] Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
@@ -30,7 +30,7 @@ export async function aiGeneratedWallpaperHarvest({
         }));
 
     /*/
-    // !!! This should be just temporary OR flagged
+    // TODO: [🏯] This should be just temporary OR flagged
     if(await isDirectoryExisting(wallpaperGalleryPath)){
       await rmdir(wallpaperGalleryPath, { recursive: true });
     }
@@ -70,9 +70,9 @@ export async function aiGeneratedWallpaperHarvest({
     }
 
     /*/
-   // TODO: !!! Allow this by some CLI flag
+   // TODO: [🏯] Allow this by some CLI flag
     for (const localDir of localDirs) {
-        // !!! Use openFolder
+        // TODO: [🏯] Use openFolder
         await execCommand({ command: `explorer ${localDir}`, crashOnError: false });
     }
     /**/

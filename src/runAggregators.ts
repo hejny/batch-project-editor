@@ -1,7 +1,5 @@
 import chalk from 'chalk';
-import { spawn } from 'child_process';
 import { readFile } from 'fs/promises';
-import { locateVSCode } from 'locate-app';
 import { basename, join } from 'path';
 import { forTime } from 'waitasecond';
 import { AGGREGATORS } from './aggregators/aggregators';
@@ -11,10 +9,6 @@ import { findProjectName } from './utils/findProjectName';
 import { findProjectTitle } from './utils/findProjectTitle';
 import { forPlay } from './utils/forPlay';
 import { isFileExisting } from './utils/isFileExisting';
-import { isProjectArchived } from './utils/isProjectArchived';
-import { isProjectFork } from './utils/isProjectFork';
-import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
-import { isWorkingTreeInMergeProgress } from './utils/isWorkingTreeInMergeProgress';
 
 interface IRunAggregatorsOptions {
     isLooping: boolean;
@@ -59,43 +53,15 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
         const projectTitle = await findProjectTitle(projectPath);
         const { name: projectName, org: projectOrg, url: projectUrl } = await findProjectName(projectPath);
 
-        if (await isProjectArchived(projectUrl)) {
-            // !!! This skip does not make sence
-            console.info(chalk.gray(`⏩ Skipping project ${projectTitle} because the project is archived on GitHub`));
-            continue;
-        }
-
-        if (await isProjectFork(projectUrl)) {
-            // !!! This skip does not make sence
-            console.info(
-                chalk.gray(`⏩ Skipping project ${projectTitle} because the project is just a fork on GitHub`),
-            );
-            continue;
-        }
-
         let currentBranch = await execCommand({
             command: 'git branch --show-current',
             cwd: projectPath,
         });
 
-        if (!(await isWorkingTreeClean(projectPath))) {
-            // TODO: !!! Maybe not nessesary
-            if (!(await isWorkingTreeInMergeProgress(projectPath))) {
-                // !!! This skip does MAYBE not make sence
-                console.info(chalk.gray(`⏩ Skipping project ${projectTitle} because working dir is not clean`));
-            } else {
-                // !!! This OPEN does MAYBE not make sence
-                console.info(
-                    chalk.gray(`⏩ Opening project ${projectTitle} in VSCode because there is merge in progress`),
-                );
-
-                spawn(await locateVSCode(), [projectPath]);
-            }
-            continue;
-        }
-
+        /*
+        Note: Kepping for [👊] use it in checkoutMainBranch
         if (currentBranch !== 'main' && currentBranch !== 'master') {
-            // TODO: !!! Maybe not nessesary
+
 
             console.info(`👉 Switching from branch ${currentBranch} to main.`);
 
@@ -117,17 +83,18 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
                 `⏩ Skipping project ${projectTitle} because current branch is not main (or master) but ${currentBranch}.`,
             );
             continue;
-            */
+            * /
         }
+        */
 
         if (!(await isFileExisting(join(projectPath, 'package.json')))) {
-            // TODO: !!! Maybe not nessesary
+            // TODO: [🐎] Maybe not nessesary
             console.info(chalk.gray(`⏩ Skipping project ${projectTitle} because package.json does not exist`));
             continue;
         }
 
         if (!(await isFileExisting(join(projectPath, 'README.md')))) {
-            // TODO: !!! Maybe not nessesary
+            // TODO: [🐎] Maybe not nessesary
             console.info(chalk.gray(`⏩ Skipping project ${projectTitle} because README.md does not exist`));
             continue;
         }
@@ -195,8 +162,6 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
 }
 
 /**
- * TODO: !!! Make runnable from main index.ts
- * TODO: !!! Under some aggregate typeof aggregators
  * TODO: Simplyfy this file (maybe make some utils Class) and DRY runWorkflows + runAggregators
  * TODO: Maybe use nodegit
  */

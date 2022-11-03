@@ -44,7 +44,7 @@ export async function aiGeneratedWallpaperUseInGithub({
     await githubPage.goto(`${projectUrl}/settings`, { waitUntil: 'networkidle0' });
 
     /**
-     * !!! Describe
+     * [🏯] Describe
      */
     let isClickedOnUpload = false;
     (async () => {

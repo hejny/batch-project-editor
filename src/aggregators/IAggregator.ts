@@ -19,10 +19,11 @@ export interface IAggregator<T> {
     run(options: IAggregatorOptions): Promisable<T>;
     join(a: T, b: T): T;
     print(value: T): object | string | number | boolean;
-    // TODO: !!! toHtml
 }
 
 /**
- * TODO: !!! Maybe allow to run just 1 aggregation in one commant and remove unnecessary things like initialize
- * TODO: !!! DRY with IWorkflow
+ *  TODO: Split into mainBranch to mainBranch and currentBranch
+ * TODO: [👊] Add utility checkoutMainBranch
+ * TODO: DRY with IWorkflow
+ * TODO: Make toHtml instead of print
  */

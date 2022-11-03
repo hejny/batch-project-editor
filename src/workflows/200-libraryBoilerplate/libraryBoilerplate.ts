@@ -9,8 +9,8 @@ export async function libraryBoilerplate({
     skippingBecauseOf,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     return skippingBecauseOf(`Not implemented yet`);
-    // TODO: !!! Combine files like JSONs and YML and give priority to existing project ones
-    // TODO: !!! Skip on non-lib projects
+    // TODO: !! Combine files like JSONs and YML and give priority to existing project ones
+    // TODO: !! Skip on non-lib projects
     // TODO: Some util to copy boilerplate files @see fca7572fcb4d834d3bba6b883439a8f81e052986
     for (const boilerplateFilePath of await glob(join(__dirname, 'boilerplate/**/*'), { dot: true })) {
         const projectFilePath = join(projectPath, relative(join(__dirname, 'boilerplate'), boilerplateFilePath));
@@ -21,5 +21,5 @@ export async function libraryBoilerplate({
 }
 
 /**
- * TODO: !!! Split between universal and library boilerplate
+ * TODO: !! Split between universal and library boilerplate
  */

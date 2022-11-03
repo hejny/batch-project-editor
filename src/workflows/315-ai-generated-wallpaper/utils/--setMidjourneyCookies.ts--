@@ -2,7 +2,7 @@ import { Page } from 'puppeteer-core';
 import { forTime } from 'waitasecond';
 
 export interface IDiscordCookies {
-    // !!!
+    // [🏯]
     //c_user: number;
     //xs: string;
 }

@@ -36,7 +36,6 @@ export class gitHours implements IAggregator<IGitHoursResult> {
             execOptions: { maxBuffer: 1000 * 1024 * 1024 * 1024 * 1024 /* <- TODO: Want Infinite */ },
         });
 
-        // !!! Exculude = skip BPE
 
         const commits = allCommits.filter(({ body }) => !body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE));
 
@@ -58,7 +57,7 @@ export class gitHours implements IAggregator<IGitHoursResult> {
                     // console.info('___');
                     leadingCommitsCount++;
                     commitTime = moment.duration({
-                        minutes: 30 /* <- !!! TODO: LERP average duration of commit according to additions/deletions */,
+                        minutes: 30 /* <- TODO: [🐎] LERP average duration of commit according to additions/deletions */,
                     });
                 }
 
@@ -66,7 +65,7 @@ export class gitHours implements IAggregator<IGitHoursResult> {
 
                 // console.info(subject, ' took ', commitTime.humanize(), ` changed ${commit.files.length} file`, body);
 
-                // !!! TODO: Analyze that duration is not totally different (40%) from avarage
+                // TODO: [🐎] Analyze (and report if) that duration is not totally different (40%) from avarage
             }
             lastDate = currentDate;
         }
@@ -102,8 +101,12 @@ export class gitHours implements IAggregator<IGitHoursResult> {
 }
 
 /**
- * TODO: !!! Split by months
- * TODO: !!! Split subprojects by purpose
- * TODO: !!! Check that here all all the commits
+ * Note: All important gitHours TODOs are marked with [🐎]
+ * TODO: [🐎] Split by months
+ * TODO: [🐎] Split subprojects by purpose
+ * TODO: [🐎] Filter out generated code
+ * TODO: [🐎] Filter the work by the author (to be able to count work on the forks)
+ * TODO: [🐎] Count all branches
+ * TODO: [🐎] Check that here all all the commits
  * TODO: What is the difference between authorDate and committerDate
  */
