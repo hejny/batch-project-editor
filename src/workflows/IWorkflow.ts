@@ -34,7 +34,6 @@ export interface IWorkflowOptions {
     projectOrg: string;
     projectName: string;
     packageJson: PackageJson;
-    readmeContent: string;
     mainBranch: 'master' | 'main';
 
     execCommandOnProject(command: string): Promise<string>;

@@ -2,12 +2,9 @@ import spaceTrim from 'spacetrim';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { pickPartnersForProject } from './organizations';
 
-const PARTNERS_DISABLE = /No-Partners/i;
 const PARTNERS_IN_README = /<!--Partners-->(?<badges>.*)<!--\/Partners-->/is;
 
 export async function partners({
-    readmeContent,
-    skippingBecauseOf,
     projectUrl,
     projectName,
     projectOrg,
@@ -15,10 +12,6 @@ export async function partners({
     commit,
     mainBranch,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    if (PARTNERS_DISABLE.test(readmeContent)) {
-        return skippingBecauseOf(`Project has disabled partners part`);
-    }
-
     const organizations = pickPartnersForProject({
         projectUrl,
         projectOrg,

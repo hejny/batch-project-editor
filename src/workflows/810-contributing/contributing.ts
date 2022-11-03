@@ -1,22 +1,15 @@
 import spaceTrim from 'spacetrim';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-const CONTRIBUTING_DISABLE = /No-Contributing/i;
 const CONTRIBUTING_IN_README = /<!--Contributing-->(?<badges>.*)<!--\/Contributing-->/is;
 
 export async function contributing({
-    readmeContent,
-    skippingBecauseOf,
     projectName,
     projectOrg,
     modifyFiles,
     commit,
     mainBranch,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    if (CONTRIBUTING_DISABLE.test(readmeContent)) {
-        return skippingBecauseOf(`Project has disabled contributing part`);
-    }
-
     const contributingMarkdown =
         projectOrg !== 'hejny'
             ? ``

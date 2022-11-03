@@ -233,7 +233,6 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     }
 
                     const packageJson = JSON.parse(await readFile(join(projectPath, 'package.json'), 'utf8'));
-                    const readmeContent = await readFile(join(projectPath, 'README.md'), 'utf8');
 
                     function modifyPackage(
                         fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
@@ -257,7 +256,6 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         projectUrl,
                         projectOrg,
                         packageJson,
-                        readmeContent,
                         mainBranch: currentBranch as 'main' | 'master',
                         execCommandOnProject,
                         readFile: readProjectFile,
