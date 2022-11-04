@@ -218,8 +218,10 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         }
                     }
 
-                    function readProjectFile(filePath: string): Promise<string> {
-                        return readFile(join(projectPath, filePath), 'utf8');
+                    async function readProjectFile(filePath: string): Promise<string> {
+                        let content = await readFile(join(projectPath, filePath), 'utf8');
+                        content = content.split(`\r\n`).join('\n');
+                        return content;
                     }
 
                     function modifyJsonFiles<T>(

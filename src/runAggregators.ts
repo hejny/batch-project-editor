@@ -109,6 +109,7 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
 
         function readProjectFile(filePath: string): Promise<string> {
             return readFile(join(projectPath, filePath), 'utf8');
+            // TODO: Warn if here is CRLF (\r\n)
         }
 
         const packageJson = JSON.parse(await readFile(join(projectPath, 'package.json'), 'utf8'));
