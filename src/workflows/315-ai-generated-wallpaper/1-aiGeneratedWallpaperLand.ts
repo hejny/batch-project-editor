@@ -32,7 +32,7 @@ export async function aiGeneratedWallpaperLand({
         // Note: Test if already landed
         const searchResult = await searchMidjourney({ prompt: imagineSentence });
         if (searchResult.length > 0) {
-            return skippingBecauseOf(`Already landed "${imagineSentence}"`);
+            return skippingBecauseOf(`already landed "${imagineSentence}"`);
         }
 
         const discordPage = getDiscordPage();

@@ -22,11 +22,11 @@ export async function aiGeneratedWallpaperUseInReadme({
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
     const wallpaperCurrentPointerPath = join(wallpaperPath, 'current');
     if (!(await isFileExisting(wallpaperCurrentPointerPath))) {
-        return skippingBecauseOf(`No wallpaper current pointer yet; run aiGeneratedWallpaperPick workflow`);
+        return skippingBecauseOf(`no wallpaper current pointer yet; run aiGeneratedWallpaperPick workflow`);
     }
     const wallpaperCurrentPath = join(wallpaperGalleryPath, await readFile(wallpaperCurrentPointerPath, 'utf8'));
     if (!(await isFileExisting(wallpaperCurrentPath))) {
-        throw new Error(`Wrong wallpaper current pointer yet; re-run aiGeneratedWallpaperPick workflow`);
+        throw new Error(`wrong wallpaper current pointer yet; re-run aiGeneratedWallpaperPick workflow`);
     }
 
     const wallpaperMarkdown = spaceTrim(`

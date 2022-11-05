@@ -36,7 +36,6 @@ export class gitHours implements IAggregator<IGitHoursResult> {
             execOptions: { maxBuffer: 1000 * 1024 * 1024 * 1024 * 1024 /* <- TODO: Want Infinite */ },
         });
 
-
         const commits = allCommits.filter(({ body }) => !body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE));
 
         let leadingCommitsCount = 0;
@@ -105,6 +104,8 @@ export class gitHours implements IAggregator<IGitHoursResult> {
  * TODO: [🐎] Split by months
  * TODO: [🐎] Split subprojects by purpose
  * TODO: [🐎] Filter out generated code
+ * TODO: [🐎] Special rules for non-text-edited files (Like Inkscape SVG)
+ * TODO: [🐎] LERP should be file-specific like svgs-to-svgs, ts(x)-to-ts(x) ,...
  * TODO: [🐎] Filter the work by the author (to be able to count work on the forks)
  * TODO: [🐎] Count all branches
  * TODO: [🐎] Check that here all all the commits

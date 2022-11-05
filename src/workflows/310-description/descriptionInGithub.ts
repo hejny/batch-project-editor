@@ -10,7 +10,7 @@ export async function descriptionInGithub({
     const description = packageJson.description;
 
     if (!description) {
-        return skippingBecauseOf(`No description extracted from README.md`);
+        return skippingBecauseOf(`no description extracted from README.md`);
     }
 
     const githubPage = await getGithubPage();

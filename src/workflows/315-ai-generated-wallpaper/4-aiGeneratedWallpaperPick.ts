@@ -32,7 +32,7 @@ export async function aiGeneratedWallpaperPick({
     const allWallpapersPaths = await glob(join(wallpaperGalleryPath, '*.png'));
 
     if (allWallpapersPaths.length === 0) {
-        return skippingBecauseOf('No images to pick');
+        return skippingBecauseOf('no images to pick');
     }
 
     const port = randomInteger(11111, 65536);

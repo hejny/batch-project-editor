@@ -41,7 +41,7 @@ export async function aiGeneratedWallpaperHarvest({
     ).flat();
 
     if (searchResult.length === 0) {
-        return skippingBecauseOf(`Nothing to harvest yet`);
+        return skippingBecauseOf(`nothing to harvest yet`);
     }
 
     const localDirs = new Set<string>();
