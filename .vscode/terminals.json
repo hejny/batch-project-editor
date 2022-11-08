@@ -12,6 +12,16 @@
             "focus": true
         },
         {
+            "name": "🔼⏎ Change CRLF to LF",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --workflows lines --projects %"
+            ],
+            "onlySingle": false,
+            "focus": true
+        }
+        ,
+        {
             "name": "🔼📦 Run update & audit dependencies",
             "commands": [
                 "ts-node ./src/index.ts --clone",
@@ -64,7 +74,7 @@
         },
         {
             "name": "🔼 Run workflows",
-            "command": "ts-node ./src/index.ts --edit --workflows %,-descriptionInGithub,-aiGeneratedWallpaper% --projects %",
+            "command": "ts-node ./src/index.ts --edit --workflows %,-lines,-descriptionInGithub,-aiGeneratedWallpaper% --projects %",
             "onlySingle": true,
             "focus": true
         },

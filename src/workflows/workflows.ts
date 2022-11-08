@@ -25,7 +25,7 @@ import { IWorkflow } from './IWorkflow';
 import { terminalsVersion } from './terminals-version/terminalsVersion';
 
 export const WORKFLOWS: IWorkflow[] = [
-    // ...RARE_WORKFLOWS
+    lines,
     prettier,
     // TODO: updateDependency('touchcontroller'),
     // TODO: updateDependency('configchecker'),
@@ -62,9 +62,3 @@ export const WORKFLOWS: IWorkflow[] = [
     branchesRemoveMerged,
     branchesUpdateFeatures,
 ];
-
-/**
- * Rare workflows are workflows that need to be used once but it would be too inefficient to run them every time.
- */
-
-export const RARE_WORKFLOWS: IWorkflow[] = [lines];
