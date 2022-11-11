@@ -19,8 +19,7 @@
             ],
             "onlySingle": false,
             "focus": true
-        }
-        ,
+        },
         {
             "name": "🔼📦 Run update & audit dependencies",
             "commands": [
