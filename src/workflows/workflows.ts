@@ -18,6 +18,7 @@ import { normalizePackage } from './330-normalizePackage/normalizePackage';
 import { badges } from './800-badges/badges';
 import { contributing } from './810-contributing/contributing';
 import { partners } from './820-partners/partners';
+import { normalizeSvgs } from './900-assets/normalizeSvgs';
 import { branchesRemoveMerged } from './branches-remove-merged/branches-remove-merged';
 import { branchesUpdateFeatures } from './branches-update-features/branches-update-features';
 import { collboardModuleNames } from './collboard-module-names/collboard-module-names';
@@ -61,4 +62,5 @@ export const WORKFLOWS: IWorkflow[] = [
     collboardModuleNames,
     branchesRemoveMerged,
     branchesUpdateFeatures,
+    normalizeSvgs,
 ];
