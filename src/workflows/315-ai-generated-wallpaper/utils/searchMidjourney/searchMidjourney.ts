@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
 import { MIDJOURNEY_COOKIES } from '../../../../config';
 import { IMidjourneyJob } from './IMidjourneyJob';
@@ -43,7 +44,19 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
     });
 
     if (json.msg === 'Error: Internal server error') {
-        console.info(chalk.gray('Internal server error on MidJourney, retrying after 5 minutes...'), { json });
+        console.info(
+            chalk.gray(
+                spaceTrim(`
+
+                  Internal server error on MidJourney
+                  Try to update MIDJOURNEY_COOKIES.__Secure-next-auth.session-token
+
+                  Retrying after 5 minutes...
+
+                `),
+            ),
+            { json },
+        );
         await forTime(1000 * 60 * 5);
         return searchMidjourney(options);
     }
