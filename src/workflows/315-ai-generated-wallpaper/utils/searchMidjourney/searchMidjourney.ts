@@ -11,7 +11,7 @@ interface ISearchMidjourneyOptions {
 export async function searchMidjourney(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {
     const { prompt } = options;
 
-    const url = new URL(` https://www.midjourney.com/api/app/recent-jobs/`);
+    const url = new URL(`https://www.midjourney.com/api/app/recent-jobs/`);
 
     url.searchParams.set('amount', '500' /* <- TODO: Implement pagination */);
     url.searchParams.set('jobType', 'yfcc_upsample' /* <- TODO: What this means? */);
