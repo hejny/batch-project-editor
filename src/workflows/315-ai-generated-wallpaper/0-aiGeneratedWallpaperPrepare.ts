@@ -2,7 +2,6 @@ import { mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { createAllSubsetsOf } from '../../utils/createAllSubsetsOf';
-import { randomInteger } from '../../utils/random/randomInteger';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { IMAGINE_OPTIONAL_FLAGS, IMAGINE_REQUIRED_FLAGS, IMAGINE_TEMPLATES } from './config';
 
@@ -23,8 +22,13 @@ export async function aiGeneratedWallpaperPrepare({
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
 
-    const descriptionSentence = packageJson.description.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
-    const imagineFlagsSeed = `--seed ${randomInteger(1111111, 9999999)}`;
+    let descriptionSentence = packageJson.description;
+
+    // TODO: !!! Following should be in config:
+    descriptionSentence = descriptionSentence.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
+    descriptionSentence = descriptionSentence.replace('See all file support modules for Collboard', '');
+
+    // const imagineFlagsSeed = `--seed ${randomInteger(1111111, 9999999)}`;
 
     const wallpaperImagineContents: string[] = [];
     for (const imagineOptionalFlags of createAllSubsetsOf(...IMAGINE_OPTIONAL_FLAGS)) {
@@ -35,7 +39,7 @@ export async function aiGeneratedWallpaperPrepare({
                     (block) => `
                         ${block(imagineSentence)}
                         ${block([...IMAGINE_REQUIRED_FLAGS, ...imagineOptionalFlags].join(' '))}
-                        ${block(imagineFlagsSeed)}
+                        ${/*block(imagineFlagsSeed)*/ ''}
                     `,
                 )
                     .split('\n\n')
