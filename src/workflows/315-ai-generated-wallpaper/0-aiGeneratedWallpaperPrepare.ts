@@ -28,6 +28,8 @@ export async function aiGeneratedWallpaperPrepare({
     descriptionSentence = descriptionSentence.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
     descriptionSentence = descriptionSentence.replace('See all file support modules for Collboard', '');
 
+    // TODO: !!! Trim descriptionSentence + trim also .
+
     // const imagineFlagsSeed = `--seed ${randomInteger(1111111, 9999999)}`;
 
     const wallpaperImagineContents: string[] = [];
