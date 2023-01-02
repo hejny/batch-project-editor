@@ -75,6 +75,7 @@ export async function aiGeneratedWallpaperUseInGithub({
 
             await forTime(1000 /* To be ready to use from sharp */);
             await fileChooser.accept([shrinkedPath]);
+            console.info(chalk.gray(`⏳ Waiting for 15 seconds to file to be uploaded`));
             await forTime(1000 * 15 /* To be uploaded - to be able to unlink */);
         } finally {
             await unlink(shrinkedPath);
@@ -85,6 +86,7 @@ export async function aiGeneratedWallpaperUseInGithub({
     await clickOnText(githubPage, 'Upload an image');
     isClickedOnUpload = true;
 
+    console.info(chalk.gray(`⏳ Waiting for 15 seconds to everything to settle`));
     await forTime(1000 * 15 /* To be uploaded - to everything to settle */);
 
     return WorkflowResult.SideEffect;

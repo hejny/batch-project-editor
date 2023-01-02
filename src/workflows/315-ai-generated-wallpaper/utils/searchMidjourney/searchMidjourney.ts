@@ -43,8 +43,8 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
     });
 
     if (json.msg === 'Error: Internal server error') {
-        await forTime(1000 * 60 * 5);
         console.info(chalk.gray('Internal server error on MidJourney, retrying after 5 minutes...'), { json });
+        await forTime(1000 * 60 * 5);
         return searchMidjourney(options);
     }
 

@@ -43,7 +43,9 @@ export async function aiGeneratedWallpaperLand({
         await discordPage.keyboard.press('Enter');
 
         // TODO: [🏯] Configurable waiting time> await forTime(1000 * 60 * Math.random());
-        await forTime(1000 * 60 * 10 * Math.random());
+        let secondsToWait = 60 * 10 * Math.random();
+        console.info(chalk.gray(`⏳ Waiting for ${secondsToWait} seconds after writing /imagine command`));
+        await forTime(1000 * secondsToWait);
     }
 
     return WorkflowResult.SideEffect;
@@ -52,6 +54,7 @@ export async function aiGeneratedWallpaperLand({
 aiGeneratedWallpaperLand.initialize = prepareDiscordPage;
 
 /**
+ * TODO: Maybe rename to aiGeneratedWallpaperImagine
  * [🏯] ??? DigitalOcean Referral Badge
  * TODO: LIB spacetrim should be able to modify prototype of string and add there a .spaceTrim() method
  */

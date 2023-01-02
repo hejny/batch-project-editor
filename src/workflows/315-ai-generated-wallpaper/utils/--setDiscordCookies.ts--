@@ -19,6 +19,8 @@ export async function setDiscordCookies(
             value: value as string,
         });
     }
+
+    console.info(chalk.gray(`⏳ Waiting for 5 seconds to ...`));
     await forTime(5000);
 
     await page.evaluate((discordLocalStorage) => {
