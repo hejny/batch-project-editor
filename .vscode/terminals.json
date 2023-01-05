@@ -39,10 +39,19 @@
             "focus": true
         },
         {
+            "name": "🏭🖼️ Prepare AI–⁠generated wallpapers",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --loop --workflows description,aiGeneratedWallpaperPrepare --projects %"
+            ],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
             "name": "🔼🖼️ Run AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPick --projects %"
+                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPrepare,-aiGeneratedWallpaperPick --projects %"
             ],
             "onlySingle": true,
             "focus": true

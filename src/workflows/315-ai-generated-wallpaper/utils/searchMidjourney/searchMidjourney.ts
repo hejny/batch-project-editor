@@ -5,12 +5,13 @@ import { MIDJOURNEY_COOKIES } from '../../../../config';
 import { IMidjourneyJob } from './IMidjourneyJob';
 
 interface ISearchMidjourneyOptions {
+    version: number;
     // TODO: [0] userId: number
     prompt: string;
 }
 
 export async function searchMidjourney(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {
-    const { prompt } = options;
+    const { prompt, version } = options;
 
     const url = new URL(`https://www.midjourney.com/api/app/recent-jobs/`);
 
@@ -49,6 +50,7 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
                 spaceTrim(`
 
                   Internal server error on MidJourney
+                  ${url.href}
                   Try to update MIDJOURNEY_COOKIES.__Secure-next-auth.session-token
 
                   Retrying after 5 minutes...
@@ -70,7 +72,9 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
         return [];
     }
 
-    const jobs = json as IMidjourneyJob[];
+    let jobs = json as IMidjourneyJob[];
+
+    jobs = jobs.filter((job) => job.version === version);
 
     return jobs;
 }

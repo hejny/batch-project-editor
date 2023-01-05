@@ -1,3 +1,5 @@
+export const IMAGINE_VERSION = 4;
+
 export const IMAGINE_OPTIONAL_FLAGS: string[] = [
     //'--hd',
     // '--version 3',
@@ -6,8 +8,10 @@ export const IMAGINE_OPTIONAL_FLAGS: string[] = [
 ];
 
 export const IMAGINE_REQUIRED_FLAGS: string[] = [
-    /*'--aspect 2:1'*/
+    `--version ${IMAGINE_VERSION}`,
+    //'--aspect 2:1'
 ];
+
 export const IMAGINE_TEMPLATES: string[] = [
     '%',
     // 'Banner for %',

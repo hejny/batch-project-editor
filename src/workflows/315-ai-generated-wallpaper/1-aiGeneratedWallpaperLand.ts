@@ -4,6 +4,7 @@ import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
+import { IMAGINE_VERSION } from './config';
 import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
 import { DISCORD_MESSAGE_QUERYSELECTOR } from './utils/discordQuerySelectors';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
@@ -30,7 +31,7 @@ export async function aiGeneratedWallpaperLand({
 
     for (const { imagineSentence, imagineSentenceWithFlags } of imagines) {
         // Note: Test if already landed
-        const searchResult = await searchMidjourney({ prompt: imagineSentence });
+        const searchResult = await searchMidjourney({ prompt: imagineSentence, version: IMAGINE_VERSION });
         if (searchResult.length > 0) {
             return skippingBecauseOf(`already landed "${imagineSentence}"`);
         }

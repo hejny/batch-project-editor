@@ -41,4 +41,5 @@ export interface IMidjourneyJob {
     user_ranking_count: number;
     user_ranking_score: number;
     username: string;
+    version?: number;
 }

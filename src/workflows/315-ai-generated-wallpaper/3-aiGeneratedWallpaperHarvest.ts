@@ -6,6 +6,7 @@ import { stringToArrayBuffer } from '../../utils/stringToArrayBuffer';
 import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
+import { IMAGINE_VERSION } from './config';
 
 export async function aiGeneratedWallpaperHarvest({
     projectPath,
@@ -37,7 +38,7 @@ export async function aiGeneratedWallpaperHarvest({
     /**/
 
     const searchResult = (
-        await imagines.mapAsync(({ imagineSentence }) => searchMidjourney({ prompt: imagineSentence }))
+        await imagines.mapAsync(({ imagineSentence }) => searchMidjourney({ prompt: imagineSentence , version: IMAGINE_VERSION}))
     ).flat();
 
     if (searchResult.length === 0) {
