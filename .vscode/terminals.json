@@ -48,7 +48,7 @@
             "focus": true
         },
         {
-            "name": "🔼🖼️ Land&Harvest&Use AI–⁠generated wallpapers",
+            "name": "🔼🖼️ Land & Harvest & Use AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
                 "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPrepare,-aiGeneratedWallpaperPick --projects %"
