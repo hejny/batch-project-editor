@@ -154,6 +154,7 @@ export async function badges({
 }
 
 /**
+ * TODO: Add coverage report https://app.codecov.io/gh/TypeStrong/ts-node
  * TODO: Add priority and pick only first 7
  * TODO: [🎸] Some common util to modify readme
  * TODO: [🏨] Some common config to parse readme - BADGES_IN_README
