@@ -48,7 +48,8 @@ export async function aiGeneratedWallpaperUseInGithub({
      */
     let isClickedOnUpload = false;
     (async () => {
-        const fileChooser = await githubPage.waitForFileChooser();
+        const fileChooser =
+            await githubPage.waitForFileChooser(/* !!!!!!! Here is often TimeoutError: waiting for waiting for file chooser failed: timeout 30000ms exceeded */);
 
         await forTime(100);
 

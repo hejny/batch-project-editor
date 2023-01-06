@@ -4,6 +4,7 @@ import spaceTrim from 'spacetrim';
 import { createAllSubsetsOf } from '../../utils/createAllSubsetsOf';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { IMAGINE_OPTIONAL_FLAGS, IMAGINE_REQUIRED_FLAGS, IMAGINE_TEMPLATES } from './config';
+import { stripsLinks } from './utils/stripsLinks';
 
 export async function aiGeneratedWallpaperPrepare({
     packageJson,
@@ -27,6 +28,7 @@ export async function aiGeneratedWallpaperPrepare({
     // TODO: !!! Following should be in config:
     descriptionSentence = descriptionSentence.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
     descriptionSentence = descriptionSentence.replace('See all file support modules for Collboard', '');
+    descriptionSentence = stripsLinks(descriptionSentence);
 
     // TODO: !!! Trim descriptionSentence + trim also .
 
