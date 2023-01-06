@@ -8,6 +8,7 @@ import { IMAGINE_VERSION } from './config';
 import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
 import { DISCORD_MESSAGE_QUERYSELECTOR } from './utils/discordQuerySelectors';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
+import { stripFlagsFromPrompt } from './utils/stripFlagsFromPrompt';
 
 export async function aiGeneratedWallpaperLand({
     skippingBecauseOf,
@@ -20,27 +21,23 @@ export async function aiGeneratedWallpaperLand({
     const imagines = spaceTrim(wallpaperImagineContents)
         .split('\n\n')
         .map((row) => row.split('\n').join(' ').split('  ').join(' ').trim())
-        .filter((row) => row !== '' && !row.startsWith('#'))
-        .map((imagineSentenceWithFlags) => ({
-            imagineSentenceWithFlags,
-            imagineSentence: imagineSentenceWithFlags
-                .split(/--[a-zA-Z]+\s+[^\s]+\s*/g)
-                .join('')
-                .trim(),
-        }));
+        .filter((row) => row !== '' && !row.startsWith('#'));
 
-    for (const { imagineSentence, imagineSentenceWithFlags } of imagines) {
+    for (const imagine of imagines) {
         // Note: Test if already landed
-        const searchResult = await searchMidjourney({ prompt: imagineSentence, version: IMAGINE_VERSION });
+        const searchResult = await searchMidjourney({
+            prompt: stripFlagsFromPrompt(imagine),
+            version: IMAGINE_VERSION,
+        });
         if (searchResult.length > 0) {
-            return skippingBecauseOf(`already landed "${imagineSentence}"`);
+            return skippingBecauseOf(`already landed "${stripFlagsFromPrompt(imagine)}"`);
         }
 
         const discordPage = getDiscordPage();
 
-        console.log(chalk.blue(imagineSentenceWithFlags));
+        console.log(chalk.blue(imagine));
 
-        await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagineSentenceWithFlags, { delay: 50 });
+        await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagine, { delay: 50 });
         await discordPage.keyboard.press('Enter');
 
         // TODO: [🏯] Configurable waiting time> await forTime(1000 * 60 * Math.random());

@@ -22,6 +22,8 @@ describe(`searchMidjourney`, () => {
             prompt: `Background frames like papers (A4, A3,...), screens, etc. for virtual online whiteboard`,
             version: 4,
         });
+
+        console.log(result);
         expect(result.length).toBeGreaterThanOrEqual(1);
     });
 

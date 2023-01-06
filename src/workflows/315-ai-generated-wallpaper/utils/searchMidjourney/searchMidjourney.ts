@@ -76,7 +76,7 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
     let jobs = json as IMidjourneyJob[];
 
     if (version !== null) {
-        jobs = jobs.filter((job) => job.version === version);
+        jobs = jobs.filter((job) => job._parsed_params.version === version);
     }
     return jobs;
 }
