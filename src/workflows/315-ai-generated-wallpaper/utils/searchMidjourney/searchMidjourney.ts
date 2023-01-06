@@ -1,13 +1,14 @@
 import chalk from 'chalk';
+import fetch from 'node-fetch';
 import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
 import { MIDJOURNEY_COOKIES } from '../../../../config';
 import { IMidjourneyJob } from './IMidjourneyJob';
 
 interface ISearchMidjourneyOptions {
-    version: number;
     // TODO: [0] userId: number
     prompt: string;
+    version: number | null;
 }
 
 export async function searchMidjourney(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {
@@ -74,8 +75,9 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
 
     let jobs = json as IMidjourneyJob[];
 
-    jobs = jobs.filter((job) => job.version === version);
-
+    if (version !== null) {
+        jobs = jobs.filter((job) => job.version === version);
+    }
     return jobs;
 }
 
