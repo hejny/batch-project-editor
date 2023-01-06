@@ -42,25 +42,53 @@
             "name": "🏭🖼️ Prepare AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --loop --workflows description,aiGeneratedWallpaperPrepare --projects %"
+                "ts-node ./src/index.ts --edit --workflows description,aiGeneratedWallpaperPrepare --projects %"
             ],
             "onlySingle": true,
             "focus": true
         },
         {
-            "name": "🔼🖼️ Land & Harvest & Use AI–⁠generated wallpapers",
+            "name": "🚜🖼️ Land AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPrepare,-aiGeneratedWallpaperPick --projects %"
+                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperLand --projects %"
             ],
             "onlySingle": true,
             "focus": true
         },
+        {
+            "name": "🌾🖼️ Harvest AI–⁠generated wallpapers",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperHarvest --projects %"
+            ],
+            "onlySingle": true,
+            "focus": true
+        },
+
         {
             "name": "👉🖼️ Pick AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaperPick --projects %"
+                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperPick --projects %"
+            ],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "💸🖼️ Use AI–⁠generated wallpapers",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperUse% --projects %"
+            ],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "🔼🖼️➰ Land & Harvest & Use AI–⁠generated wallpapers in a loop",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPrepare,-aiGeneratedWallpaperPick --projects %"
             ],
             "onlySingle": true,
             "focus": true
