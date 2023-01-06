@@ -5,8 +5,8 @@ import spaceTrim from 'spacetrim';
 import { stringToArrayBuffer } from '../../utils/stringToArrayBuffer';
 import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 import { IMAGINE_VERSION } from './config';
+import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 
 export async function aiGeneratedWallpaperHarvest({
     projectPath,
@@ -38,7 +38,9 @@ export async function aiGeneratedWallpaperHarvest({
     /**/
 
     const searchResult = (
-        await imagines.mapAsync(({ imagineSentence }) => searchMidjourney({ prompt: imagineSentence , version: IMAGINE_VERSION}))
+        await imagines.mapAsync(({ imagineSentence }) =>
+            searchMidjourney({ prompt: imagineSentence, version: IMAGINE_VERSION }),
+        )
     ).flat();
 
     if (searchResult.length === 0) {
@@ -48,7 +50,7 @@ export async function aiGeneratedWallpaperHarvest({
     const localDirs = new Set<string>();
 
     for (const result of searchResult) {
-        for (const imageRemotePath of result.image_paths) {
+        for (const imageRemotePath of result.image_paths || []) {
             // Download image to gallery
 
             const imageResponse = await fetch(imageRemotePath);
