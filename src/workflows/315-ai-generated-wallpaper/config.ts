@@ -14,6 +14,7 @@ export const IMAGINE_REQUIRED_FLAGS: string[] = [
 
 export const IMAGINE_TEMPLATES: string[] = [
     '%',
+    'Banner for social media for %',
     // 'Banner for %',
     // 'Wallpaper in minimalistic style for project that %'
     //'Banner for social media for project that %',
