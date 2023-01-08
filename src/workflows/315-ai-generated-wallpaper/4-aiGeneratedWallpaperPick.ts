@@ -52,8 +52,24 @@ export async function aiGeneratedWallpaperPick({
         return response.send(`
 
             <h1>${projectTitle}</h1>
-            <a href="/open-folder" target="_blank">Open folder</a>
-            <a href="${projectUrl}" target="_blank">Open on GitHub</a>
+
+            <ul>
+              <li><a href="/open-folder" target="_blank">Open folder</a></li>
+              <li><a href="${projectUrl}" target="_blank">Open on GitHub</a></li>
+              <li><a href="${projectUrl}/edit/main/package.json" target="_blank">Edit package.json</a></li>
+            </ul>
+
+            <i>
+            <ul>
+              <li>Note: If there is no good looking image, edit package.json and change description to some better /imagine and pick none at the bottom.</li>
+              ${
+                  !wallpaperCurrentPath
+                      ? ``
+                      : `<li>Note: To preserve your pick just select the highlited first image.</li>`
+              }
+            </ul>
+            </i>
+
             <div id="gallery">
                 ${(
                     await allWallpapersPaths.mapAsync(async (absolutePath) => {
@@ -148,8 +164,10 @@ export async function aiGeneratedWallpaperPick({
               }
 
               .picked {
-                  outline: 5px solid #11ff33 !important;
                   z-index: 2;
+                  order: -1;
+                  outline: 5px solid #ff1152 !important;
+                  box-shadow: #5011ff 0 0 15px;
               }
 
               #gallery a:link {
@@ -163,6 +181,11 @@ export async function aiGeneratedWallpaperPick({
 
               #gallery .none{
                 font-size: 16px !important;
+                background-color: #66ccff;
+                aspect-ratio: 3/2;
+                display: flex;
+                justify-content: center;
+                align-items: center;
               }
 
           </style>

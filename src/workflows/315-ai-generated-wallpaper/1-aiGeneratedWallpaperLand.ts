@@ -52,6 +52,7 @@ export async function aiGeneratedWallpaperLand({
 aiGeneratedWallpaperLand.initialize = prepareDiscordPage;
 
 /**
+ * TODO: !!! Re-land if landed loot of time ago with no upscale
  * TODO: Maybe rename to aiGeneratedWallpaperImagine
  * [🏯] ??? DigitalOcean Referral Badge
  * TODO: LIB spacetrim should be able to modify prototype of string and add there a .spaceTrim() method
