@@ -39,7 +39,7 @@ export async function aiGeneratedWallpaperHarvest({
 
     const searchResult = (
         await imagines.mapAsync(({ imagineSentence }) =>
-            searchMidjourney({ prompt: imagineSentence, version: IMAGINE_VERSION }),
+            searchMidjourney({ prompt: imagineSentence, version: IMAGINE_VERSION,isRetrying:true }),
         )
     ).flat();
 

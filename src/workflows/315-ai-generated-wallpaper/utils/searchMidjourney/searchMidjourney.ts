@@ -9,10 +9,11 @@ interface ISearchMidjourneyOptions {
     // TODO: [0] userId: number
     prompt: string;
     version: number | null;
+    isRetrying: boolean;
 }
 
 export async function searchMidjourney(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {
-    const { prompt, version } = options;
+    const { prompt, version, isRetrying } = options;
 
     const url = new URL(`https://www.midjourney.com/api/app/recent-jobs/`);
 
@@ -46,20 +47,31 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
     });
 
     if (json.msg === 'Error: Internal server error') {
+        const errorMessage = spaceTrim(`
+
+          Internal server error on MidJourney
+          ${url.href}
+          Try to update MIDJOURNEY_COOKIES.__Secure-next-auth.session-token
+
+        `);
+
+        if (!isRetrying) {
+            throw new Error(errorMessage);
+        }
+
         console.info(
             chalk.gray(
-                spaceTrim(`
+                spaceTrim(
+                    (block) => `
+                        ${block(errorMessage)}
 
-                  Internal server error on MidJourney
-                  ${url.href}
-                  Try to update MIDJOURNEY_COOKIES.__Secure-next-auth.session-token
-
-                  Retrying after 5 minutes...
-
-                `),
+                        Retrying after 5 minutes...
+                    `,
+                ),
             ),
             { json },
         );
+
         await forTime(1000 * 60 * 5);
         return searchMidjourney(options);
     }

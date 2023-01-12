@@ -28,6 +28,11 @@ export async function aiGeneratedWallpaperLand({
         const searchResult = await searchMidjourney({
             prompt: stripFlagsFromPrompt(imagine),
             version: IMAGINE_VERSION,
+            isRetrying: false,
+        }).catch((error) => {
+            // TODO: !!! What is the best strategy here?
+            console.error(chalk.gray(error));
+            return [];
         });
         if (searchResult.length > 0) {
             return skippingBecauseOf(`already landed "${stripFlagsFromPrompt(imagine)}"`);
