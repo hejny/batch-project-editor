@@ -40,7 +40,7 @@ export async function aiGeneratedWallpaperLand({
 
         const discordPage = getDiscordPage();
 
-        console.log(chalk.blue(imagine));
+        console.log(chalk.magenta('/imagine ') + chalk.blue(imagine));
 
         await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagine, { delay: 50 });
         await discordPage.keyboard.press('Enter');
@@ -57,6 +57,8 @@ export async function aiGeneratedWallpaperLand({
 aiGeneratedWallpaperLand.initialize = prepareDiscordPage;
 
 /**
+ * TODO: Why there is duplicite flags
+ *     > Background patterns for virtual online whiteboard --version 4 --aspect 3:2 --v 4 --q 2
  * TODO: !!! Re-land if landed loot of time ago with no upscale
  * TODO: Maybe rename to aiGeneratedWallpaperImagine
  * [🏯] ??? DigitalOcean Referral Badge
