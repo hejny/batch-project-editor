@@ -8,13 +8,13 @@ export const IMAGINE_OPTIONAL_FLAGS: string[] = [
 ];
 
 export const IMAGINE_REQUIRED_FLAGS: string[] = [
-    `--version ${IMAGINE_VERSION}`,
-    //'--aspect 2:1'
+    // Note: Version is automatically set by default flags in MJ
+    //     > `--version ${IMAGINE_VERSION}`,
 ];
 
 export const IMAGINE_TEMPLATES: string[] = [
     '%',
-    'Banner for social media for %',
+    // 'Banner for social media for %',
     // 'Banner for %',
     // 'Wallpaper in minimalistic style for project that %'
     //'Banner for social media for project that %',

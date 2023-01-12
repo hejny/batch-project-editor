@@ -1,0 +1,18 @@
+import { isProjectFork } from './isProjectFork';
+
+describe(`detection if the project is fork on github`, () => {
+    it(`is fork`, async () => {
+        // TODO: expect(await isProjectFork(new URL(`https://github.com/hejny/____`))).toBe(true);
+        expect(await isProjectFork(new URL(`https://github.com/collboard/fetch-blob`))).toBe(true);
+    });
+
+    it(`is NOT fork`, async () => {
+        expect(await isProjectFork(new URL(`https://github.com/hejny/batch-project-editor`))).toBe(false);
+        expect(await isProjectFork(new URL(`https://github.com/collboard/collboard`))).toBe(false);
+    });
+});
+
+/**
+ * TODO: Detect dynamically NOT from some side-cache
+ * TODO: [🐩] Test also combinations of archived, fork and private
+ */

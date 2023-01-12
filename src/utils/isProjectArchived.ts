@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 import { PROJECT_FLAGS } from '../config';
 
 /**
@@ -11,6 +12,11 @@ export async function isProjectArchived(url: URL): Promise<boolean> {
     const response = await fetch(url.href);
     const text = await response.text();
     const isArchived = text.includes(`This repository has been archived by the owner. It is now read-only.`);
+
+    // !!! Remove test logging
+    // console.log({ isArchived, text });
+    // await forEver();
+
     return isArchived;
 }
 

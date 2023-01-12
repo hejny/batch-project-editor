@@ -56,12 +56,13 @@ export async function aiGeneratedWallpaperPick({
             <ul>
               <li><a href="/open-folder" target="_blank">Open folder</a></li>
               <li><a href="${projectUrl}" target="_blank">Open on GitHub</a></li>
-              <li><a href="${projectUrl}/edit/main/package.json" target="_blank">Edit package.json</a></li>
+              <li><a href="${projectUrl}/edit/main/README.md target="_blank">Edit README.md</a></li>
+              <li><a href="${projectUrl}/edit/main/assets/ai/wallpaper/imagine target="_blank">Edit imagine</a> + you need to add <i># @batch-project-editor ignore</i> line there.</li>
             </ul>
 
             <i>
             <ul>
-              <li>Note: If there is no good looking image, edit package.json and change description to some better /imagine and pick none at the bottom.</li>
+              <li>Note: If there is no good looking image, edit projects README or imagine file and change description to some better /imagine and pick none at the bottom.</li>
               ${
                   !wallpaperCurrentPath
                       ? ``

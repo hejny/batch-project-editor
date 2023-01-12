@@ -1,0 +1,18 @@
+import { isProjectPrivate } from './isProjectPrivate';
+
+describe(`detection if the project is private on github`, () => {
+    it(`is private`, async () => {
+        expect(await isProjectPrivate(new URL(`https://github.com/hejny/utils`))).toBe(true);
+        expect(await isProjectPrivate(new URL(`https://github.com/collboard/collboard`))).toBe(true);
+    });
+
+    it(`is NOT private`, async () => {
+        expect(await isProjectPrivate(new URL(`https://github.com/hejny/hejny`))).toBe(false);
+        expect(await isProjectPrivate(new URL(`https://github.com/collboard/modules-sdk`))).toBe(false);
+    });
+});
+
+/**
+ * TODO: Detect dynamically NOT from some side-cache
+ * TODO: [🐩] Test also combinations of archived, fork and private
+ */

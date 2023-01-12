@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir } from 'fs/promises';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { createAllSubsetsOf } from '../../utils/createAllSubsetsOf';
@@ -11,6 +11,7 @@ export async function aiGeneratedWallpaperPrepare({
     projectPath,
     commit,
     skippingBecauseOf,
+    modifyFile,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     // TODO: Detect manual change and if than do not regenerate
     //       @see https://stackoverflow.com/questions/3701404/how-to-list-all-commits-that-changed-a-specific-file
@@ -53,7 +54,9 @@ export async function aiGeneratedWallpaperPrepare({
     }
 
     await mkdir(wallpaperPath, { recursive: true });
-    await writeFile(
+
+    // !!! ACRY USE writeFile from tools OR pass some ignore detection
+    await modifyFile(
         wallpaperImaginePath,
         spaceTrim(
             (block) => `
@@ -64,7 +67,6 @@ export async function aiGeneratedWallpaperPrepare({
 
         `,
         ),
-        'utf8',
     );
 
     return commit(`🤖🖼️ AI–⁠generated wallpaper prepare imagine entry`);

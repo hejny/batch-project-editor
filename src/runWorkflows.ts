@@ -63,7 +63,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
     }
     console.info(``);
     console.info(``);
-    await forTime(1000 * 5);
+    await forTime(1000 * 1 /* Wait 1 second before start */);
     // ----------------------- Initialize ---
 
     for (const workflow of sortedWorkflows) {
@@ -198,15 +198,43 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         }
                     }
 
+                    async function modifyFile(filePath: string, newFileContent: string): Promise<void> {
+                        // !!! DRY writeFile, modifyFile, modifyFiles
+
+                        const oldFileContent = await readFile(filePath, 'utf8');
+
+                        console.log('!!!', { oldFileContent });
+                        if (oldFileContent.includes(`@batch-project-editor ignore`)) {
+                            console.info(`⏩ Skipping file ${filePath} because ignore tag is present`);
+                            return;
+                        }
+
+                        if (newFileContent !== oldFileContent) {
+                            console.info(`💾 Changing file ${filePath}`);
+                            await writeFile(filePath, newFileContent);
+                        } else {
+                            // console.info(`⬜ Keeping file ${filePath}`);
+                        }
+                    }
+
                     async function modifyFiles(
                         globPattern: string,
                         fileModifier: (fileContent: string) => Promisable<string>,
                     ): Promise<void> {
+                        // !!! DRY writeFile, modifyFile, modifyFiles
+
                         for (const filePath of await glob(join(projectPath, globPattern), {
                             dot: true,
                             ignore: ['**/node_modules/**', '**/.git/**'],
                         })) {
                             const fileContent = await readFile(filePath, 'utf8');
+
+                            console.log('!!!', { fileContent });
+                            if (fileContent.includes(`@batch-project-editor ignore`)) {
+                                console.info(`⏩ Skipping file ${filePath} because ignore tag is present`);
+                                continue;
+                            }
+
                             const newFileContent = await fileModifier(fileContent);
 
                             if (fileContent !== newFileContent) {
@@ -263,6 +291,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         mainBranch: currentBranch as 'main' | 'master',
                         execCommandOnProject,
                         readFile: readProjectFile,
+                        modifyFile,
                         modifyFiles,
                         modifyJsonFiles,
                         modifyPackage,
