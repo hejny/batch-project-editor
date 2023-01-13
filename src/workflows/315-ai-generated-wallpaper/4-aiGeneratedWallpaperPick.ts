@@ -4,7 +4,7 @@ import express, { Request, Response } from 'express';
 import { readFile, unlink, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
 import { locateChrome } from 'locate-app';
-import { join, relative } from 'path';
+import { basename, join, relative } from 'path';
 import serveStatic from 'serve-static';
 import sharp from 'sharp';
 import { openFolder } from '../../utils/execCommand/openFolder';
@@ -78,7 +78,7 @@ export async function aiGeneratedWallpaperPick({
                         const isPicked = absolutePath === wallpaperCurrentPath;
                         const isThumbnail = (width || 0) <= 512;
 
-                        const classes: string[] = [];
+                        const classes: string[] = ['item'];
                         if (isPicked) {
                             classes.push('picked');
                         }
@@ -100,9 +100,21 @@ export async function aiGeneratedWallpaperPick({
                     .sort((a, b) => (a.width < b.width ? 1 : -1))
                     .map(({ absolutePath, relativePath, width, height, isPicked, isThumbnail, classes }) => {
                         return `
-                                <a href="/pick/${relativePath}" class="${classes.join(' ')}">
-                                    <div class="label-size"><div class="inner">${width}x${height}</div></div>
-                                    <img src="/gallery/${relativePath}"/>
+                                <div class="${classes.join(' ')}">
+                                    <div class="image-label"><div class="inner">
+                                        ${width < 1920 || height < 1080 ? `⚠` : `✅`} ${width}x${height}
+
+                                        <a href="https://www.midjourney.com/app/jobs/${
+                                            basename(relativePath)
+                                                .split('.')[0]
+                                                .split(/-[0-9]_[0-9]$/)[0]
+                                        }">
+                                        🔗MidJourney
+                                        </a>
+                                    </div></div>
+                                    <a class="image" target="_blank" href="/pick/${relativePath}">
+                                      <img src="/gallery/${relativePath}"/>
+                                    </a>
                                     <!--${JSON.stringify({
                                         absolutePath,
                                         relativePath,
@@ -112,84 +124,94 @@ export async function aiGeneratedWallpaperPick({
                                         isThumbnail,
                                         classes,
                                     })}-->
-                                </a>
+                                </div>
                             `;
                     })
                     .join('\n')}
 
-                <a href="/pick/none" class="none">Choose none</a>
+                <a href="/pick/none" class="item none">Choose none</a>
             </div>
 
 
-          <style>
+            <style>
 
-              html,
-              body {
-                  padding: 0;
-                  margin: 0;
-              }
+                html,
+                body {
+                    padding: 0;
+                    margin: 0;
+                }
 
-              #gallery {
-                  display: flex;
-                  flex-wrap: wrap;
-                  padding: 0;
-                  margin: 0;
-                  margin-top: 20px;
-                  font-size: 0;
-              }
+                #gallery {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: stretch;
+                    padding: 0;
+                    margin: 0;
+                    margin-top: 20px;
+                    font-size: 0;
+                }
 
-              #gallery a {
-                  outline: 1px solid black;
+                #gallery > .item {
+                    outline: 1px solid black;
+                    display: block;
+                    width: calc(33.33% - 5px);
+                }
+
+                #gallery a,
+                #gallery a:link,
+                #gallery a:visited {
+                  color: inherit;
+                  text-decoration: inherit;
+                }
+
+                #gallery > .item > a.image {
                   display: block;
-                  width: calc(33.33% - 5px);
-              }
-
-              #gallery a img {
                   width: 100%;
-              }
+                  height: 100%;
+                  overflow: hidden;
+                }
 
-              #gallery a .label-size {
-                  display: inline;
-                  z-index: 100;
-                  position: relative;
-              }
+                #gallery > .item > a.image > img {
+                    width: 100%;
+                }
 
-              #gallery a .label-size .inner {
-                  display: inline;
-                  position: absolute;
-                  font-size: 16px;
-              }
+                #gallery > .item > .image-label {
+                    display: inline;
+                    z-index: 100;
+                    position: relative;
 
-              .thumbnail {
-                  opacity: 0.5;
-              }
+                }
 
-              .picked {
-                  z-index: 2;
-                  order: -1;
-                  outline: 5px solid #ff1152 !important;
-                  box-shadow: #5011ff 0 0 15px;
-              }
+                #gallery > .item > .image-label > .inner {
+                    display: inline;
+                    position: absolute;
+                    margin: 20px;
+                    font-size: 16px;
+                    text-shadow: 1px 1px 2px black;
+                    color: white;
+                }
 
-              #gallery a:link {
-                color: black;
-                text-decoration: none;
-              }
+                .thumbnail {
+                    opacity: 0.5;
+                }
 
-              #gallery a:visited {
-                color: black;
-              }
+                .picked {
+                    z-index: 2;
+                    order: -1;
+                    outline: 5px solid #ff1152 !important;
+                    box-shadow: #5011ff 0 0 15px;
+                }
 
-              #gallery .none{
-                font-size: 16px !important;
-                background-color: #66ccff;
-                aspect-ratio: 3/2;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              }
+                #gallery > .none {
+                  font-size: 16px !important;
+                  background-color: #66ccff;
+                  aspect-ratio: 3/2;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                }
 
-          </style>
+            </style>
 
         `);
     });
