@@ -4,6 +4,8 @@ import { BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE } from '../../config';
 import { IAggregator, IAggregatorOptions } from '../IAggregator';
 
 interface IGitHoursResult {
+    // !!! Anotate
+    outCommitsCount: number;
     allCommitsCount: number;
     leadingCommitsCount: number;
     commitsCount: number;
@@ -12,6 +14,7 @@ interface IGitHoursResult {
 
 export class gitHours implements IAggregator<IGitHoursResult> {
     public initial = {
+        outCommitsCount: 0,
         allCommitsCount: 0,
         leadingCommitsCount: 0,
         commitsCount: 0,
@@ -38,12 +41,26 @@ export class gitHours implements IAggregator<IGitHoursResult> {
 
         const commits = allCommits.filter(({ body }) => !body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE));
 
+        // !!! Better name for outCommitsCount
+        let outCommitsCount = 0;
         let leadingCommitsCount = 0;
         let time = moment.duration({ minutes: 0 });
         let lastDate: null | Date = null;
         for (const commit of commits) {
             const { subject, authorDate, body } = commit; /* <- TODO: Destruct in for loop */
             const currentDate = new Date(authorDate);
+
+            if (
+                !(
+                    currentDate.getTime() > new Date(`2022-11-1`).getTime() &&
+                    currentDate.getTime() > new Date(`2022-12-31`).getTime()
+                )
+            ) {
+                // TODO: !!! Time span should be passed as a parameter
+                // TODO: !!! leading times should be before this
+                outCommitsCount++;
+                continue;
+            }
 
             if (lastDate) {
                 let commitTime = moment.duration({ milliseconds: lastDate.getTime() - currentDate.getTime() });
@@ -72,6 +89,7 @@ export class gitHours implements IAggregator<IGitHoursResult> {
         //console.log(commits);
 
         return {
+            outCommitsCount,
             allCommitsCount: allCommits.length,
             leadingCommitsCount,
             commitsCount: commits.length,
@@ -81,6 +99,7 @@ export class gitHours implements IAggregator<IGitHoursResult> {
 
     public join(a: IGitHoursResult, b: IGitHoursResult) {
         return {
+            outCommitsCount: a.outCommitsCount + b.outCommitsCount,
             allCommitsCount: a.allCommitsCount + b.allCommitsCount,
             leadingCommitsCount: a.leadingCommitsCount + b.leadingCommitsCount,
             commitsCount: a.commitsCount + b.commitsCount,

@@ -142,6 +142,15 @@
             "focus": true
         },
         {
+            "name": "🕤💙 Git hours for H-edu projects",
+            "commands": [
+                "ts-node ./src/index.ts --clone",
+                "ts-node ./src/index.ts --aggregate --aggregator gitHours --projects hedu-collboard-integration"
+            ],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
             "name": "📋⚙️ List workflows",
             "command": "ts-node ./src/index.ts --list-workflows",
             "onlySingle": true,
