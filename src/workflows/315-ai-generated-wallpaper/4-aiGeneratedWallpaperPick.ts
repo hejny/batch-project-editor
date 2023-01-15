@@ -57,7 +57,7 @@ export async function aiGeneratedWallpaperPick({
               <li><a href="/open-folder" target="_blank">Open folder</a></li>
               <li><a href="${projectUrl}" target="_blank">Open on GitHub</a></li>
               <li><a href="${projectUrl}/edit/main/README.md target="_blank">Edit README.md</a></li>
-              <li><a href="${projectUrl}/edit/main/assets/ai/wallpaper/imagine target="_blank">Edit imagine</a> + you need to add <i># @batch-project-editor ignore</i> line there.</li>
+              <li><a href="${projectUrl}/edit/main/assets/ai/wallpaper/imagine" target="_blank">Edit imagine</a> + you need to add <i># @batch-project-editor ignore</i> line there.</li>
             </ul>
 
             <i>
@@ -104,7 +104,7 @@ export async function aiGeneratedWallpaperPick({
                                     <div class="image-label"><div class="inner">
                                         ${width < 1920 || height < 1080 ? `⚠` : `✅`} ${width}x${height}
 
-                                        <a href="https://www.midjourney.com/app/jobs/${
+                                        <a target="_blank" href="https://www.midjourney.com/app/jobs/${
                                             basename(relativePath)
                                                 .split('.')[0]
                                                 .split(/-[0-9]_[0-9]$/)[0]
@@ -112,7 +112,7 @@ export async function aiGeneratedWallpaperPick({
                                         🔗MidJourney
                                         </a>
                                     </div></div>
-                                    <a class="image" target="_blank" href="/pick/${relativePath}">
+                                    <a class="image" href="/pick/${relativePath}">
                                       <img src="/gallery/${relativePath}"/>
                                     </a>
                                     <!--${JSON.stringify({

@@ -17,7 +17,7 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
 
     const url = new URL(`https://www.midjourney.com/api/app/recent-jobs/`);
 
-    url.searchParams.set('amount', '500' /* <- TODO: Implement pagination */);
+    url.searchParams.set('amount', '100' /* <- TODO: Implement pagination, 500 throws internal error */);
     url.searchParams.set('jobType', 'yfcc_upsample' /* <- TODO: What this means? */);
     url.searchParams.set('orderBy', 'new');
     url.searchParams.set('jobStatus', 'completed');
