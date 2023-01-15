@@ -11,6 +11,7 @@ import { openFolder } from '../../utils/execCommand/openFolder';
 import { isFileExisting } from '../../utils/isFileExisting';
 import { randomInteger } from '../../utils/random/randomInteger';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
+import { getMidjourneyLink } from './utils/getMidjourneyLink';
 
 export async function aiGeneratedWallpaperPick({
     projectPath,
@@ -104,11 +105,7 @@ export async function aiGeneratedWallpaperPick({
                                     <div class="image-label"><div class="inner">
                                         ${width < 1920 || height < 1080 ? `⚠` : `✅`} ${width}x${height}
 
-                                        <a target="_blank" href="https://www.midjourney.com/app/jobs/${
-                                            basename(relativePath)
-                                                .split('.')[0]
-                                                .split(/-[0-9]_[0-9]$/)[0]
-                                        }">
+                                        <a target="_blank" href="${getMidjourneyLink(relativePath)}">
                                         🔗MidJourney
                                         </a>
                                     </div></div>
