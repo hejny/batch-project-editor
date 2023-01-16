@@ -1,9 +1,13 @@
-import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function license({ projectPath, modifyPackage, commit }: IWorkflowOptions): Promise<WorkflowResult> {
+export async function license({
+    projectPath,
+    modifyPackage,
+    modifyFile,
+    commit,
+}: IWorkflowOptions): Promise<WorkflowResult> {
     const licenseText = spaceTrim(`
 
                                 Apache License
@@ -217,7 +221,7 @@ export async function license({ projectPath, modifyPackage, commit }: IWorkflowO
         return packageJson;
     });
 
-    await writeFile(join(projectPath, 'LICENSE'), licenseText, 'utf8');
+    await modifyFile(join(projectPath, 'LICENSE'), () => licenseText);
 
     return commit('📝 License ');
 }

@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { mkdir } from 'fs/promises';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
@@ -53,11 +54,10 @@ export async function aiGeneratedWallpaperPrepare({
         }
     }
 
+    console.log(chalk.gray(`Creating folder ${wallpaperPath.split('\\').join('/')}`));
     await mkdir(wallpaperPath, { recursive: true });
 
-    // !!! ACRY USE writeFile from tools OR pass some ignore detection
-    await modifyFile(
-        wallpaperImaginePath,
+    await modifyFile(wallpaperImaginePath, () =>
         spaceTrim(
             (block) => `
             # Note: Each part is new input for imagine command

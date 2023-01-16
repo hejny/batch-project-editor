@@ -198,16 +198,26 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         }
                     }
 
-                    async function modifyFile(filePath: string, newFileContent: string): Promise<void> {
-                        // !!! DRY writeFile, modifyFile, modifyFiles
+                    async function modifyFile(
+                        filePath: string,
+                        fileModifier: (fileContent: string | null) => Promisable<string>,
+                    ): Promise<void> {
+                        // TODO: DRY modifyFile, modifyFiles
 
-                        const oldFileContent = await readFile(filePath, 'utf8');
+                        let oldFileContent: string | null;
 
-                        console.log('!!!', { oldFileContent });
-                        if (oldFileContent.includes(`@batch-project-editor ignore`)) {
-                            console.info(`⏩ Skipping file ${filePath} because ignore tag is present`);
-                            return;
+                        if (!(await isFileExisting(filePath))) {
+                            oldFileContent = null;
+                        } else {
+                            oldFileContent = await readFile(filePath, 'utf8');
+
+                            if (oldFileContent.includes(`@batch-project-editor ignore`)) {
+                                console.info(`⏩ Skipping file ${filePath} because ignore tag is present`);
+                                return;
+                            }
                         }
+
+                        const newFileContent = await fileModifier(oldFileContent);
 
                         if (newFileContent !== oldFileContent) {
                             console.info(`💾 Changing file ${filePath}`);
@@ -221,7 +231,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         globPattern: string,
                         fileModifier: (fileContent: string) => Promisable<string>,
                     ): Promise<void> {
-                        // !!! DRY writeFile, modifyFile, modifyFiles
+                        // TODO: DRY modifyFile, modifyFiles
 
                         for (const filePath of await glob(join(projectPath, globPattern), {
                             dot: true,

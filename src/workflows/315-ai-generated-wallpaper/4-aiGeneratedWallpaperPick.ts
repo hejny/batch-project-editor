@@ -4,7 +4,7 @@ import express, { Request, Response } from 'express';
 import { readFile, unlink, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
 import { locateChrome } from 'locate-app';
-import { basename, join, relative } from 'path';
+import { join, relative } from 'path';
 import serveStatic from 'serve-static';
 import sharp from 'sharp';
 import { openFolder } from '../../utils/execCommand/openFolder';
@@ -248,6 +248,7 @@ export async function aiGeneratedWallpaperPick({
 
     if (pickedWallpaper !== null) {
         console.info(chalk.bgGrey(` 👉  You have picked ${pickedWallpaper} for project ${projectName}`));
+        // Note: Here should be really used writeFile not modifyFile
         await writeFile(wallpaperCurrentPointerPath, pickedWallpaper, 'utf8');
     } else {
         console.info(chalk.bgGrey(` 👉  You have unpicked wallpaper for project ${projectName}`));

@@ -39,8 +39,7 @@ export interface IWorkflowOptions {
 
     execCommandOnProject(command: string): Promise<string>;
     readFile(filePath: string): Promise<string>;
-    // !!! Put also writeFile
-    modifyFile(filePath: string, fileContent: string): Promise<void>;
+    modifyFile(filePath: string, fileModifier: (fileContent: string | null) => Promisable<string>): Promise<void>;
     modifyFiles(globPattern: string, fileModifier: (fileContent: string) => Promisable<string>): Promise<void>;
     modifyJsonFiles<T>(globPattern: string, fileModifier: (fileJson: T) => Promisable<T>): Promise<void>;
     modifyPackage(fileModifier: (packageContent: PackageJson) => Promisable<PackageJson | void>): Promise<void>;
