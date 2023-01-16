@@ -23,6 +23,8 @@ export async function aiGeneratedWallpaperLand({
         .map((row) => row.split('\n').join(' ').split('  ').join(' ').trim())
         .filter((row) => row !== '' && !row.startsWith('#'));
 
+    let landedCount = 0;
+
     for (const imagine of imagines) {
         // Note: Test if already landed
         const searchResult = await searchMidjourney({
@@ -35,7 +37,7 @@ export async function aiGeneratedWallpaperLand({
             return [];
         });
         if (searchResult.length > 0) {
-            return skippingBecauseOf(`already landed "${stripFlagsFromPrompt(imagine)}"`);
+            continue;
         }
 
         const discordPage = getDiscordPage();
@@ -45,13 +47,19 @@ export async function aiGeneratedWallpaperLand({
         await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagine, { delay: 50 });
         await discordPage.keyboard.press('Enter');
 
+        landedCount++;
+
         // TODO: [🏯] Configurable waiting time> await forTime(1000 * 60 * Math.random());
         let secondsToWait = 60 * 10 * Math.random();
         console.info(chalk.gray(`⏳ Waiting for ${secondsToWait} seconds after writing /imagine command`));
         await forTime(1000 * secondsToWait);
     }
 
-    return WorkflowResult.SideEffect;
+    if (landedCount === 0) {
+        return skippingBecauseOf(`All imagine commands already landed`);
+    } else {
+        return WorkflowResult.SideEffect;
+    }
 }
 
 aiGeneratedWallpaperLand.initialize = prepareDiscordPage;

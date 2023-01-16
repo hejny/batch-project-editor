@@ -13,6 +13,7 @@ export enum WorkflowResult {
 
     /**
      * Workflow made some changes but not via commit
+     * TODO: Make also a description of the side-effect similarly as Skip
      */
     SideEffect = 'SIDE_EFFECT',
 
