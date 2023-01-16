@@ -2,7 +2,7 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { markdownToTxtEnhanced } from './markdownToTxtEnhanced';
 
 export const DESCRIPTION_IN_README =
-    /(?<heading>^#[^\n]*$)(\s*)((<!--Badges-->(?<badges>.*)<!--\/Badges-->)?)(\s*)(?<description>^.*?$)?(\n{2,})/ims;
+    /(?<heading>^#[^\n]*$)(\s*)((<!--Badges-->(?<badges>.*)<!--\/Badges-->)?)(\s*)((<!--Wallpaper-->(?<wallpaper>.*)<!--\/Wallpaper-->)?)(\s*)(?<description>^.*?$)?(\n{2,})/ims;
 
 export async function description({
     projectOrg,
