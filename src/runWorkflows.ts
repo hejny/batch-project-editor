@@ -158,6 +158,14 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         */
                     }
 
+                    console.info(`🔼 Running workflow ${workflowName} for project ${projectTitle}`);
+
+                    await execCommand({
+                        command: 'git pull',
+                        crashOnError: false,
+                        cwd: projectPath,
+                    });
+
                     if (!(await isFileExisting(join(projectPath, 'package.json')))) {
                         // TODO: Probbably use standard skippingOfBecause
                         console.info(
@@ -173,14 +181,6 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         );
                         continue;
                     }
-
-                    console.info(`🔼 Running workflow ${workflowName} for project ${projectTitle}`);
-
-                    await execCommand({
-                        command: 'git pull',
-                        crashOnError: false,
-                        cwd: projectPath,
-                    });
 
                     const configPath = join(projectPath, 'batch-project-editor.js');
                     if (await isFileExisting(configPath)) {
