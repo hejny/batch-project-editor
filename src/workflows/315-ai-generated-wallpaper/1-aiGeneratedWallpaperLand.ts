@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { readFile } from 'fs/promises';
+import glob from 'glob-promise';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
@@ -16,6 +17,7 @@ export async function aiGeneratedWallpaperLand({
 }: IWorkflowOptions): Promise<WorkflowResult> {
     // TODO: [🏯] Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
+    const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
     const imagines = spaceTrim(wallpaperImagineContents)
@@ -26,19 +28,33 @@ export async function aiGeneratedWallpaperLand({
     let landedCount = 0;
 
     for (const imagine of imagines) {
-        // Note: Test if already landed
-        const searchResult = await searchMidjourney({
-            prompt: stripFlagsFromPrompt(imagine),
-            version: IMAGINE_VERSION,
-            isRetrying: false,
-        }).catch((error) => {
-            // TODO: !!! What is the best strategy here?
-            console.error(chalk.gray(error));
-            return [];
-        });
-        if (searchResult.length > 0) {
+        //-------------
+        if (false) {
+            // !!!!!!!!! Temporary blocked because searchMidjourney not working properly
+            // Note: Test if already landed
+            const searchResult = await searchMidjourney({
+                prompt: stripFlagsFromPrompt(imagine),
+                version: IMAGINE_VERSION,
+                isRetrying: false,
+            }).catch((error) => {
+                // TODO: !!! What is the best strategy here?
+                console.error(chalk.gray(error));
+                return [];
+            });
+            if (searchResult.length > 0) {
+                continue;
+            }
+        }
+        //-------------
+
+        //-------------
+        // Note: Test if already harvested
+        // !!!!!!!!! Temporary solution - skipping all harvested
+        const allWallpapersPaths = await glob(join(wallpaperGalleryPath, '*.png'));
+        if (allWallpapersPaths.length !== 0) {
             continue;
         }
+        //-------------
 
         const discordPage = getDiscordPage();
 
