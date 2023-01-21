@@ -25,7 +25,7 @@ export async function descriptionInGithub({
     await githubPage.keyboard.type(description, { delay: 50 });
     await clickOnText(githubPage, 'Save changes');
 
-    return WorkflowResult.SideEffect;
+    return WorkflowResult.SideEffect /* <- TODO: Describe the SideEffect ACRY */;
 }
 
 descriptionInGithub.initialize = prepareGithubPage;

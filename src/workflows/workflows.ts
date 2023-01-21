@@ -19,10 +19,11 @@ import { badges } from './800-badges/badges';
 import { contributing } from './810-contributing/contributing';
 import { partners } from './820-partners/partners';
 import { normalizeSvgs } from './900-assets/normalizeSvgs';
+import { revertLastBpeCommit } from './999-revert-last-bpe-commit/revertLastBpeCommit';
+import { IWorkflow } from './IWorkflow';
 import { branchesRemoveMerged } from './branches-remove-merged/branches-remove-merged';
 import { branchesUpdateFeatures } from './branches-update-features/branches-update-features';
 import { collboardModuleNames } from './collboard-module-names/collboard-module-names';
-import { IWorkflow } from './IWorkflow';
 import { terminalsVersion } from './terminals-version/terminalsVersion';
 
 export const WORKFLOWS: IWorkflow[] = [
@@ -63,4 +64,5 @@ export const WORKFLOWS: IWorkflow[] = [
     branchesRemoveMerged,
     branchesUpdateFeatures,
     normalizeSvgs,
+    revertLastBpeCommit,
 ];

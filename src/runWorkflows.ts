@@ -184,17 +184,21 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
                     const configPath = join(projectPath, 'batch-project-editor.js');
                     if (await isFileExisting(configPath)) {
-                        const config = require(configPath);
-                        if (config.ignoreWorkflows) {
-                            if (config.ignoreWorkflows.includes(workflowName)) {
-                                // TODO: Probbably use standard skippingOfBecause
-                                console.info(
-                                    chalk.gray(
-                                        `⏩ Skipping workflow ${workflowName} for project ${projectTitle} because projects config ignores this workflow`,
-                                    ),
-                                );
-                                continue;
+                        try {
+                            const config = require(configPath);
+                            if (config.ignoreWorkflows) {
+                                if (config.ignoreWorkflows.includes(workflowName)) {
+                                    // TODO: Probbably use standard skippingOfBecause
+                                    console.info(
+                                        chalk.gray(
+                                            `⏩ Skipping workflow ${workflowName} for project ${projectTitle} because projects config ignores this workflow`,
+                                        ),
+                                    );
+                                    continue;
+                                }
                             }
+                        } catch (error) {
+                            console.error(error);
                         }
                     }
 
@@ -296,7 +300,12 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         });
                     }
 
-                    const packageJson = JSON.parse(await readFile(join(projectPath, 'package.json'), 'utf8'));
+                    const packageJson = await readFile(join(projectPath, 'package.json'), 'utf8')
+                        .then((packageContent) => JSON.parse(packageContent))
+                        // !!! Comment and keep only for testing
+                        .catch(() => ({
+                            // Note: When the package.json is corrupted then pass empty object
+                        }));
                     const readmeContent = await readFile(join(projectPath, 'README.md'), 'utf8');
 
                     function modifyPackage(
