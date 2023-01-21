@@ -42,6 +42,7 @@ export interface IWorkflowOptions {
     readFile(filePath: string): Promise<string>;
     modifyFile(filePath: string, fileModifier: (fileContent: string | null) => Promisable<string>): Promise<void>;
     modifyFiles(globPattern: string, fileModifier: (fileContent: string) => Promisable<string>): Promise<void>;
+    // TODO: modifyJsonFile
     modifyJsonFiles<T>(globPattern: string, fileModifier: (fileJson: T) => Promisable<T>): Promise<void>;
     modifyPackage(fileModifier: (packageContent: PackageJson) => Promisable<PackageJson | void>): Promise<void>;
     commit(message: string): Promise<WorkflowResult.Change | WorkflowResult.NoChange>;

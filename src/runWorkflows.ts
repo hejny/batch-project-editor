@@ -266,9 +266,16 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         globPattern: string,
                         fileModifier: (fileContent: T) => Promisable<T>,
                     ): Promise<void> {
-                        return modifyFiles(globPattern, async (fileContent) => {
-                            const fileJson = JSON.parse(fileContent);
-                            return JSON.stringify((await fileModifier(fileJson)) || fileJson, null, 4) + '\n';
+                        return modifyFiles(globPattern, async (oldContentString) => {
+                            const oldContent = JSON.parse(oldContentString);
+                            const newContent = await fileModifier(oldContent);
+
+                            if (JSON.stringify(oldContent) === JSON.stringify(newContent)) {
+                                // Note: Do not re-format the file when nothing changed
+                                return oldContentString;
+                            }
+
+                            return JSON.stringify(newContent, null, 4) + '\n';
                         });
                     }
 
