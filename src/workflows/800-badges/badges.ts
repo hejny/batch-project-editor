@@ -14,7 +14,7 @@ export async function badges({
     projectName,
     projectPath,
     projectOrg,
-    modifyFiles,
+    modifyFile,
     commit,
     mainBranch,
 }: IWorkflowOptions): Promise<WorkflowResult> {
@@ -131,7 +131,11 @@ export async function badges({
     `,
     );
 
-    await modifyFiles('README.md', async (readmeContent) => {
+    await modifyFile('README.md', async (readmeContent) => {
+        if (readmeContent === null) {
+            return null;
+        }
+
         if (BADGES_IN_README.test(readmeContent)) {
             return readmeContent.replace(BADGES_IN_README, badgesMarkdown);
         } else {

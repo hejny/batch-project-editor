@@ -8,7 +8,7 @@ export async function partners({
     projectUrl,
     projectName,
     projectOrg,
-    modifyFiles,
+    modifyFile,
     commit,
     mainBranch,
 }: IWorkflowOptions): Promise<WorkflowResult> {
@@ -50,7 +50,10 @@ export async function partners({
                 `,
               );
 
-    await modifyFiles('README.md', async (readmeContent) => {
+    await modifyFile('README.md', async (readmeContent) => {
+        if (readmeContent === null) {
+            return null;
+        }
         if (PARTNERS_IN_README.test(readmeContent)) {
             return readmeContent.replace(PARTNERS_IN_README, partnersMarkdown);
         } else {

@@ -200,7 +200,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
                     async function modifyFile(
                         filePath: string,
-                        fileModifier: (fileContent: string | null) => Promisable<string>,
+                        fileModifier: (fileContent: string | null) => Promisable<string | null>,
                     ): Promise<void> {
                         // TODO: DRY modifyFile, modifyFiles
 
@@ -219,7 +219,10 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
                         const newFileContent = await fileModifier(oldFileContent);
 
-                        if (newFileContent !== oldFileContent) {
+                        if (newFileContent === null) {
+                            // TODO: Maybe here delete the file if exists
+                            console.info(`⬜ Keeping file ${filePath}`);
+                        } else if (newFileContent !== oldFileContent) {
                             console.info(`💾 Changing file ${filePath}`);
                             await writeFile(filePath, newFileContent);
                         } else {
@@ -229,7 +232,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
                     async function modifyFiles(
                         globPattern: string,
-                        fileModifier: (fileContent: string) => Promisable<string>,
+                        fileModifier: (filePath: string, fileContent: string) => Promisable<string>,
                     ): Promise<void> {
                         // TODO: DRY modifyFile, modifyFiles
 
@@ -239,13 +242,12 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         })) {
                             const fileContent = await readFile(filePath, 'utf8');
 
-                            console.log('!!!', { fileContent });
                             if (fileContent.includes(`@batch-project-editor ignore`)) {
                                 console.info(`⏩ Skipping file ${filePath} because ignore tag is present`);
                                 continue;
                             }
 
-                            const newFileContent = await fileModifier(fileContent);
+                            const newFileContent = await fileModifier(filePath, fileContent);
 
                             if (fileContent !== newFileContent) {
                                 console.info(`💾 Changing file ${filePath}`);
@@ -264,14 +266,29 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
                     function modifyJsonFiles<T>(
                         globPattern: string,
-                        fileModifier: (fileContent: T) => Promisable<T>,
+                        fileModifier: (filePath: string, fileContent: T) => Promisable<T>,
                     ): Promise<void> {
-                        return modifyFiles(globPattern, async (oldContentString) => {
-                            const oldContent = JSON.parse(oldContentString);
-                            const newContent = await fileModifier(oldContent);
+                        return modifyFiles(globPattern, async (filePath, oldContentString) => {
+                            let oldContent = JSON.parse(oldContentString);
+                            let newContent = await fileModifier(filePath, oldContent);
+
+                            if (!newContent) {
+                                // Note: fileModifier can just mutate the content and return nothing - so grabbing mutated oldContent
+                                newContent = oldContent;
+                            }
+
+                            // Note: Parsing once again because fileModifier can mutate the content and we need here real old content of the file
+                            oldContent = JSON.parse(oldContentString);
+
+                            // console.log({ oldContent, newContent });
 
                             if (JSON.stringify(oldContent) === JSON.stringify(newContent)) {
                                 // Note: Do not re-format the file when nothing changed
+                                console.info(
+                                    `⏩ Not changing ${basename(
+                                        filePath,
+                                    )} because JSON contents does not changed and we do not want to do the re-format of the file`,
+                                );
                                 return oldContentString;
                             }
 
@@ -285,7 +302,9 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     function modifyPackage(
                         fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
                     ): Promise<void> {
-                        return modifyJsonFiles<PackageJson>('package.json', (packageJson) => fileModifier(packageJson));
+                        return modifyJsonFiles<PackageJson>('package.json', (filePath, packageJson) =>
+                            fileModifier(packageJson),
+                        );
                     }
 
                     function execCommandOnProject(command: string) {

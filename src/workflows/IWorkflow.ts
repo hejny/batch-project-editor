@@ -40,10 +40,19 @@ export interface IWorkflowOptions {
 
     execCommandOnProject(command: string): Promise<string>;
     readFile(filePath: string): Promise<string>;
-    modifyFile(filePath: string, fileModifier: (fileContent: string | null) => Promisable<string>): Promise<void>;
-    modifyFiles(globPattern: string, fileModifier: (fileContent: string) => Promisable<string>): Promise<void>;
+    modifyFile(
+        filePath: string,
+        fileModifier: (fileContent: string | null) => Promisable<string | null>,
+    ): Promise<void>;
+    modifyFiles(
+        globPattern: string,
+        fileModifier: (filePath: string, fileContent: string) => Promisable<string>,
+    ): Promise<void>;
     // TODO: modifyJsonFile
-    modifyJsonFiles<T>(globPattern: string, fileModifier: (fileJson: T) => Promisable<T>): Promise<void>;
+    modifyJsonFiles<T>(
+        globPattern: string,
+        fileModifier: (filePath: string, fileJson: T) => Promisable<T>,
+    ): Promise<void>;
     modifyPackage(fileModifier: (packageContent: PackageJson) => Promisable<PackageJson | void>): Promise<void>;
     commit(message: string): Promise<WorkflowResult.Change | WorkflowResult.NoChange>;
     skippingBecauseOf(message: string): WorkflowResult.Skip;

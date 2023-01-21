@@ -13,7 +13,7 @@ export async function aiGeneratedWallpaperUseInReadme({
     projectName,
     projectPath,
     projectOrg,
-    modifyFiles,
+    modifyFile,
     commit,
     skippingBecauseOf,
     mainBranch,
@@ -39,7 +39,10 @@ export async function aiGeneratedWallpaperUseInReadme({
         <!--/Wallpaper-->
     `);
 
-    await modifyFiles('README.md', (readmeContent) => {
+    await modifyFile('README.md', (readmeContent) => {
+        if (readmeContent === null) {
+            return null;
+        }
         if (WALLPAPER_IN_README.test(readmeContent)) {
             return readmeContent.replace(WALLPAPER_IN_README, wallpaperMarkdown);
         } else {
