@@ -13,6 +13,7 @@ export async function aiGeneratedWallpaperUseInGithub({
     projectPath,
     projectUrl,
     skippingBecauseOf,
+    madeSideEffect,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     const readmeContent = await readFile(join(projectPath, `README.md`), 'utf8');
     const match1 = WALLPAPER_IN_README.exec(readmeContent);
@@ -90,7 +91,7 @@ export async function aiGeneratedWallpaperUseInGithub({
     console.info(chalk.gray(`⏳ Waiting for 15 seconds to everything to settle`));
     await forTime(1000 * 15 /* To be uploaded - to everything to settle */);
 
-    return WorkflowResult.SideEffect;
+    return madeSideEffect(`Changed social media banner image in Github repository settings`);
 }
 
 aiGeneratedWallpaperUseInGithub.initialize = prepareGithubPage;

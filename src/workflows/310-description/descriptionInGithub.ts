@@ -5,6 +5,7 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 export async function descriptionInGithub({
     packageJson,
     skippingBecauseOf,
+    madeSideEffect,
     projectUrl,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     const description = packageJson.description;
@@ -25,7 +26,7 @@ export async function descriptionInGithub({
     await githubPage.keyboard.type(description, { delay: 50 });
     await clickOnText(githubPage, 'Save changes');
 
-    return WorkflowResult.SideEffect /* <- TODO: Describe the SideEffect ACRY */;
+    return madeSideEffect(`Changed description in GitHub repository settings`);
 }
 
 descriptionInGithub.initialize = prepareGithubPage;

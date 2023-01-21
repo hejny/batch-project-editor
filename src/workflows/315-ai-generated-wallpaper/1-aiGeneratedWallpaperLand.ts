@@ -14,6 +14,7 @@ import { stripFlagsFromPrompt } from './utils/stripFlagsFromPrompt';
 export async function aiGeneratedWallpaperLand({
     skippingBecauseOf,
     projectPath,
+    madeSideEffect,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     // TODO: [🏯] Dry to some util
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
@@ -74,7 +75,7 @@ export async function aiGeneratedWallpaperLand({
     if (landedCount === 0) {
         return skippingBecauseOf(`All imagine commands already landed`);
     } else {
-        return WorkflowResult.SideEffect;
+        return madeSideEffect(`Written imagine command to MidJourney discord`);
     }
 }
 

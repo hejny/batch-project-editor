@@ -122,7 +122,7 @@ export async function aiGeneratedWallpaperTrigger({
         */
     }
 
-    return WorkflowResult.SideEffect;
+    return madeSideEffect(`Triggered ... TODO: @@@`);
 }
 
 aiGeneratedWallpaperTrigger.initialize = prepareDiscordPage;

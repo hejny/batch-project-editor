@@ -55,7 +55,8 @@ export interface IWorkflowOptions {
     ): Promise<void>;
     modifyPackage(fileModifier: (packageContent: PackageJson) => Promisable<PackageJson | void>): Promise<void>;
     commit(message: string): Promise<WorkflowResult.Change | WorkflowResult.NoChange>;
-    skippingBecauseOf(message: string): WorkflowResult.Skip;
+    madeSideEffect(whatWasDoneDescription: string): WorkflowResult.SideEffect;
+    skippingBecauseOf(reasonToSkipDescription: string): WorkflowResult.Skip;
 }
 
 export interface IWorkflow {

@@ -340,10 +340,18 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         modifyFiles,
                         modifyJsonFiles,
                         modifyPackage,
-                        skippingBecauseOf(message) {
+                        madeSideEffect(whatWasDoneDescription: string) {
+                            console.info(
+                                chalk.green(
+                                    `👨‍🏭 Workflow ${workflowName} on project ${projectTitle} ${whatWasDoneDescription}`,
+                                ),
+                            );
+                            return WorkflowResult.SideEffect;
+                        },
+                        skippingBecauseOf(reasonToSkipDescription: string) {
                             console.info(
                                 chalk.gray(
-                                    `⏩ Skipping workflow ${workflowName} on project ${projectTitle} because of ${message}`,
+                                    `⏩ Skipping workflow ${workflowName} on project ${projectTitle} because of ${reasonToSkipDescription}`,
                                 ),
                             );
                             return WorkflowResult.Skip;
