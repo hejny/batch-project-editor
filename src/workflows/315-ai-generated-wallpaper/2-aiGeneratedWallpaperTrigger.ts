@@ -54,8 +54,8 @@ export async function aiGeneratedWallpaperTrigger({
                 continue;
             }
 
-            elementHandle.click();
-            await forTime(1000 * 2 /* seconds before detecting new status of the button */);
+            await elementHandle.click();
+            await forTime(1000 * 1 /* seconds before detecting new status of the button */);
 
             const statusAfterClick = await getStatusOfButton(elementHandle);
 
@@ -113,7 +113,7 @@ async function getStatusOfButton(elementHandle: ElementHandle): Promise<'BLANK' 
 
     if (color === 'rgb(79, 84, 92)') {
         return 'BLANK';
-    } else if (color === 'rgb(88, 101, 242)' || color === 'rgb(45, 125, 70)') {
+    } else if (color === 'rgb(88, 101, 242)' || color === 'rgb(71, 82, 196)' || color === 'rgb(45, 125, 70)') {
         return 'TRIGGERED';
     } else {
         console.info('Unknown color', { color });
