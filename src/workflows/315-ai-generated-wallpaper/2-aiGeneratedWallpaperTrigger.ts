@@ -59,6 +59,8 @@ export async function aiGeneratedWallpaperTrigger({
 
             const statusAfterClick = await getStatusOfButton(elementHandle);
 
+            // !!!!! Why the statusAfterClick is always 'BLANK'
+
             if (statusAfterClick === 'TRIGGERED') {
                 console.info(chalk.green(`👉 Clicked on`) + ' ' + chalk.bgGreen(text));
                 // return madeSideEffect(`Triggered ${text}`);
@@ -111,7 +113,7 @@ async function getStatusOfButton(elementHandle: ElementHandle): Promise<'BLANK' 
 
     if (color === 'rgb(79, 84, 92)') {
         return 'BLANK';
-    } else if (color === 'rgb(88, 101, 242)') {
+    } else if (color === 'rgb(88, 101, 242)' || color === 'rgb(45, 125, 70)') {
         return 'TRIGGERED';
     } else {
         console.info('Unknown color', { color });
