@@ -9,28 +9,43 @@ export async function revertLastBpeCommit({
     execCommandOnProject,
     commit,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    const [lastCommit] = await gitlog({
+    const recentCommits = await gitlog({
         repo: projectPath,
-        number: 1,
+        number: 1 /* <- TODO: !!! [0] Configurable - how far should I search */,
         // author: "Dom Harrington",
         fields: ['hash', 'subject', 'body'],
     });
 
-    if (!lastCommit.body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE)) {
-        return skippingBecauseOf(`Last commit is not by Batch project editor`);
-    }
+    for (const recentCommit of recentCommits) {
+        if (!recentCommit.body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE)) {
+            continue;
+            // return skippingBecauseOf(`Last commit is not by Batch project editor`);
+        }
 
-    if (lastCommit.subject.includes('Revert') && lastCommit.body.includes('This reverts commit')) {
-        return skippingBecauseOf(`Last commit is already a revert commit`);
-    }
+        /*
+        // TODO: !!! [0] Extra condition
+        if (!recentCommit.subject.includes('Update contributing')) {
+            continue;
+            // return skippingBecauseOf(`@@@`);
+        }
+        */
 
-    await execCommandOnProject(`git revert ${lastCommit.hash} --no-edit --no-commit`);
+        if (recentCommit.subject.includes('Revert') && recentCommit.body.includes('This reverts commit')) {
+            continue;
+            // return skippingBecauseOf(`Last commit is already a revert commit`);
+        }
 
-    return commit(
-        spaceTrim(`
-            Revert "${lastCommit.subject}"
+        await execCommandOnProject(`git revert ${recentCommit.hash} --no-edit --no-commit`);
 
-            This reverts commit ${lastCommit.hash}.
+        return commit(
+            spaceTrim(`
+            Revert "${recentCommit.subject}"
+
+            This reverts commit ${recentCommit.hash}.
         `),
-    );
+        );
+        // TODO: !!! [0] Allow to make multiple reverts
+    }
+
+    return skippingBecauseOf(`No recent commit for revent.`);
 }
