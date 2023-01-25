@@ -109,12 +109,6 @@
             "focus": true
         },
         {
-            "name": "🔼 Run workflows",
-            "command": "ts-node ./src/index.ts --edit --workflows %,-revertLastBpeCommit,-lines,-descriptionInGithub,-aiGeneratedWallpaper% --projects %",
-            "onlySingle": true,
-            "focus": true
-        },
-        {
             "name": "🔼🧪👨🏽‍💻 Run one workflow on one project",
             "command": "ts-node ./src/index.ts --edit --workflows badges --projects spacetrim",
             "onlySingle": true,
