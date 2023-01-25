@@ -33,38 +33,33 @@ export async function aiGeneratedWallpaperTrigger({
                 return element.innerText;
             });
 
-            if (!['U1', 'U2' /* !!! More + Upscales */].includes(text)) {
+            if (!['U1', 'U2' /* !!! All + Upscales */].includes(text)) {
                 continue;
             }
 
-            elementHandle.focus();
+            const statusBeforeClick = await getStatusOfButton(elementHandle);
 
-            // [6] const elementImage = await elementHandle.screenshot() as Buffer;
-            // [6] console.log(elementImage);
-
-            await forTime(500);
-
-            const status = await getStatusOfButton(elementHandle);
-
-            if (status === 'TRIGGERED') {
+            if (statusBeforeClick === 'TRIGGERED') {
                 console.info(chalk.gray(`⏩ Already triggered`) + ' ' + chalk.bgGray(text));
                 continue;
-            } else if (status === 'UNKNOWN') {
+            } else if (statusBeforeClick === 'UNKNOWN') {
                 console.info(chalk.red(`⏩ Unknown status of button`) + ' ' + chalk.bgRed(text));
                 continue;
             }
 
+            await elementHandle.focus();
+            console.info(chalk.green(`👉 Clicking on`) + ' ' + chalk.bgGreen(text));
             await elementHandle.click();
-            await forTime(1000 * 1 /* seconds before detecting new status of the button */);
+            await forTime(1000 * 10 /* seconds before detecting new status of the button */);
 
             const statusAfterClick = await getStatusOfButton(elementHandle);
 
+            // TODO: !!! Remove all console.log
+            console.log({ statusBeforeClick, statusAfterClick });
+
             // !!!!! Why the statusAfterClick is always 'BLANK'
 
-            if (statusAfterClick === 'TRIGGERED') {
-                console.info(chalk.green(`👉 Clicked on`) + ' ' + chalk.bgGreen(text));
-                // return madeSideEffect(`Triggered ${text}`);
-            } else if (statusAfterClick === 'BLANK') {
+            if (statusAfterClick === 'BLANK') {
                 console.info(
                     chalk.yellow(`👉 Clicked on`) +
                         ' ' +
@@ -72,7 +67,7 @@ export async function aiGeneratedWallpaperTrigger({
                         ' ' +
                         chalk.yellow(`but queue is stucked`),
                 );
-                console.info(chalk.gray(`⏳ Waiting for 2 minutes to MidJourney finish up the queue`));
+                console.info(chalk.gray(`⏳ Waiting for 2 minutes to MidJourney to finish up the queue`));
                 await forTime(1000 * 60 * 2 /* minutes */);
                 continue;
             } else if (statusAfterClick === 'UNKNOWN') {
@@ -111,9 +106,14 @@ async function getStatusOfButton(elementHandle: ElementHandle): Promise<'BLANK' 
         return window.getComputedStyle(element).backgroundColor;
     });
 
-    if (color === 'rgb(79, 84, 92)') {
+    if (color === 'rgb(79, 84, 92)' || color === 'rgb(104, 109, 115)') {
         return 'BLANK';
-    } else if (color === 'rgb(88, 101, 242)' || color === 'rgb(71, 82, 196)' || color === 'rgb(45, 125, 70)') {
+    } else if (
+        color === 'rgb(88, 101, 242)' ||
+        color === 'rgb(71, 82, 196)' ||
+        color === 'rgb(45, 125, 70)' ||
+        color === '@@@ rgb(45, 125, 70)'
+    ) {
         return 'TRIGGERED';
     } else {
         console.info('Unknown color', { color });
