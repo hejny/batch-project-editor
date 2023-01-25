@@ -59,7 +59,7 @@
         {
             "name": "🚜🖼️ Trigger AI–⁠generated wallpapers",
             "commands": [
-                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaperTrigger --projects batch-project-editor"
+                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperTrigger --projects batch-project-editor"
             ],
             "onlySingle": true,
             "focus": true
