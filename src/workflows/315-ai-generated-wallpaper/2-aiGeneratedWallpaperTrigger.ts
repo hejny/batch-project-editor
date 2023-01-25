@@ -33,7 +33,7 @@ export async function aiGeneratedWallpaperTrigger({
                 return element.innerText;
             });
 
-            if (!['U1', 'U2' /* !!! All + Upscales */].includes(text)) {
+            if (!['U1', 'U2', 'U3', 'U4' /* !!! Upscales */].includes(text)) {
                 continue;
             }
 
