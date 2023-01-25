@@ -37,6 +37,10 @@ export async function aiGeneratedWallpaperTrigger({
                 continue;
             }
 
+            await elementHandle.evaluate((element) => {
+                element.style.outline = '2px solid #cccccc';
+            });
+
             const statusBeforeClick = await getStatusOfButton(elementHandle);
 
             if (statusBeforeClick === 'TRIGGERED') {
@@ -47,7 +51,11 @@ export async function aiGeneratedWallpaperTrigger({
                 continue;
             }
 
-            await elementHandle.focus();
+            await elementHandle.focus(/* [9] Redundant */);
+            await elementHandle.evaluate((element) => {
+                element.focus(/* [9] Redundant */);
+                element.style.outline = '2px solid #ff0000';
+            });
             console.info(chalk.green(`👉 Clicking on`) + ' ' + chalk.bgGreen(text));
             await elementHandle.click();
             await forTime(1000 * 10 /* seconds before detecting new status of the button */);
