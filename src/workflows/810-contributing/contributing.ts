@@ -28,7 +28,7 @@ export async function contributing({
 
               `);
 
-    await modifyFiles('README.md', async (readmeContent) => {
+    await modifyFiles('README.md', async (filePath, readmeContent) => {
         // TODO: Include prettier formatting
         if (CONTRIBUTING_IN_README.test(readmeContent)) {
             return readmeContent.replace(CONTRIBUTING_IN_README, contributingMarkdown);
