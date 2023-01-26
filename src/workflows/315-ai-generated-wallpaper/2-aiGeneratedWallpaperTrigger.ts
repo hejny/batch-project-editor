@@ -60,6 +60,8 @@ export async function aiGeneratedWallpaperTrigger({
             await elementHandle.click();
             await forTime(1000 * 10 /* seconds before detecting new status of the button */);
 
+
+            // TODO: !!! Try to click multiple times when status is still BLANK
             const statusAfterClick = await getStatusOfButton(elementHandle);
 
             // TODO: !!! Remove all console.log
@@ -89,10 +91,26 @@ export async function aiGeneratedWallpaperTrigger({
 
         console.info(chalk.gray(`⬆ Scrolling up`));
 
-        await discordPage.evaluate(() => {
+        await discordPage.evaluate(async () => {
+            function forAnimationFrame(): Promise<void> {
+                return new Promise((resolve) => {
+                    requestAnimationFrame(() => {
+                        resolve();
+                    });
+
+                    setTimeout(() => {
+                        resolve();
+                    }, 10);
+                });
+            }
+
             const scrollableElements = Array.from(document.querySelectorAll(`div[class^=scroller-]`));
             const messagesElement = scrollableElements[scrollableElements.length - 1];
-            messagesElement.scrollBy(0, window.innerHeight * -0.8);
+
+            for (let i = 0; i <= 500; i++) {
+                messagesElement.scrollBy(0, -10);
+                await forAnimationFrame();
+            }
         });
     }
 }
