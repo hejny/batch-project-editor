@@ -30,10 +30,11 @@ export async function aiGeneratedWallpaperTrigger({
 
         for (const elementHandle of elementHandles.reverse()) {
             const text = await elementHandle.evaluate((element) => {
+                // TODO: DRY [13]
                 return element.innerText;
             });
 
-            if (!['U1', 'U2', 'U3', 'U4' /* !!! Upscales */].includes(text)) {
+            if (!['U1', 'U2', 'U3', 'U4'].includes(text)) {
                 continue;
             }
 
@@ -51,22 +52,12 @@ export async function aiGeneratedWallpaperTrigger({
                 continue;
             }
 
-            await elementHandle.focus(/* [9] Redundant */);
-            await elementHandle.evaluate((element) => {
-                element.focus(/* [9] Redundant */);
-                element.style.outline = '2px solid #ff0000';
-            });
-            console.info(chalk.green(`👉 Clicking on`) + ' ' + chalk.bgGreen(text));
-            await elementHandle.click();
-            await forTime(1000 * 10 /* seconds before detecting new status of the button */);
+            await clickOnTriggerButtonWithRetry(elementHandle);
 
-            // TODO: !!! Try to click multiple times when status is still BLANK
             const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
 
             // TODO: !!! Remove all console.log
             console.log({ statusBeforeClick, statusAfterClick });
-
-            // !!!!! Why the statusAfterClick is always 'BLANK'
 
             if (statusAfterClick === 'BLANK') {
                 console.info(
@@ -116,8 +107,48 @@ export async function aiGeneratedWallpaperTrigger({
 
 aiGeneratedWallpaperTrigger.initialize = prepareDiscordPage;
 
+/**
+ *  Try to click multiple times when status is still BLANK
+ */
+async function clickOnTriggerButtonWithRetry(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
+    console.log('clickOnTriggerButtonWithRetry');
+
+    await clickOnTriggerButton(elementHandle, true);
+    await forTime(1000 * 10 /* seconds before detecting new status of the button */);
+    const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
+
+    if (statusAfterClick !== 'BLANK') {
+        return;
+    }
+
+    await forTime(1000 * 5);
+    await clickOnTriggerButton(elementHandle, false);
+}
+
+async function clickOnTriggerButton(elementHandle: ElementHandle<HTMLButtonElement>, isLogged: boolean): Promise<void> {
+    console.log('clickOnTriggerButton');
+
+    const text = await elementHandle.evaluate((element) => {
+        // TODO: DRY [13]
+        return element.innerText;
+    });
+
+    await elementHandle.focus(/* [9] Redundant */);
+    await elementHandle.evaluate((element) => {
+        element.focus(/* [9] Redundant */);
+        element.style.outline = '2px solid #ff0000';
+    });
+
+    if (isLogged) {
+        console.info(chalk.green(`👉 Clicking on`) + ' ' + chalk.bgGreen(text));
+    }
+    await elementHandle.click();
+}
+
 async function getStatusOfButtonWithRetry(elementHandle: ElementHandle): Promise<ButtonStatus> {
-    const status = await getStatusOfButton(elementHandle);
+    console.log('getStatusOfButtonWithRetry');
+
+    const status = await getStatusOfButton(elementHandle, false);
 
     if (status !== 'UNKNOWN') {
         return status;
@@ -129,7 +160,9 @@ async function getStatusOfButtonWithRetry(elementHandle: ElementHandle): Promise
 
 type ButtonStatus = 'BLANK' | 'TRIGGERED' | 'UNKNOWN';
 
-async function getStatusOfButton(elementHandle: ElementHandle, isLogged = false): Promise<ButtonStatus> {
+async function getStatusOfButton(elementHandle: ElementHandle, isLogged: boolean): Promise<ButtonStatus> {
+    console.log('getStatusOfButton');
+
     const color = await elementHandle.evaluate((element) => {
         return window.getComputedStyle(element).backgroundColor;
     });
