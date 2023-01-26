@@ -56,17 +56,9 @@ export async function aiGeneratedWallpaperTrigger({
 
             const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
 
-            // TODO: !!! Remove all console.log
-            console.log({ statusBeforeClick, statusAfterClick });
+            // console.log({ statusBeforeClick, statusAfterClick });
 
             if (statusAfterClick === 'BLANK') {
-                console.info(
-                    chalk.yellow(`👉 Clicked on`) +
-                        ' ' +
-                        chalk.bgYellow(text) +
-                        ' ' +
-                        chalk.yellow(`but queue is stucked`),
-                );
                 console.info(chalk.gray(`⏳ Waiting for 2 minutes to MidJourney to finish up the queue`));
                 await forTime(1000 * 60 * 2 /* minutes */);
                 continue;
@@ -111,27 +103,36 @@ aiGeneratedWallpaperTrigger.initialize = prepareDiscordPage;
  *  Try to click multiple times when status is still BLANK
  */
 async function clickOnTriggerButtonWithRetry(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
-    console.log('clickOnTriggerButtonWithRetry');
-
-    await clickOnTriggerButton(elementHandle, true);
-    await forTime(1000 * 10 /* seconds before detecting new status of the button */);
-    const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
-
-    if (statusAfterClick !== 'BLANK') {
-        return;
-    }
-
-    await forTime(1000 * 5);
-    await clickOnTriggerButton(elementHandle, false);
-}
-
-async function clickOnTriggerButton(elementHandle: ElementHandle<HTMLButtonElement>, isLogged: boolean): Promise<void> {
-    console.log('clickOnTriggerButton');
+    // console.log('clickOnTriggerButtonWithRetry');
 
     const text = await elementHandle.evaluate((element) => {
         // TODO: DRY [13]
         return element.innerText;
     });
+
+    for (let i = 0; i < 5; i++) {
+        console.info(
+            chalk.green(`👉 Clicking on`) +
+                ' ' +
+                chalk.bgGreen(text) +
+                (i === 0 ? '' : ' ' + chalk.gray(`(${i + 1}. attempt)`)),
+        );
+
+        await clickOnTriggerButton(elementHandle);
+        await forTime(1000 * 2 /* seconds before detecting new status of the button */);
+
+        const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
+
+        if (statusAfterClick === 'TRIGGERED') {
+            return;
+        }
+    }
+
+    console.info(chalk.yellow(`🤼 Queue seems to be stucked`));
+}
+
+async function clickOnTriggerButton(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
+    // console.log('clickOnTriggerButton');
 
     await elementHandle.focus(/* [9] Redundant */);
     await elementHandle.evaluate((element) => {
@@ -139,14 +140,11 @@ async function clickOnTriggerButton(elementHandle: ElementHandle<HTMLButtonEleme
         element.style.outline = '2px solid #ff0000';
     });
 
-    if (isLogged) {
-        console.info(chalk.green(`👉 Clicking on`) + ' ' + chalk.bgGreen(text));
-    }
     await elementHandle.click();
 }
 
 async function getStatusOfButtonWithRetry(elementHandle: ElementHandle): Promise<ButtonStatus> {
-    console.log('getStatusOfButtonWithRetry');
+    // console.log('getStatusOfButtonWithRetry');
 
     const status = await getStatusOfButton(elementHandle, false);
 
@@ -161,7 +159,7 @@ async function getStatusOfButtonWithRetry(elementHandle: ElementHandle): Promise
 type ButtonStatus = 'BLANK' | 'TRIGGERED' | 'UNKNOWN';
 
 async function getStatusOfButton(elementHandle: ElementHandle, isLogged: boolean): Promise<ButtonStatus> {
-    console.log('getStatusOfButton');
+    // console.log('getStatusOfButton');
 
     const color = await elementHandle.evaluate((element) => {
         return window.getComputedStyle(element).backgroundColor;
