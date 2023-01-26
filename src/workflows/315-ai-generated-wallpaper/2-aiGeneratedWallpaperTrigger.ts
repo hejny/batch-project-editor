@@ -41,7 +41,7 @@ export async function aiGeneratedWallpaperTrigger({
                 element.style.outline = '2px solid #cccccc';
             });
 
-            const statusBeforeClick = await getStatusOfButton(elementHandle);
+            const statusBeforeClick = await getStatusOfButtonWithRetry(elementHandle);
 
             if (statusBeforeClick === 'TRIGGERED') {
                 console.info(chalk.gray(`⏩ Already triggered`) + ' ' + chalk.bgGray(text));
@@ -60,9 +60,8 @@ export async function aiGeneratedWallpaperTrigger({
             await elementHandle.click();
             await forTime(1000 * 10 /* seconds before detecting new status of the button */);
 
-
             // TODO: !!! Try to click multiple times when status is still BLANK
-            const statusAfterClick = await getStatusOfButton(elementHandle);
+            const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
 
             // TODO: !!! Remove all console.log
             console.log({ statusBeforeClick, statusAfterClick });
@@ -117,17 +116,20 @@ export async function aiGeneratedWallpaperTrigger({
 
 aiGeneratedWallpaperTrigger.initialize = prepareDiscordPage;
 
-/*
-TODO: --loop 60
+async function getStatusOfButtonWithRetry(elementHandle: ElementHandle): Promise<ButtonStatus> {
+    const status = await getStatusOfButton(elementHandle);
 
-[🏯] Remove unused and better organize
-DISCORD_SEARCHRESULTS_QUERYSELECTOR;
-DISCORD_SEARCHRESULTS_ITEM__QUERYSELECTOR;
-DISCORD_MESSAGE__QUERYSELECTOR;
+    if (status !== 'UNKNOWN') {
+        return status;
+    }
 
-*/
+    await forTime(1000 * 5);
+    return await getStatusOfButton(elementHandle, true);
+}
 
-async function getStatusOfButton(elementHandle: ElementHandle): Promise<'BLANK' | 'TRIGGERED' | 'UNKNOWN'> {
+type ButtonStatus = 'BLANK' | 'TRIGGERED' | 'UNKNOWN';
+
+async function getStatusOfButton(elementHandle: ElementHandle, isLogged = false): Promise<ButtonStatus> {
     const color = await elementHandle.evaluate((element) => {
         return window.getComputedStyle(element).backgroundColor;
     });
@@ -142,7 +144,9 @@ async function getStatusOfButton(elementHandle: ElementHandle): Promise<'BLANK' 
     ) {
         return 'TRIGGERED';
     } else {
-        console.info('Unknown color', { color });
+        if (isLogged) {
+            console.info('Unknown color', { color });
+        }
         return 'UNKNOWN';
     }
 }
@@ -158,4 +162,14 @@ async function identifyElementHandle(handle: ElementHandle): Promise<any> {
               });
 * /
 }
+*/
+
+/*
+TODO: --loop 60
+
+[🏯] Remove unused and better organize
+DISCORD_SEARCHRESULTS_QUERYSELECTOR;
+DISCORD_SEARCHRESULTS_ITEM__QUERYSELECTOR;
+DISCORD_MESSAGE__QUERYSELECTOR;
+
 */
