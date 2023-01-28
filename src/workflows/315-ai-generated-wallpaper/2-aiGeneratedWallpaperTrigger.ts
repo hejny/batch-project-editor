@@ -13,8 +13,8 @@ export async function aiGeneratedWallpaperTrigger({
 
     const { triggeredCount, scrolledPagesCount } = await triggerMidjourney({
         discordPage,
-        triggerMaxCount: 2,
-        scrollMaxPagesCount: 1,
+        triggerMaxCount: Infinity,
+        scrollMaxPagesCount: Infinity,
     });
     console.info(chalk.green(`⏫ Triggered ${triggeredCount} images`));
     console.info(chalk.green(`⏫ Scrolled ${scrolledPagesCount} pages`));

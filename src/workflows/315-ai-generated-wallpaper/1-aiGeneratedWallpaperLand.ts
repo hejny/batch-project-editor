@@ -4,6 +4,7 @@ import glob from 'glob-promise';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
+import { WAIT_MULTIPLICATOR } from '../../config';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { IMAGINE_VERSION } from './config';
 import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
@@ -68,15 +69,15 @@ export async function aiGeneratedWallpaperLand({
         landedCount++;
 
         // TODO: [🏯] Configurable waiting time> await forTime(1000 * 60 * Math.random());
-        let secondsToWaitAfterImagine = 60 * 7 * Math.random();
+        let secondsToWaitAfterImagine = 60 * 7 * Math.random() * WAIT_MULTIPLICATOR;
         console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterImagine} seconds after writing /imagine command`));
         await forTime(1000 * secondsToWaitAfterImagine);
 
         const { triggeredCount } = await triggerMidjourney({ discordPage, triggerMaxCount: 4, scrollMaxPagesCount: 1 });
         console.info(chalk.green(`⏫ Upscaled ${triggeredCount} images`));
 
-        // TODO: [🏯] Configurable waiting time> await forTime(1000 * 60 * Math.random());
-        let secondsToWaitAfterUpscale = 60 * 2 * Math.random();
+        // TODO: [🏯] Configurable waiting time
+        let secondsToWaitAfterUpscale = 60 * 2 * Math.random() * WAIT_MULTIPLICATOR;
         console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterUpscale} seconds after clicking on upscale`));
         await forTime(1000 * secondsToWaitAfterUpscale);
     }

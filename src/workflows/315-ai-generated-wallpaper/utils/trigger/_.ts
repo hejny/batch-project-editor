@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { ElementHandle, Page } from 'puppeteer-core';
 import { forTime } from 'waitasecond';
+import { WAIT_MULTIPLICATOR } from '../../../../config';
 
 // !!!!! Split to files AND beware of bottom jsdoc
 
@@ -69,8 +70,15 @@ export async function triggerMidjourney({
                     return { triggeredCount, scrolledPagesCount };
                 }
             } else if (statusAfterClick === 'BLANK') {
-                console.info(chalk.gray(`⏳ Waiting for 2 minutes to MidJourney to finish up the queue`));
-                await forTime(1000 * 60 * 2 /* minutes */);
+                // TODO: [🏯] Configurable waiting time
+                let secondsToWaitToFinishUpQueue = 60 * 2 * WAIT_MULTIPLICATOR;
+                console.info(
+                    chalk.gray(
+                        `⏳ Waiting for ${secondsToWaitToFinishUpQueue} seconds to MidJourney to finish up the queue`,
+                    ),
+                );
+                await forTime(1000 * secondsToWaitToFinishUpQueue);
+
                 continue;
             } else if (statusAfterClick === 'UNKNOWN') {
                 console.info(
@@ -78,12 +86,14 @@ export async function triggerMidjourney({
                 );
             }
 
-            await forTime(1000 * 3 /* seconds before clicking on next button */);
+            // TODO: [🏯] Configurable waiting time
+            let secondsToWaitBeforeClickingOnNextUpscale = 3 * WAIT_MULTIPLICATOR;
+            await forTime(1000 * secondsToWaitBeforeClickingOnNextUpscale);
         }
 
         console.info(chalk.gray(`⬆ Scrolling up`));
 
-        await discordPage.evaluate(async () => {
+        const newScrolledPagesCount = await discordPage.evaluate(async () => {
             function forAnimationFrame(): Promise<void> {
                 return new Promise((resolve) => {
                     requestAnimationFrame(() => {
@@ -96,6 +106,7 @@ export async function triggerMidjourney({
                 });
             }
 
+            let scrolledPagesCount = 0;
             const scrollableElements = Array.from(document.querySelectorAll(`div[class^=scroller-]`));
             const messagesElement = scrollableElements[scrollableElements.length - 1];
 
@@ -104,7 +115,11 @@ export async function triggerMidjourney({
                 messagesElement.scrollBy(0, -10);
                 await forAnimationFrame();
             }
+
+            return scrolledPagesCount;
         });
+
+        scrolledPagesCount += newScrolledPagesCount;
 
         if (scrolledPagesCount >= scrollMaxPagesCount) {
             return { triggeredCount, scrolledPagesCount };
@@ -134,7 +149,10 @@ async function clickOnTriggerButtonWithRetry(elementHandle: ElementHandle<HTMLBu
         );
 
         await clickOnTriggerButton(elementHandle);
-        await forTime(1000 * 2 /* seconds before detecting new status of the button */);
+
+        // TODO: [🏯] Configurable waiting time
+        let secondsToWaitSecondsBeforeDetectingNewStatusOfTheButton = 2 * WAIT_MULTIPLICATOR;
+        await forTime(1000 * secondsToWaitSecondsBeforeDetectingNewStatusOfTheButton);
 
         const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
 
@@ -167,7 +185,10 @@ async function getStatusOfButtonWithRetry(elementHandle: ElementHandle): Promise
         return status;
     }
 
-    await forTime(1000 * 5);
+    // TODO: [🏯] Configurable waiting time
+    let secondsToRetryGettingButtonStatus = 5 * WAIT_MULTIPLICATOR;
+    await forTime(1000 * secondsToRetryGettingButtonStatus);
+
     return await getStatusOfButton(elementHandle, true);
 }
 
@@ -198,6 +219,7 @@ async function getStatusOfButton(elementHandle: ElementHandle, isLogged: boolean
 }
 
 /*
+TODO: Maybe rename to triggerUpscale OR upscaleMidjourney - just think about better naming scheme of all AI
 TODO: [2]
 async function identifyElementHandle(handle: ElementHandle): Promise<any> {
     return handle.asElement();
