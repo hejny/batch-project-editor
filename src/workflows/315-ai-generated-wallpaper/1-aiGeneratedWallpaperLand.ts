@@ -24,7 +24,8 @@ export async function aiGeneratedWallpaperLand({
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
     const imagines = spaceTrim(wallpaperImagineContents)
-        // TODO: This is not wotking when the lines are \r (or any combinations of with \r)
+        .split('\r\n')
+        .join('\n')
         .split('\n\n')
         .map((row) => row.split('\n').join(' ').split('  ').join(' ').trim())
         .filter((row) => row !== '' && !row.startsWith('#'));

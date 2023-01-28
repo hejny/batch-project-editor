@@ -141,6 +141,8 @@ export async function badges({
         } else {
             let added = false;
             return readmeContent
+                .split('\r\n')
+                .join('\n')
                 .split('\n')
                 .map((line) => {
                     if (!added && line.startsWith('#')) {

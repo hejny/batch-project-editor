@@ -19,6 +19,8 @@ export async function aiGeneratedWallpaperHarvest({
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
     const imagines = spaceTrim(wallpaperImagineContents)
+        .split('\r\n')
+        .join('\n')
         .split('\n\n')
         .map((row) => row.split('\n').join(' ').split('  ').join(' ').trim())
         .filter((row) => row !== '' && !row.startsWith('#'))
@@ -39,7 +41,7 @@ export async function aiGeneratedWallpaperHarvest({
 
     const searchResult = (
         await imagines.mapAsync(({ imagineSentence }) =>
-            searchMidjourney({ prompt: imagineSentence, version: IMAGINE_VERSION,isRetrying:true }),
+            searchMidjourney({ prompt: imagineSentence, version: IMAGINE_VERSION, isRetrying: true }),
         )
     ).flat();
 
