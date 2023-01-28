@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
-import { triggerMidjourney } from './utils/trigger/_';
+import { triggerMidjourney } from './utils/trigger/triggerMidjourney';
 
 export async function aiGeneratedWallpaperTrigger({
     skippingBecauseOf,

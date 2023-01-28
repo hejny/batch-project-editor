@@ -1,9 +1,9 @@
 import chalk from 'chalk';
-import { ElementHandle, Page } from 'puppeteer-core';
+import { Page } from 'puppeteer-core';
 import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../../config';
-
-// !!!!! Split to files AND beware of bottom jsdoc
+import { clickOnTriggerButtonWithRetry } from './clickOnTriggerButtonWithRetry';
+import { getStatusOfButtonWithRetry } from './getStatusOfButtonWithRetry';
 
 export async function triggerMidjourney({
     discordPage,
@@ -18,21 +18,19 @@ export async function triggerMidjourney({
     let scrolledPagesCount = 0;
 
     /* TODO: [2]
-    let lastLeadingHandle: any = null;
-    */
-
+  let lastLeadingHandle: any = null;
+  */
     while (true) {
         const elementHandles = await discordPage.$$('button');
 
         /* TODO: [2]
-        console.log(lastLeadingHandle, lastLeadingHandle === elementHandles[0]);
-        if (lastLeadingHandle === identifyElementHandle(/* TODO: DRY * / elementHandles[0])) {
-            // Note: Even if scrolled, the first element kept the same so I assume that we are at the top of the chat
-            return skippingBecauseOf(`Nothing to trigger`);
-        }
-        lastLeadingHandle = identifyElementHandle(/* TODO: DRY * / elementHandles[0]);
-        */
-
+    console.log(lastLeadingHandle, lastLeadingHandle === elementHandles[0]);
+    if (lastLeadingHandle === identifyElementHandle(/* TODO: DRY * / elementHandles[0])) {
+        // Note: Even if scrolled, the first element kept the same so I assume that we are at the top of the chat
+        return skippingBecauseOf(`Nothing to trigger`);
+    }
+    lastLeadingHandle = identifyElementHandle(/* TODO: DRY * / elementHandles[0]);
+    */
         for (const elementHandle of elementHandles.reverse()) {
             const text = await elementHandle.evaluate((element) => {
                 // TODO: DRY [13]
@@ -62,7 +60,6 @@ export async function triggerMidjourney({
             const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
 
             // console.log({ statusBeforeClick, statusAfterClick });
-
             if (statusAfterClick === 'TRIGGERED') {
                 triggeredCount++;
 
@@ -126,98 +123,6 @@ export async function triggerMidjourney({
         }
 
         console.log({ triggeredCount, scrolledPagesCount, triggerMaxCount, scrollMaxPagesCount });
-    }
-}
-
-/**
- *  Try to click multiple times when status is still BLANK
- */
-async function clickOnTriggerButtonWithRetry(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
-    // console.log('clickOnTriggerButtonWithRetry');
-
-    const text = await elementHandle.evaluate((element) => {
-        // TODO: DRY [13]
-        return element.innerText;
-    });
-
-    for (let i = 0; i < 5; i++) {
-        console.info(
-            chalk.green(`👉 Clicking on`) +
-                ' ' +
-                chalk.bgGreen(text) +
-                (i === 0 ? '' : ' ' + chalk.gray(`(${i + 1}. attempt)`)),
-        );
-
-        await clickOnTriggerButton(elementHandle);
-
-        // TODO: [🏯] Configurable waiting time
-        let secondsToWaitSecondsBeforeDetectingNewStatusOfTheButton = 2 * WAIT_MULTIPLICATOR;
-        await forTime(1000 * secondsToWaitSecondsBeforeDetectingNewStatusOfTheButton);
-
-        const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
-
-        if (statusAfterClick === 'TRIGGERED') {
-            return;
-        }
-    }
-
-    console.info(chalk.yellow(`🤼 Queue seems to be stucked`));
-}
-
-async function clickOnTriggerButton(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
-    // console.log('clickOnTriggerButton');
-
-    await elementHandle.focus(/* [9] Redundant */);
-    await elementHandle.evaluate((element) => {
-        element.focus(/* [9] Redundant */);
-        element.style.outline = '2px solid #ff0000';
-    });
-
-    await elementHandle.click().catch((error) => {
-        // Note: Do not throw here because sometimes happen that node is detached from document
-        console.error(error);
-    });
-}
-
-async function getStatusOfButtonWithRetry(elementHandle: ElementHandle): Promise<ButtonStatus> {
-    // console.log('getStatusOfButtonWithRetry');
-
-    const status = await getStatusOfButton(elementHandle, false);
-
-    if (status !== 'UNKNOWN') {
-        return status;
-    }
-
-    // TODO: [🏯] Configurable waiting time
-    let secondsToRetryGettingButtonStatus = 5 * WAIT_MULTIPLICATOR;
-    await forTime(1000 * secondsToRetryGettingButtonStatus);
-
-    return await getStatusOfButton(elementHandle, true);
-}
-
-type ButtonStatus = 'BLANK' | 'TRIGGERED' | 'UNKNOWN';
-
-async function getStatusOfButton(elementHandle: ElementHandle, isLogged: boolean): Promise<ButtonStatus> {
-    // console.log('getStatusOfButton');
-
-    const color = await elementHandle.evaluate((element) => {
-        return window.getComputedStyle(element).backgroundColor;
-    });
-
-    if (color === 'rgb(79, 84, 92)' || color === 'rgb(104, 109, 115)') {
-        return 'BLANK';
-    } else if (
-        color === 'rgb(88, 101, 242)' ||
-        color === 'rgb(71, 82, 196)' ||
-        color === 'rgb(45, 125, 70)' ||
-        color === '@@@ rgb(45, 125, 70)'
-    ) {
-        return 'TRIGGERED';
-    } else {
-        if (isLogged) {
-            console.info('Unknown color', { color });
-        }
-        return 'UNKNOWN';
     }
 }
 

@@ -11,7 +11,7 @@ import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
 import { DISCORD_MESSAGE_QUERYSELECTOR } from './utils/discordQuerySelectors';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 import { stripFlagsFromPrompt } from './utils/stripFlagsFromPrompt';
-import { triggerMidjourney } from './utils/trigger/_';
+import { triggerMidjourney } from './utils/trigger/triggerMidjourney';
 
 export async function aiGeneratedWallpaperLand({
     skippingBecauseOf,
