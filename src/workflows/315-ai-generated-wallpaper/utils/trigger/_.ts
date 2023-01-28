@@ -173,7 +173,10 @@ async function clickOnTriggerButton(elementHandle: ElementHandle<HTMLButtonEleme
         element.style.outline = '2px solid #ff0000';
     });
 
-    await elementHandle.click();
+    await elementHandle.click().catch((error) => {
+        // Note: Do not throw here because sometimes happen that node is detached from document
+        console.error(error);
+    });
 }
 
 async function getStatusOfButtonWithRetry(elementHandle: ElementHandle): Promise<ButtonStatus> {
