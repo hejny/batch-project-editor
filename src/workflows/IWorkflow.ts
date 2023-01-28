@@ -63,3 +63,7 @@ export interface IWorkflow {
     (options: IWorkflowOptions): Promisable<WorkflowResult>;
     initialize?(): Promisable<void>;
 }
+
+/**
+ * TODO: There should be 2 different returns: skippingBecauseOf VS notingChangedBecauseOf
+ */

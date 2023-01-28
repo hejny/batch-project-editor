@@ -102,6 +102,12 @@
             "focus": true
         },
         {
+            "name": "🤖🚜 Land AIdeas",
+            "commands": ["ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperLand --projects AIdeas"],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
             "name": "🔼🐈 Run Github description",
             "commands": [
                 "ts-node ./src/index.ts --clone",

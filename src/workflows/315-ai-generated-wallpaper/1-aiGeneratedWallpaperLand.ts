@@ -10,6 +10,7 @@ import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
 import { DISCORD_MESSAGE_QUERYSELECTOR } from './utils/discordQuerySelectors';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 import { stripFlagsFromPrompt } from './utils/stripFlagsFromPrompt';
+import { triggerMidjourney } from './utils/trigger/_';
 
 export async function aiGeneratedWallpaperLand({
     skippingBecauseOf,
@@ -67,9 +68,17 @@ export async function aiGeneratedWallpaperLand({
         landedCount++;
 
         // TODO: [🏯] Configurable waiting time> await forTime(1000 * 60 * Math.random());
-        let secondsToWait = 60 * 10 * Math.random();
-        console.info(chalk.gray(`⏳ Waiting for ${secondsToWait} seconds after writing /imagine command`));
-        await forTime(1000 * secondsToWait);
+        let secondsToWaitAfterImagine = 60 * 7 * Math.random();
+        console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterImagine} seconds after writing /imagine command`));
+        await forTime(1000 * secondsToWaitAfterImagine);
+
+        const { triggeredCount } = await triggerMidjourney({ discordPage, triggerMaxCount: 4, scrollMaxPagesCount: 1 });
+        console.info(chalk.green(`⏫ Upscaled ${triggeredCount} images`));
+
+        // TODO: [🏯] Configurable waiting time> await forTime(1000 * 60 * Math.random());
+        let secondsToWaitAfterUpscale = 60 * 2 * Math.random();
+        console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterUpscale} seconds after clicking on upscale`));
+        await forTime(1000 * secondsToWaitAfterUpscale);
     }
 
     if (landedCount === 0) {
