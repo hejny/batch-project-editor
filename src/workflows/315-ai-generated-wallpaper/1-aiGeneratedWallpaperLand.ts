@@ -24,11 +24,15 @@ export async function aiGeneratedWallpaperLand({
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
     const imagines = spaceTrim(wallpaperImagineContents)
+        // TODO: This is not wotking when the lines are \r (or any combinations of with \r)
         .split('\n\n')
         .map((row) => row.split('\n').join(' ').split('  ').join(' ').trim())
         .filter((row) => row !== '' && !row.startsWith('#'));
 
     let landedCount = 0;
+
+    // TODO: Remove all console.log
+    console.log({ wallpaperImagineContents, imagines });
 
     for (const imagine of imagines) {
         //-------------
@@ -54,6 +58,7 @@ export async function aiGeneratedWallpaperLand({
         // Note: Test if already harvested
         // !!!!!!!!! Temporary solution - skipping all harvested
         const allWallpapersPaths = await glob(join(wallpaperGalleryPath, '*.png'));
+        console.log({ allWallpapersPaths });
         if (allWallpapersPaths.length !== 0) {
             continue;
         }
@@ -83,6 +88,7 @@ export async function aiGeneratedWallpaperLand({
     }
 
     if (landedCount === 0) {
+        // TODO: [🥗] There should be 2 different returns: skippingBecauseOf VS notingChangedBecauseOf
         return skippingBecauseOf(`All imagine commands already landed`);
     } else {
         return madeSideEffect(`Written imagine command to MidJourney discord`);

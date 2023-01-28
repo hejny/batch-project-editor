@@ -22,7 +22,7 @@ export async function aiGeneratedWallpaperTrigger({
     if (triggeredCount) {
         return madeSideEffect(`Triggered ${triggeredCount} buttons `);
     } else {
-        // TODO: There should be 2 different returns: skippingBecauseOf VS notingChangedBecauseOf
+        // TODO: [🥗] There should be 2 different returns: skippingBecauseOf VS notingChangedBecauseOf
         return skippingBecauseOf(`No button triggered `);
     }
 }
