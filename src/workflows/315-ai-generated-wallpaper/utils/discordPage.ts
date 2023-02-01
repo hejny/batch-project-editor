@@ -25,6 +25,8 @@ export async function prepareDiscordPage() {
     });
     */
 
+
+    // TODO: Use here puppeteer-cluster to be able to run multiple browser-based workflows at once
     const browser = await puppeteer.launch({
         // TODO: [0]
         executablePath: await locateChrome(),
