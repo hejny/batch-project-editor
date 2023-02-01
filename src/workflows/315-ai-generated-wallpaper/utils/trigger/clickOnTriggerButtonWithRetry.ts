@@ -4,6 +4,7 @@ import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../../config';
 import { clickOnTriggerButton } from './clickOnTriggerButton';
 import { getStatusOfButtonWithRetry } from './getStatusOfButtonWithRetry';
+import { forPlay } from '../../../../utils/forPlay';
 
 /**
  *  Try to click multiple times when status is still BLANK
@@ -11,6 +12,8 @@ import { getStatusOfButtonWithRetry } from './getStatusOfButtonWithRetry';
 
 export async function clickOnTriggerButtonWithRetry(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
     // console.log('clickOnTriggerButtonWithRetry');
+
+    await forPlay();
     const text = await elementHandle.evaluate((element) => {
         // TODO: DRY [13]
         return element.innerText;

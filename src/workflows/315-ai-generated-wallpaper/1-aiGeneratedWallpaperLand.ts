@@ -12,6 +12,7 @@ import { DISCORD_MESSAGE_QUERYSELECTOR } from './utils/discordQuerySelectors';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 import { stripFlagsFromPrompt } from './utils/stripFlagsFromPrompt';
 import { triggerMidjourney } from './utils/trigger/triggerMidjourney';
+import { forPlay } from '../../utils/forPlay';
 
 export async function aiGeneratedWallpaperLand({
     skippingBecauseOf,
@@ -36,6 +37,9 @@ export async function aiGeneratedWallpaperLand({
     console.log({ wallpaperImagineContents, imagines });
 
     for (const imagine of imagines) {
+
+      await forPlay();
+
         //-------------
         if (false) {
             // !!!!!!!!! Temporary blocked because searchMidjourney not working properly
@@ -69,18 +73,25 @@ export async function aiGeneratedWallpaperLand({
 
         console.log(chalk.magenta('/imagine ') + chalk.blue(imagine));
 
+        await forPlay();
         await discordPage.type(DISCORD_MESSAGE_QUERYSELECTOR, '/imagine ' + imagine, { delay: 50 });
         await discordPage.keyboard.press('Enter');
 
         landedCount++;
+
+        await forPlay();
 
         // TODO: [🏯] Configurable waiting time> await forTime(1000 * 60 * Math.random());
         let secondsToWaitAfterImagine = 60 * 7 * Math.random() * WAIT_MULTIPLICATOR;
         console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterImagine} seconds after writing /imagine command`));
         await forTime(1000 * secondsToWaitAfterImagine);
 
+        await forPlay();
+
         const { triggeredCount } = await triggerMidjourney({ discordPage, triggerMaxCount: 4, scrollMaxPagesCount: 1 });
         console.info(chalk.green(`⏫ Upscaled ${triggeredCount} images`));
+
+        await forPlay();
 
         // TODO: [🏯] Configurable waiting time
         let secondsToWaitAfterUpscale = 60 * 2 * Math.random() * WAIT_MULTIPLICATOR;

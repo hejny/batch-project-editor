@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { Page } from 'puppeteer-core';
 import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../../config';
+import { forPlay } from '../../../../utils/forPlay';
 import { clickOnTriggerButtonWithRetry } from './clickOnTriggerButtonWithRetry';
 import { getStatusOfButtonWithRetry } from './getStatusOfButtonWithRetry';
 
@@ -32,6 +33,8 @@ export async function triggerMidjourney({
     lastLeadingHandle = identifyElementHandle(/* TODO: DRY * / elementHandles[0]);
     */
         for (const elementHandle of elementHandles.reverse()) {
+            await forPlay();
+
             const text = await elementHandle.evaluate((element) => {
                 // TODO: DRY [13]
                 return element.innerText;
