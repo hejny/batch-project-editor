@@ -6,7 +6,7 @@
             "name": "🔼 Run",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows %,-revertLastBpeCommit,-branchesUpdateFeatures,-descriptionInGithub,-aiGeneratedWallpaper% --projects %"
+                "ts-node ./src/index.ts --edit --workflows %,-revertLastBpeCommit,-branchesUpdateFeatures,-descriptionInGithub,-aiGeneratedWallpaper%,-social% --projects %"
             ],
             "onlySingle": false,
             "focus": true
@@ -104,6 +104,13 @@
         {
             "name": "🤖🚜 Land AIdeas",
             "commands": ["ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperLand --projects AIdeas"],
+            "onlySingle": true,
+            "focus": true
+        },
+
+        {
+            "name": "🤵 Interact on social networks",
+            "commands": ["ts-node ./src/index.ts --edit --workflows social% --projects hejny"],
             "onlySingle": true,
             "focus": true
         },

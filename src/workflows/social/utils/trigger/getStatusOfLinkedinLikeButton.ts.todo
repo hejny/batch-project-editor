@@ -1,10 +1,13 @@
 import { ElementHandle } from 'puppeteer-core';
 import { forPlay } from '../../../../utils/forPlay';
 
-export type ButtonStatus = 'BLANK' | 'TRIGGERED' | 'UNKNOWN';
+export type LinkedinLikeButtonStatus = 'NONE' | 'LIKED' | 'CELEBRATE' /* <- !!! TODO: Add all */;
 
-export async function getStatusOfButton(elementHandle: ElementHandle, isLogged: boolean): Promise<ButtonStatus> {
-    // console.log('getStatusOfButton');
+export async function getStatusOfLinkedinLikeButton(
+    elementHandle: ElementHandle,
+    isLogged: boolean,
+): Promise<ButtonStatus> {
+    // console.log('getStatusOfLinkedinLikeButton');
     await forPlay();
     const color = await elementHandle.evaluate((element) => {
         return window.getComputedStyle(element).backgroundColor;
@@ -26,8 +29,3 @@ export async function getStatusOfButton(elementHandle: ElementHandle, isLogged: 
         return 'UNKNOWN';
     }
 }
-
-/**
- * TODO: Rename ButtonStatus to DiscordButtonStatus
- * TODO: Reanme - add discord to name like getStatusOfDiscordButton
- */

@@ -42,3 +42,8 @@ export async function clickOnTriggerButtonWithRetry(elementHandle: ElementHandle
 
     console.info(chalk.yellow(`🤼 Queue seems to be stucked`));
 }
+
+
+/**
+ * TODO: Reanme - add discord to name like clickOnDiscordButtonWithRetry
+ */

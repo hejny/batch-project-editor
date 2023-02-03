@@ -25,6 +25,7 @@ import { IWorkflow } from './IWorkflow';
 import { branchesRemoveMerged } from './branches-remove-merged/branches-remove-merged';
 import { branchesUpdateFeatures } from './branches-update-features/branches-update-features';
 import { collboardModuleNames } from './collboard-module-names/collboard-module-names';
+import { socialLinkedin } from './social/linkedin';
 import { terminalsVersion } from './terminals-version/terminalsVersion';
 
 export const WORKFLOWS: IWorkflow[] = [
@@ -66,4 +67,5 @@ export const WORKFLOWS: IWorkflow[] = [
     branchesUpdateFeatures,
     normalizeSvgs,
     revertLastBpeCommit,
+    socialLinkedin,
 ];

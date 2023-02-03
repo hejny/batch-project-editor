@@ -19,3 +19,7 @@ export async function getStatusOfButtonWithRetry(elementHandle: ElementHandle): 
 
     return await getStatusOfButton(elementHandle, true);
 }
+
+/**
+ * TODO: Reanme - add discord to name like getStatusOfDiscordButtonWithRetry
+ */

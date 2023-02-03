@@ -1,8 +1,9 @@
 import { ElementHandle } from 'puppeteer-core';
 import { forPlay } from '../../../../utils/forPlay';
 
-export async function clickOnTriggerButton(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
-    // console.log('clickOnTriggerButton');
+export async function clickOnLinkedinLikeButton(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
+
+    console.log('clickOnLinkedinLikeButton');
 
     await forPlay();
     await elementHandle.focus(/* [9] Redundant */);
@@ -16,7 +17,3 @@ export async function clickOnTriggerButton(elementHandle: ElementHandle<HTMLButt
         console.error(error);
     });
 }
-
-/**
- * TODO: Reanme - add discord to name like clickOnDiscordButton
- */
