@@ -3,7 +3,7 @@ import spaceTrim from 'spacetrim';
 import { BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE } from '../../config';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function revertLastBpeCommit({
+export async function onceRevertLastBpeCommit({
     projectPath,
     skippingBecauseOf,
     execCommandOnProject,
@@ -49,3 +49,8 @@ export async function revertLastBpeCommit({
 
     return skippingBecauseOf(`No recent commit for revent.`);
 }
+
+
+/**
+ * TODO: Make some better system for workflows not connected with project
+ */

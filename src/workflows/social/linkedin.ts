@@ -39,3 +39,7 @@ DISCORD_SEARCHRESULTS_ITEM__QUERYSELECTOR;
 DISCORD_MESSAGE__QUERYSELECTOR;
 
 */
+
+/**
+ * TODO: Make some better system for workflows not connected with project
+ */

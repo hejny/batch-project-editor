@@ -6,7 +6,7 @@
             "name": "🔼 Run",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows %,-revertLastBpeCommit,-branchesUpdateFeatures,-descriptionInGithub,-aiGeneratedWallpaper%,-social% --projects %"
+                "ts-node ./src/index.ts --edit --workflows %,-once%,-branchesUpdateFeatures,-descriptionInGithub,-aiGeneratedWallpaper%,-social% --projects %"
             ],
             "onlySingle": false,
             "focus": true
@@ -111,6 +111,14 @@
         {
             "name": "🤵 Interact on social networks",
             "commands": ["ts-node ./src/index.ts --edit --workflows social% --projects hejny"],
+            "onlySingle": true,
+            "focus": true
+        },
+        {
+            "name": "⏬🖼️ Download MidJourney gallery",
+            "commands": [
+                "ts-node ./src/index.ts --edit --workflows onceHarvestAllMidjourney --projects batch-project-editor"
+            ],
             "onlySingle": true,
             "focus": true
         },

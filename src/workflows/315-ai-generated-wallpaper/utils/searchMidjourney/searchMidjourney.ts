@@ -5,26 +5,51 @@ import { forTime } from 'waitasecond';
 import { MIDJOURNEY_COOKIES } from '../../../../config';
 import { IMidjourneyJob } from './IMidjourneyJob';
 
+const MIDJOURNEY_AMOUNT_ON_PAGE = 50;
+
 interface ISearchMidjourneyOptions {
     // TODO: [0] userId: number
-    prompt: string;
+    prompt: string | null;
     version: number | null;
     isRetrying: boolean;
 }
 
 export async function searchMidjourney(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {
-    const { prompt, version, isRetrying } = options;
+    const aggregatedResult: IMidjourneyJob[] = [];
+
+    let page = 0;
+    while (true) {
+        console.info(chalk.green(` ⏬  Listing midjourney page ${page} `));
+        const pageResult = await searchMidjourneyOnPage({ ...options, page, amount: MIDJOURNEY_AMOUNT_ON_PAGE });
+
+        if (pageResult.length < MIDJOURNEY_AMOUNT_ON_PAGE) {
+            break;
+        }
+
+        aggregatedResult.push(...pageResult);
+    }
+
+    return aggregatedResult;
+}
+
+async function searchMidjourneyOnPage(
+    options: ISearchMidjourneyOptions & { amount: number; page: number },
+): Promise<IMidjourneyJob[]> {
+    const { prompt, version, isRetrying, amount, page } = options;
 
     const url = new URL(`https://www.midjourney.com/api/app/recent-jobs/`);
 
-    url.searchParams.set('amount', '100' /* <- TODO: Implement pagination, 500 throws internal error */);
-    url.searchParams.set('jobType', 'yfcc_upsample' /* <- TODO: What this means? */);
+    url.searchParams.set('amount', amount.toString());
+    url.searchParams.set('page', page.toString());
+    // url.searchParams.set('jobType', 'yfcc_upsample' /* <- TODO: What this means? */);
     url.searchParams.set('orderBy', 'new');
     url.searchParams.set('jobStatus', 'completed');
     url.searchParams.set('userId', '310540068588879872' /* <- TODO: [0] Unhardcode */);
     url.searchParams.set('isPublished', 'true');
     url.searchParams.set('minRankingScore', '0' /* <- TODO: What this means? */);
-    url.searchParams.set('prompt', prompt);
+    if (prompt) {
+        url.searchParams.set('prompt', prompt);
+    }
     url.searchParams.set('dedupe', 'true' /* <- TODO: What this means? */);
     url.searchParams.set('refreshApi', '0' /* <- TODO: What this means? */);
 
