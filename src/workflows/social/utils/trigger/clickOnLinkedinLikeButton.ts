@@ -3,7 +3,7 @@ import { forPlay } from '../../../../utils/forPlay';
 
 export async function clickOnLinkedinLikeButton(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
 
-    console.log('clickOnLinkedinLikeButton');
+    //console.log('clickOnLinkedinLikeButton');
 
     await forPlay();
     await elementHandle.focus(/* [9] Redundant */);

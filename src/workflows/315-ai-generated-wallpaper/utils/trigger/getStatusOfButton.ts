@@ -3,7 +3,10 @@ import { forPlay } from '../../../../utils/forPlay';
 
 export type ButtonStatus = 'BLANK' | 'TRIGGERED' | 'UNKNOWN';
 
-export async function getStatusOfButton(elementHandle: ElementHandle, isLogged: boolean): Promise<ButtonStatus> {
+export async function getStatusOfButton(
+    elementHandle: ElementHandle<HTMLButtonElement>,
+    isLogged: boolean,
+): Promise<ButtonStatus> {
     // console.log('getStatusOfButton');
     await forPlay();
     const color = await elementHandle.evaluate((element) => {

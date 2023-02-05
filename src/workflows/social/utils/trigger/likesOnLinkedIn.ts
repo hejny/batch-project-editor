@@ -4,17 +4,18 @@ import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../../config';
 import { forPlay } from '../../../../utils/forPlay';
 import { clickOnLinkedinLikeButton } from './clickOnLinkedinLikeButton';
+import { getStatusOfLinkedinLikeButton } from './getStatusOfLinkedinLikeButton';
 
 export async function likesOnLinkedIn({
     linkedinPage,
-    triggerMaxCount,
+    likeMaxCount,
     scrollMaxPagesCount,
 }: {
     linkedinPage: Page;
-    triggerMaxCount: number | typeof Infinity;
+    likeMaxCount: number | typeof Infinity;
     scrollMaxPagesCount: number | typeof Infinity;
-}): Promise<{ triggeredCount: number; scrolledPagesCount: number }> {
-    let triggeredCount = 0;
+}): Promise<{ likeCount: number; scrolledPagesCount: number }> {
+    let likeCount = 0;
     let scrolledPagesCount = 0;
 
     /* TODO: [2]
@@ -31,8 +32,7 @@ export async function likesOnLinkedIn({
                 return element.getAttribute('aria-label') || '';
             });
 
-            // TODO: !!! Also ^dislike
-            if (!/^like/i.test(label)) {
+            if (!/^(un)?like.*post/i.test(label)) {
                 continue;
             }
 
@@ -40,55 +40,31 @@ export async function likesOnLinkedIn({
                 element.style.outline = '2px solid #cccccc';
             });
 
-            /* TODO: !!!>
-            const statusBeforeClick = await getStatusOfButtonWithRetry(elementHandle);
+            const statusBeforeClick = await getStatusOfLinkedinLikeButton(elementHandle);
 
-            if (statusBeforeClick === 'TRIGGERED') {
-                console.info(chalk.gray(`⏩ Already triggered`) + ' ' + chalk.bgGray(text));
+            if (statusBeforeClick.startsWith('LIKE')) {
+                console.info(chalk.gray(`⏩ Already LIKED`));
                 continue;
             } else if (statusBeforeClick === 'UNKNOWN') {
-                console.info(chalk.red(`⏩ Unknown status of button`) + ' ' + chalk.bgRed(text));
+                console.info(chalk.red(`⏩ Unknown status of button`));
                 continue;
             }
-            */
 
             await clickOnLinkedinLikeButton(elementHandle);
 
-            if (triggeredCount >= triggerMaxCount) {
-                return { triggeredCount, scrolledPagesCount };
+            //const statusAfterClick = await getStatusOfLinkedinLikeButton(elementHandle);
+            // console.log({ label, statusBeforeClick, statusAfterClick });
+
+            likeCount++;
+
+            console.info(chalk.cyan(`Liked ${likeCount}x`));
+
+            if (likeCount >= likeMaxCount) {
+                return { likeCount, scrolledPagesCount };
             }
-            /*
-            const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
-
-
-            // console.log({ statusBeforeClick, statusAfterClick });
-            if (statusAfterClick === 'TRIGGERED') {
-                triggeredCount++;
-
-                if (triggeredCount >= triggerMaxCount) {
-                    return { triggeredCount, scrolledPagesCount };
-                }
-            } else if (statusAfterClick === 'BLANK') {
-                // TODO: [🏯] Configurable waiting time
-                let secondsToWaitToFinishUpQueue = 60 * 2 * WAIT_MULTIPLICATOR;
-                console.info(
-                    chalk.gray(
-                        `⏳ Waiting for ${secondsToWaitToFinishUpQueue} seconds to MidJourney to finish up the queue`,
-                    ),
-                );
-                await forTime(1000 * secondsToWaitToFinishUpQueue);
-
-                continue;
-            } else if (statusAfterClick === 'UNKNOWN') {
-                console.info(
-                    chalk.red(`👉 Clicked on `) + ' ' + chalk.bgRed(text) + ' ' + chalk.red(`but unknown thing happen`),
-                );
-            }
-
-            */
 
             // TODO: [🏯] Configurable waiting time
-            let secondsToWaitBeforeClickingNextLike = 3 * WAIT_MULTIPLICATOR;
+            let secondsToWaitBeforeClickingNextLike = 30 * WAIT_MULTIPLICATOR;
             await forTime(1000 * secondsToWaitBeforeClickingNextLike);
         }
 
@@ -121,9 +97,9 @@ export async function likesOnLinkedIn({
         scrolledPagesCount += newScrolledPagesCount;
 
         if (scrolledPagesCount >= scrollMaxPagesCount) {
-            return { triggeredCount, scrolledPagesCount };
+            return { likeCount, scrolledPagesCount };
         }
 
-        console.log({ triggeredCount, scrolledPagesCount, triggerMaxCount, scrollMaxPagesCount });
+        console.log({ likeCount, scrolledPagesCount, likeMaxCount, scrollMaxPagesCount });
     }
 }
