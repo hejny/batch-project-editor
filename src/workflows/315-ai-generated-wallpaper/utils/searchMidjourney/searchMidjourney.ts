@@ -17,8 +17,7 @@ interface ISearchMidjourneyOptions {
 export async function searchMidjourney(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {
     const aggregatedResult: IMidjourneyJob[] = [];
 
-    let page = 0;
-    while (true) {
+    for (let page = 1; page < 10000 /* <- TODO: Unhardcode this limit */; page++) {
         console.info(chalk.green(` ⏬  Listing midjourney page ${page} `));
         const pageResult = await searchMidjourneyOnPage({ ...options, page, amount: MIDJOURNEY_AMOUNT_ON_PAGE });
 

@@ -43,3 +43,7 @@ export async function onceHarvestAllMidjourney({
 
     return madeSideEffect(`Downloaded Midjourney gallery`);
 }
+
+/**
+ * TODO: This workflow can be a separate repository on its own
+ */

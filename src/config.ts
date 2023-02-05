@@ -20,6 +20,9 @@ export const MIDJOURNEY_COOKIES = config
     .asType<Record<string, string>>()
     .required().value;
 
+// export const MIDJOURNEY_GALLERY_PATH = 'C:/Users/me/Downloads/midjourney';
+export const MIDJOURNEY_GALLERY_PATH = 'X:/Mythings/MidJourney';
+
 export const PROJECT_FLAGS: Record<string, { isPrivate: boolean; isArchived: boolean; isFork: boolean }> = {
     /* Note: It will be filled dynamically with isPrivate:boolean */
 };
