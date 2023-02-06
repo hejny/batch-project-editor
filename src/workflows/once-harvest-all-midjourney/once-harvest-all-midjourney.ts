@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { join } from 'path';
+import { MIDJOURNEY_GALLERY_PATH } from '../../config';
 import { stringToArrayBuffer } from '../../utils/stringToArrayBuffer';
 import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';
 import { searchMidjourney } from '../315-ai-generated-wallpaper/utils/searchMidjourney/searchMidjourney';
@@ -17,8 +18,6 @@ export async function onceHarvestAllMidjourney({
         process.exit();
     }
 
-    const galleryPath = join('C:/Users/me/Downloads/midjourney');
-
     const images = await searchMidjourney({ prompt: null, version: null, isRetrying: false });
 
     for (const image of images) {
@@ -29,8 +28,8 @@ export async function onceHarvestAllMidjourney({
                 /(?<imageId>[^/]+)\/(?<imageSuffix>[^/]+)\.(?<imageExtension>[^/]+)$/,
             )!.groups!;
 
-            const imageLocalPath = join(galleryPath, `${imageId}-${imageSuffix}.${imageExtension}`);
-            const metaLocalPath = join(galleryPath, `${imageId}-${imageSuffix}.json`);
+            const imageLocalPath = join(MIDJOURNEY_GALLERY_PATH, `${imageId}-${imageSuffix}.${imageExtension}`);
+            const metaLocalPath = join(MIDJOURNEY_GALLERY_PATH, `${imageId}-${imageSuffix}.json`);
 
             // console.log({ imageRemotePath, imageLocalPath, imageId, imageSuffix, imageExtension });
 
