@@ -110,7 +110,7 @@
 
         {
             "name": "🤵 Interact on social networks",
-            "commands": ["ts-node ./src/index.ts --edit --workflows social% --projects hejny"],
+            "commands": ["ts-node ./src/index.ts --edit --loop --workflows social% --projects hejny"],
             "onlySingle": true,
             "focus": true
         },

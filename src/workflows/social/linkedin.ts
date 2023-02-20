@@ -13,7 +13,7 @@ export async function socialLinkedin({
 
     const { likeCount, scrolledPagesCount } = await likesOnLinkedIn({
         linkedinPage,
-        likeMaxCount: Infinity,
+        likeMaxCount: 50,
         scrollMaxPagesCount: Infinity,
     });
     console.info(chalk.green(`⏫ Triggered ${likeCount} images`));
