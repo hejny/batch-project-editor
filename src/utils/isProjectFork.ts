@@ -1,5 +1,5 @@
-import { PROJECT_FLAGS } from '../config';
 import fetch from 'node-fetch';
+import { PROJECT_FLAGS } from '../config';
 
 /**
  * Detects if the project is just a fork

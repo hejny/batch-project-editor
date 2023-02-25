@@ -1,5 +1,4 @@
 import { PROJECT_FLAGS } from '../config';
-import fetch from 'node-fetch';
 
 /**
  * Detects if the project is private on GitHub

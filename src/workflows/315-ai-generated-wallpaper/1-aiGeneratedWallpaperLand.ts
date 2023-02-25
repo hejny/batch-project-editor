@@ -5,6 +5,7 @@ import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../config';
+import { forPlay } from '../../utils/forPlay';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { IMAGINE_VERSION } from './config';
 import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
@@ -12,7 +13,6 @@ import { DISCORD_MESSAGE_QUERYSELECTOR } from './utils/discordQuerySelectors';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 import { stripFlagsFromPrompt } from './utils/stripFlagsFromPrompt';
 import { triggerMidjourney } from './utils/trigger/triggerMidjourney';
-import { forPlay } from '../../utils/forPlay';
 
 export async function aiGeneratedWallpaperLand({
     skippingBecauseOf,

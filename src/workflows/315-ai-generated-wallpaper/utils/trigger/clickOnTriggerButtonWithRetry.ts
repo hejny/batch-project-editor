@@ -2,9 +2,9 @@ import chalk from 'chalk';
 import { ElementHandle } from 'puppeteer-core';
 import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../../config';
+import { forPlay } from '../../../../utils/forPlay';
 import { clickOnTriggerButton } from './clickOnTriggerButton';
 import { getStatusOfButtonWithRetry } from './getStatusOfButtonWithRetry';
-import { forPlay } from '../../../../utils/forPlay';
 
 /**
  *  Try to click multiple times when status is still BLANK
