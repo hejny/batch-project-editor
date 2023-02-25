@@ -18,13 +18,6 @@ export async function prettier({ projectPath, commit, skippingBecauseOf }: IWork
 
     return commit('🧹 Prettier');
 
-    await execCommand({
-        command: 'npx organize-imports-cli',
-        crashOnError: false,
-        cwd: projectPath,
-    });
-
-    return commit('🧹 Organize imports');
 }
 
 /**

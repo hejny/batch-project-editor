@@ -1,4 +1,5 @@
 import { lines } from './000-lines/lines';
+import { organizeImports } from './010-prettier/organizeImports';
 import { prettier } from './010-prettier/prettier';
 import { updateDependency } from './105-updateDependency/updateDependency';
 import { auditDependencies } from './110-auditDependencies/auditDependencies';
@@ -31,7 +32,6 @@ import { terminalsVersion } from './terminals-version/terminalsVersion';
 
 export const WORKFLOWS: IWorkflow[] = [
     lines,
-    prettier,
     // TODO: updateDependency('touchcontroller'),
     // TODO: updateDependency('configchecker'),
     updateDependency('waitasecond'),
@@ -67,6 +67,8 @@ export const WORKFLOWS: IWorkflow[] = [
     branchesRemoveMerged,
     branchesUpdateFeatures,
     normalizeSvgs,
+    prettier,
+    organizeImports,
     socialLinkedin,
     onceRevertLastBpeCommit,
     onceHarvestAllMidjourney,
