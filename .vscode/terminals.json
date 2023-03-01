@@ -115,6 +115,13 @@
             "focus": true
         },
         {
+            "name": "🤵👍 Give likes on Facebook",
+            "commands": ["ts-node ./src/index.ts --edit --loop --workflows socialFacebookLikes --projects hejny"],
+            "onlySingle": true,
+            "focus": true
+        },
+
+        {
             "name": "⏬🖼️ Download MidJourney gallery",
             "commands": [
                 "ts-node ./src/index.ts --edit --workflows onceHarvestAllMidjourney --projects batch-project-editor"

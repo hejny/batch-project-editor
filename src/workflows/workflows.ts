@@ -27,7 +27,8 @@ import { collboardModuleNames } from './collboard-module-names/collboard-module-
 import { IWorkflow } from './IWorkflow';
 import { onceHarvestAllMidjourney } from './once-harvest-all-midjourney/once-harvest-all-midjourney';
 import { onceRevertLastBpeCommit } from './once-revert-last-bpe-commit/once-revert-last-bpe-commit';
-import { socialLinkedin } from './social/linkedin';
+import { socialFacebookLikes } from './social/facebook-likes';
+import { socialLinkedinLikes } from './social/linkedin-likes';
 import { terminalsVersion } from './terminals-version/terminalsVersion';
 
 export const WORKFLOWS: IWorkflow[] = [
@@ -69,7 +70,8 @@ export const WORKFLOWS: IWorkflow[] = [
     normalizeSvgs,
     prettier,
     organizeImports,
-    socialLinkedin,
+    socialLinkedinLikes,
+    socialFacebookLikes,
     onceRevertLastBpeCommit,
     onceHarvestAllMidjourney,
 ];

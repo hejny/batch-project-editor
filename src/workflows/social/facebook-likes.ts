@@ -1,18 +1,18 @@
 import chalk from 'chalk';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { getLinkedinPage, prepareLinkedinPage } from './utils/linkedinPage';
-import { likesOnLinkedIn } from './utils/trigger/likesOnLinkedIn';
+import { getFacebookPage, prepareFacebookPage } from './utils/facebook/facebookPage';
+import { likesOnFacebook } from './utils/facebook/likesOnFacebook';
 
-export async function socialLinkedin({
+export async function socialFacebookLikes({
     skippingBecauseOf,
     projectPath,
     packageJson,
     madeSideEffect,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    const linkedinPage = getLinkedinPage();
+    const facebookPage = getFacebookPage();
 
-    const { likeCount, scrolledPagesCount } = await likesOnLinkedIn({
-        linkedinPage,
+    const { likeCount, scrolledPagesCount } = await likesOnFacebook({
+        facebookPage,
         likeMaxCount: 50,
         scrollMaxPagesCount: Infinity,
     });
@@ -27,7 +27,7 @@ export async function socialLinkedin({
     }
 }
 
-socialLinkedin.initialize = prepareLinkedinPage;
+socialFacebookLikes.initialize = prepareFacebookPage;
 
 /**
  * TODO: Maybe ACRY rename trigger to upscale

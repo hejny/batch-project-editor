@@ -2,16 +2,16 @@ import chalk from 'chalk';
 import { locateChrome } from 'locate-app';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
-import { pageContainer } from './page';
+import { pageContainer } from '../../../page';
 
-export function getLinkedinPage(): puppeteer.Page {
+export function getFacebookPage(): puppeteer.Page {
     if (!pageContainer.page) {
         throw new Error(`Discord page not initialized`);
     }
     return pageContainer.page;
 }
 
-export async function prepareLinkedinPage() {
+export async function prepareFacebookPage() {
     if (pageContainer.page) {
         return;
     }
@@ -35,7 +35,7 @@ export async function prepareLinkedinPage() {
     });
 
     pageContainer.page = await browser.newPage();
-    await pageContainer.page.goto(`https://www.linkedin.com/feed/` /* <- TODO: Unhardcode */);
+    await pageContainer.page.goto(`https://www.facebook.com/`);
 
     console.info(
         chalk.bgYellow(
@@ -52,5 +52,5 @@ export async function prepareLinkedinPage() {
 }
 
 /**
- * TODO: [🏏] Common stuff for linkedinPage and githubPage
+ * TODO: [🏏] Common stuff for facebookPage and githubPage
  */
