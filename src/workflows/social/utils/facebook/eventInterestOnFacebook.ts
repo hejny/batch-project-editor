@@ -4,9 +4,6 @@ import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../../config';
 import { forPlay } from '../../../../utils/forPlay';
 import { clickOnButton } from '../common/clickOnButton';
-import { getStatusOfFacebookLikeButton } from './getStatusOfFacebookLikeButton';
-
-// !!!!!!!!!! Like -> interested
 
 export async function eventInterestOnFacebook({
     facebookPage,
@@ -16,13 +13,14 @@ export async function eventInterestOnFacebook({
     facebookPage: Page;
     interestMaxCount: number | typeof Infinity;
     scrollMaxPagesCount: number | typeof Infinity;
-}): Promise<{ likeCount: number; scrolledPagesCount: number }> {
-    let likeCount = 0;
+}): Promise<{ interestedCount: number; scrolledPagesCount: number }> {
+    let interestedCount = 0;
     let scrolledPagesCount = 0;
 
     /* TODO: [2]
   let lastLeadingHandle: any = null;
   */
+
     while (true) {
         const elementHandles = (await facebookPage.$$('*[role="button"]')) as ElementHandle<HTMLSpanElement>[];
         for (const elementHandle of elementHandles) {
@@ -33,7 +31,15 @@ export async function eventInterestOnFacebook({
                 return element.getAttribute('aria-label') || '';
             });
 
-            if (!/^(remove|like$)/i.test(label)) {
+            /*
+            await elementHandle.evaluate((element) => {
+                element.style.outline = '2px solid #ffff00';
+            });
+            /**/
+
+            // console.log(label);
+
+            if (!/^Interested$/i.test(label)) {
                 continue;
             }
 
@@ -41,6 +47,7 @@ export async function eventInterestOnFacebook({
                 element.style.outline = '2px solid #cccccc';
             });
 
+            /*
             const statusBeforeClick = await getStatusOfFacebookLikeButton(elementHandle);
 
             if (statusBeforeClick.startsWith('LIKE')) {
@@ -50,28 +57,34 @@ export async function eventInterestOnFacebook({
                 console.info(chalk.red(`⏩ Unknown status of button`));
                 continue;
             }
+            */
 
             await clickOnButton(elementHandle);
+
+            // TODO: [🏯] Configurable waiting time
+            let secondsToWaitToInterested = 3; /* * WAIT_MULTIPLICATOR*/
+            await forTime(1000 * secondsToWaitToInterested);
 
             // const statusAfterClick = await getStatusOfFacebookLikeButton(elementHandle);
             // console.log({ label, statusBeforeClick, statusAfterClick });
 
-            likeCount++;
+            interestedCount++;
 
             console.info(
                 chalk.cyan(
-                    `Facebook event interested ${likeCount}x`,
+                    `Facebook event interested ${interestedCount}x`,
                 ) /* <- TODO: Report to console what was interested */,
             );
 
-            if (likeCount >= interestMaxCount) {
-                return { likeCount, scrolledPagesCount };
+            if (interestedCount >= interestMaxCount) {
+                return { interestedCount, scrolledPagesCount };
             }
 
             // TODO: [🏯] Configurable waiting time
-            let secondsToWaitBeforeClickingNextLike = 30 * WAIT_MULTIPLICATOR;
-            await forTime(1000 * secondsToWaitBeforeClickingNextLike);
+            let secondsToWaitBeforeClickingNextInterested = 30 * WAIT_MULTIPLICATOR;
+            await forTime(1000 * secondsToWaitBeforeClickingNextInterested);
         }
+
 
         console.info(chalk.gray(`⬇ Scrolling down`));
 
@@ -102,9 +115,7 @@ export async function eventInterestOnFacebook({
         scrolledPagesCount += newScrolledPagesCount;
 
         if (scrolledPagesCount >= scrollMaxPagesCount) {
-            return { likeCount, scrolledPagesCount };
+            return { interestedCount, scrolledPagesCount };
         }
-
-        // console.log({ likeCount, scrolledPagesCount, likeMaxCount, scrollMaxPagesCount });
     }
 }

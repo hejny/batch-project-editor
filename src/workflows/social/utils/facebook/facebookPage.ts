@@ -4,6 +4,16 @@ import { join } from 'path';
 import puppeteer from 'puppeteer-core';
 import { pageContainer } from '../../../page';
 
+
+export async function getAdditionalFacebookPage(): Promise<puppeteer.Page> {
+  if (!pageContainer.browser) {
+      throw new Error(`Discord page not initialized`);
+  }
+
+  return await pageContainer.browser.newPage();
+}
+
+
 export function getFacebookPage(): puppeteer.Page {
     if (!pageContainer.page) {
         throw new Error(`Discord page not initialized`);
@@ -34,6 +44,7 @@ export async function prepareFacebookPage() {
         // TODO: Do not show "Restore" dialog
     });
 
+    pageContainer.browser = browser;
     pageContainer.page = await browser.newPage();
     await pageContainer.page.goto(`https://www.facebook.com/`);
 
