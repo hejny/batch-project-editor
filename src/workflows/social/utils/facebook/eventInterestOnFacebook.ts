@@ -1,18 +1,20 @@
 import chalk from 'chalk';
-import { Page } from 'puppeteer-core';
+import { ElementHandle, Page } from 'puppeteer-core';
 import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../../config';
 import { forPlay } from '../../../../utils/forPlay';
 import { clickOnButton } from '../common/clickOnButton';
-import { getStatusOfLinkedinLikeButton } from './getStatusOfLinkedinLikeButton';
+import { getStatusOfFacebookLikeButton } from './getStatusOfFacebookLikeButton';
 
-export async function likesOnLinkedIn({
-    linkedinPage,
-    likeMaxCount,
+// !!!!!!!!!! Like -> interested
+
+export async function eventInterestOnFacebook({
+    facebookPage,
+    interestMaxCount,
     scrollMaxPagesCount,
 }: {
-    linkedinPage: Page;
-    likeMaxCount: number | typeof Infinity;
+    facebookPage: Page;
+    interestMaxCount: number | typeof Infinity;
     scrollMaxPagesCount: number | typeof Infinity;
 }): Promise<{ likeCount: number; scrolledPagesCount: number }> {
     let likeCount = 0;
@@ -22,8 +24,7 @@ export async function likesOnLinkedIn({
   let lastLeadingHandle: any = null;
   */
     while (true) {
-        const elementHandles = await linkedinPage.$$('button');
-
+        const elementHandles = (await facebookPage.$$('*[role="button"]')) as ElementHandle<HTMLSpanElement>[];
         for (const elementHandle of elementHandles) {
             await forPlay();
 
@@ -32,7 +33,7 @@ export async function likesOnLinkedIn({
                 return element.getAttribute('aria-label') || '';
             });
 
-            if (!/^(un)?like.*post/i.test(label)) {
+            if (!/^(remove|like$)/i.test(label)) {
                 continue;
             }
 
@@ -40,7 +41,7 @@ export async function likesOnLinkedIn({
                 element.style.outline = '2px solid #cccccc';
             });
 
-            const statusBeforeClick = await getStatusOfLinkedinLikeButton(elementHandle);
+            const statusBeforeClick = await getStatusOfFacebookLikeButton(elementHandle);
 
             if (statusBeforeClick.startsWith('LIKE')) {
                 console.info(chalk.gray(`⏩ Already LIKED`));
@@ -52,14 +53,18 @@ export async function likesOnLinkedIn({
 
             await clickOnButton(elementHandle);
 
-            //const statusAfterClick = await getStatusOfLinkedinLikeButton(elementHandle);
+            // const statusAfterClick = await getStatusOfFacebookLikeButton(elementHandle);
             // console.log({ label, statusBeforeClick, statusAfterClick });
 
             likeCount++;
 
-            console.info(chalk.cyan(`LinkedIn liked ${likeCount}x`) /* <- TODO: Report to console what was liked */);
+            console.info(
+                chalk.cyan(
+                    `Facebook event interested ${likeCount}x`,
+                ) /* <- TODO: Report to console what was interested */,
+            );
 
-            if (likeCount >= likeMaxCount) {
+            if (likeCount >= interestMaxCount) {
                 return { likeCount, scrolledPagesCount };
             }
 
@@ -70,7 +75,7 @@ export async function likesOnLinkedIn({
 
         console.info(chalk.gray(`⬇ Scrolling down`));
 
-        const newScrolledPagesCount = await linkedinPage.evaluate(async () => {
+        const newScrolledPagesCount = await facebookPage.evaluate(async () => {
             function forAnimationFrame(): Promise<void> {
                 return new Promise((resolve) => {
                     requestAnimationFrame(() => {

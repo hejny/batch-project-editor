@@ -56,7 +56,7 @@ export async function likesOnFacebook({
 
             likeCount++;
 
-            console.info(chalk.cyan(`Facebook liked ${likeCount}x`));
+            console.info(chalk.cyan(`Facebook liked ${likeCount}x` /* <- TODO: Report to console what was liked */));
 
             if (likeCount >= likeMaxCount) {
                 return { likeCount, scrolledPagesCount };

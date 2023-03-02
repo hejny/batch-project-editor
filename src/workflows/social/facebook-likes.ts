@@ -16,14 +16,14 @@ export async function socialFacebookLikes({
         likeMaxCount: 50,
         scrollMaxPagesCount: Infinity,
     });
-    console.info(chalk.green(`⏫ Triggered ${likeCount} images`));
+    console.info(chalk.green(`⏫ Liked ${likeCount} Facebook posts`));
     console.info(chalk.green(`⏫ Scrolled ${scrolledPagesCount} pages`));
 
     if (likeCount) {
-        return madeSideEffect(`Triggered ${likeCount} buttons`);
+        return madeSideEffect(`Liked ${likeCount} Facebook posts`);
     } else {
         // TODO: [🥗] There should be 2 different returns: skippingBecauseOf VS notingChangedBecauseOf
-        return skippingBecauseOf(`No button triggered`);
+        return skippingBecauseOf(`No liked Facebook posts`);
     }
 }
 

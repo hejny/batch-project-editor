@@ -1,33 +1,33 @@
 import chalk from 'chalk';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { likesOnLinkedIn } from './utils/linkedin/likesOnLinkedIn';
-import { getLinkedinPage, prepareLinkedinPage } from './utils/linkedin/linkedinPage';
+import { eventInterestOnFacebook } from './utils/facebook/eventInterestOnFacebook';
+import { getFacebookPage, prepareFacebookPage } from './utils/facebook/facebookPage';
 
-export async function socialLinkedinLikes({
+export async function socialFacebookEventInterest({
     skippingBecauseOf,
     projectPath,
     packageJson,
     madeSideEffect,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    const linkedinPage = getLinkedinPage();
+    const facebookPage = getFacebookPage();
 
-    const { likeCount, scrolledPagesCount } = await likesOnLinkedIn({
-        linkedinPage,
-        likeMaxCount: 50,
+    const { likeCount, scrolledPagesCount } = await eventInterestOnFacebook({
+        facebookPage,
+        interestMaxCount: Infinity,
         scrollMaxPagesCount: Infinity,
     });
-    console.info(chalk.green(`⏫ Liked ${likeCount} LinkedIn posts`));
+    console.info(chalk.green(`⏫ Interested in ${likeCount} Facebook Events`));
     console.info(chalk.green(`⏫ Scrolled ${scrolledPagesCount} pages`));
 
     if (likeCount) {
-        return madeSideEffect(`Liked ${likeCount} LinkedIn posts`);
+        return madeSideEffect(`Interested in ${likeCount} Facebook events`);
     } else {
         // TODO: [🥗] There should be 2 different returns: skippingBecauseOf VS notingChangedBecauseOf
-        return skippingBecauseOf(`No liked LinkedIn posts`);
+        return skippingBecauseOf(`Interested in no Facebook events`);
     }
 }
 
-socialLinkedinLikes.initialize = prepareLinkedinPage;
+socialFacebookEventInterest.initialize = prepareFacebookPage;
 
 /**
  * TODO: Maybe ACRY rename trigger to upscale
