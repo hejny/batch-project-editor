@@ -14,7 +14,7 @@ main();
 
 async function main() {
     console.clear();
-    console.log(chalk.bgBlue(' 🔥 Scraper '));
+    console.info(chalk.bgBlue(' 🔥 Scraper '));
 
     const browser = await puppeteer.launch({
         headless: false,
@@ -33,7 +33,7 @@ async function main() {
     });
 
     browser.on('disconnected', () => {
-        console.log('browser disconnected');
+        console.error('browser disconnected');
         process.exit(1);
     });
 

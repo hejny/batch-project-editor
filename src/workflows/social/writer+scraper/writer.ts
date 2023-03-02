@@ -170,7 +170,7 @@ main(false);
 
 async function main(isTesting: boolean) {
     console.clear();
-    console.log(chalk.bgBlue(' 🖊️ Writer '));
+    console.info(chalk.bgBlue(' 🖊️ Writer '));
 
     const browser = await puppeteer.launch({
         headless: false,
@@ -189,7 +189,7 @@ async function main(isTesting: boolean) {
     });
 
     browser.on('disconnected', () => {
-        console.log('browser disconnected');
+        console.error('browser disconnected');
         process.exit(1);
     });
     for (const groupUrl of FACEBOOK_GROUPS) {

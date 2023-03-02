@@ -51,12 +51,12 @@ export async function likesOnFacebook({
 
             await clickOnButton(elementHandle);
 
-            const statusAfterClick = await getStatusOfFacebookLikeButton(elementHandle);
-            console.log({ label, statusBeforeClick, statusAfterClick });
+            // const statusAfterClick = await getStatusOfFacebookLikeButton(elementHandle);
+            // console.log({ label, statusBeforeClick, statusAfterClick });
 
             likeCount++;
 
-            console.info(chalk.cyan(`Liked ${likeCount}x`));
+            console.info(chalk.cyan(`Facebook liked ${likeCount}x`));
 
             if (likeCount >= likeMaxCount) {
                 return { likeCount, scrolledPagesCount };
@@ -99,6 +99,6 @@ export async function likesOnFacebook({
             return { likeCount, scrolledPagesCount };
         }
 
-        console.log({ likeCount, scrolledPagesCount, likeMaxCount, scrollMaxPagesCount });
+        // console.log({ likeCount, scrolledPagesCount, likeMaxCount, scrollMaxPagesCount });
     }
 }

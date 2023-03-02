@@ -23,7 +23,7 @@ export async function getStatusOfFacebookLikeButton(
         return element.ariaLabel;
     });
 
-    console.log({ ariaLabel });
+    // console.log({ ariaLabel });
 
     if (!ariaLabel) {
         console.warn(chalk.bgRed(`Unexpected missing ariaLabel in Facebook button`), { elementHandle, ariaLabel });
@@ -38,7 +38,7 @@ export async function getStatusOfFacebookLikeButton(
         return element.innerText;
     });
 
-    console.log({ innerText });
+    // console.log({ innerText });
 
     if (innerText === 'Like') {
         return 'LIKE';

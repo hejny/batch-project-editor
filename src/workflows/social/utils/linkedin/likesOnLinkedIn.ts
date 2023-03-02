@@ -57,7 +57,7 @@ export async function likesOnLinkedIn({
 
             likeCount++;
 
-            console.info(chalk.cyan(`Liked ${likeCount}x`));
+            console.info(chalk.cyan(`LinkedIn liked ${likeCount}x`));
 
             if (likeCount >= likeMaxCount) {
                 return { likeCount, scrolledPagesCount };
@@ -100,6 +100,6 @@ export async function likesOnLinkedIn({
             return { likeCount, scrolledPagesCount };
         }
 
-        console.log({ likeCount, scrolledPagesCount, likeMaxCount, scrollMaxPagesCount });
+        // console.log({ likeCount, scrolledPagesCount, likeMaxCount, scrollMaxPagesCount });
     }
 }
