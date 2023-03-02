@@ -5,26 +5,32 @@ import { forPlay } from '../../../../utils/forPlay';
 export type FacebookLikeButtonStatus =
     | 'NONE'
     | 'LIKE'
-    | 'LIKE_CELEBRATE'
-    | 'LIKE_SUPPORT'
-    | 'LIKE_FUNNY'
     | 'LIKE_LOVE'
-    | 'LIKE_INSIGHTFUL'
-    | 'UNKNOWN' /* <- !!! TODO: Add all */;
+    | 'LIKE_CARE'
+    | 'LIKE_HAHA'
+    | 'LIKE_WOW'
+    | 'LIKE_SAD'
+    | 'LIKE_ANGRY'
+    | 'UNKNOWN';
 
 export async function getStatusOfFacebookLikeButton(
-    elementHandle: ElementHandle<HTMLButtonElement>,
+    elementHandle: ElementHandle<HTMLSpanElement>,
 ): Promise<FacebookLikeButtonStatus> {
     // console.log('getStatusOfFacebookLikeButton');
     await forPlay();
 
-    const ariaPressed = await elementHandle.evaluate((element) => {
-        return element.ariaPressed;
+    const ariaLabel = await elementHandle.evaluate((element) => {
+        return element.ariaLabel;
     });
 
-    // console.log({ ariaPressed });
+    console.log({ ariaLabel });
 
-    if (!ariaPressed || ariaPressed === 'false') {
+    if (!ariaLabel) {
+        console.warn(chalk.bgRed(`Unexpected missing ariaLabel in Facebook button`), { elementHandle, ariaLabel });
+        return 'UNKNOWN';
+    }
+
+    if (!/^remove/i.test(ariaLabel)) {
         return 'NONE';
     }
 
@@ -32,20 +38,22 @@ export async function getStatusOfFacebookLikeButton(
         return element.innerText;
     });
 
-    // console.log({ innerText });
+    console.log({ innerText });
 
     if (innerText === 'Like') {
         return 'LIKE';
-    } else if (innerText === 'Celebrate') {
-        return 'LIKE_CELEBRATE';
-    } else if (innerText === 'Support') {
-        return 'LIKE_SUPPORT';
-    } else if (innerText === 'Funny') {
-        return 'LIKE_FUNNY';
     } else if (innerText === 'Love') {
         return 'LIKE_LOVE';
-    } else if (innerText === 'Insightful') {
-        return 'LIKE_INSIGHTFUL';
+    } else if (innerText === 'Care') {
+        return 'LIKE_CARE';
+    } else if (innerText === 'Haha') {
+        return 'LIKE_HAHA';
+    } else if (innerText === 'Wow') {
+        return 'LIKE_WOW';
+    } else if (innerText === 'Sad') {
+        return 'LIKE_SAD';
+    } else if (innerText === 'Angry') {
+        return 'LIKE_ANGRY';
     } else {
         console.warn(chalk.bgRed(`Unexpected text in Facebook button`), { innerText });
         return 'UNKNOWN';

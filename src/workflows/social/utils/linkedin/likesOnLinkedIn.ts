@@ -3,8 +3,8 @@ import { Page } from 'puppeteer-core';
 import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../../config';
 import { forPlay } from '../../../../utils/forPlay';
-import { clickOnLinkedinLikeButton } from './clickOnLinkedinLikeButton';
 import { getStatusOfLinkedinLikeButton } from './getStatusOfLinkedinLikeButton';
+import { clickOnButton } from '../common/clickOnButton';
 
 export async function likesOnLinkedIn({
     linkedinPage,
@@ -50,7 +50,7 @@ export async function likesOnLinkedIn({
                 continue;
             }
 
-            await clickOnLinkedinLikeButton(elementHandle);
+            await clickOnButton(elementHandle);
 
             //const statusAfterClick = await getStatusOfLinkedinLikeButton(elementHandle);
             // console.log({ label, statusBeforeClick, statusAfterClick });

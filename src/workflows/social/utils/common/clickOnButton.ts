@@ -1,9 +1,8 @@
 import { ElementHandle } from 'puppeteer-core';
 import { forPlay } from '../../../../utils/forPlay';
 
-export async function clickOnLinkedinLikeButton(elementHandle: ElementHandle<HTMLButtonElement>): Promise<void> {
-
-    //console.log('clickOnLinkedinLikeButton');
+export async function clickOnButton(elementHandle: ElementHandle<HTMLElement>): Promise<void> {
+    //console.log('clickOnFacebookLikeButton');
 
     await forPlay();
     await elementHandle.focus(/* [9] Redundant */);

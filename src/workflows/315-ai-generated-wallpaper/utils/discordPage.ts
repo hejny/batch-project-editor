@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import { locateChrome } from 'locate-app';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
+import { pageContainer } from '../../page';
 import { DISCORD_MESSAGE_QUERYSELECTOR } from './discordQuerySelectors';
-import { pageContainer } from './page';
 
 export function getDiscordPage(): puppeteer.Page {
     if (!pageContainer.page) {
@@ -24,7 +24,6 @@ export async function prepareDiscordPage() {
         defaultViewport: null,
     });
     */
-
 
     // TODO: Use here puppeteer-cluster to be able to run multiple browser-based workflows at once
     const browser = await puppeteer.launch({

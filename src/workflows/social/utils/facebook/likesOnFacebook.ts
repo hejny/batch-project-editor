@@ -1,9 +1,9 @@
 import chalk from 'chalk';
-import { Page } from 'puppeteer-core';
+import { ElementHandle, Page } from 'puppeteer-core';
 import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../../config';
 import { forPlay } from '../../../../utils/forPlay';
-import { clickOnFacebookLikeButton } from './clickOnFacebookLikeButton';
+import { clickOnButton } from '../common/clickOnButton';
 import { getStatusOfFacebookLikeButton } from './getStatusOfFacebookLikeButton';
 
 export async function likesOnFacebook({
@@ -22,8 +22,7 @@ export async function likesOnFacebook({
   let lastLeadingHandle: any = null;
   */
     while (true) {
-        const elementHandles = await facebookPage.$$('button');
-
+        const elementHandles = (await facebookPage.$$('*[role="button"]')) as ElementHandle<HTMLSpanElement>[];
         for (const elementHandle of elementHandles) {
             await forPlay();
 
@@ -32,7 +31,7 @@ export async function likesOnFacebook({
                 return element.getAttribute('aria-label') || '';
             });
 
-            if (!/^(un)?like.*post/i.test(label)) {
+            if (!/^(remove|like$)/i.test(label)) {
                 continue;
             }
 
@@ -50,10 +49,10 @@ export async function likesOnFacebook({
                 continue;
             }
 
-            await clickOnFacebookLikeButton(elementHandle);
+            await clickOnButton(elementHandle);
 
-            //const statusAfterClick = await getStatusOfFacebookLikeButton(elementHandle);
-            // console.log({ label, statusBeforeClick, statusAfterClick });
+            const statusAfterClick = await getStatusOfFacebookLikeButton(elementHandle);
+            console.log({ label, statusBeforeClick, statusAfterClick });
 
             likeCount++;
 

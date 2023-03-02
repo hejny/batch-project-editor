@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { locateChrome } from 'locate-app';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
-import { pageContainer } from './page';
+import { pageContainer } from '../../page';
 
 export function getGithubPage(): puppeteer.Page {
     if (!pageContainer.page) {
