@@ -33,6 +33,7 @@ export async function eventInterestOnFacebook({
 
             /*
             await elementHandle.evaluate((element) => {
+                // TODO: [☮] Util markButton
                 element.style.outline = '2px solid #ffff00';
             });
             /**/
@@ -44,6 +45,7 @@ export async function eventInterestOnFacebook({
             }
 
             await elementHandle.evaluate((element) => {
+               // TODO: [☮] Util markButton
                 element.style.outline = '2px solid #cccccc';
             });
 

@@ -33,6 +33,7 @@ export async function socialFacebookEventInterest({
             }
 
             await elementHandle.evaluate((element) => {
+               // TODO: [☮] Util markButton
                 element.style.outline = '2px solid #cccccc';
             });
 

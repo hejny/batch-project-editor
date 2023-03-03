@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { ElementHandle } from 'puppeteer-core';
+import { forTime } from 'waitasecond';
 import { forPlay } from '../../../../utils/forPlay';
 
 export type FacebookLikeButtonStatus =
@@ -30,7 +31,7 @@ export async function getStatusOfFacebookLikeButton(
         return 'UNKNOWN';
     }
 
-    if (!/^remove/i.test(ariaLabel)) {
+    if (!/^Remove/i.test(ariaLabel)) {
         return 'NONE';
     }
 
@@ -55,7 +56,15 @@ export async function getStatusOfFacebookLikeButton(
     } else if (innerText === 'Angry') {
         return 'LIKE_ANGRY';
     } else {
-        console.warn(chalk.bgRed(`Unexpected text in Facebook button`), { innerText });
+        await elementHandle.evaluate((element) => {
+            // TODO: [☮] Util markButton
+            element.style.outline = '2px solid #ff0000';
+        });
+
+        console.warn(chalk.bgRed(`Unexpected text in Facebook button`), { innerText, ariaLabel });
+
+        // await forTime(5000);
+        // await forPlay();
         return 'UNKNOWN';
     }
 }

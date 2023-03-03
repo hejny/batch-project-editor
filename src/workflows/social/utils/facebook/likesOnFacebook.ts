@@ -31,11 +31,12 @@ export async function likesOnFacebook({
                 return element.getAttribute('aria-label') || '';
             });
 
-            if (!/^(remove|like$)/i.test(label)) {
+            if (!/^(like|(remove [a-z]+))$/i.test(label)) {
                 continue;
             }
 
             await elementHandle.evaluate((element) => {
+                // TODO: [☮] Util markButton
                 element.style.outline = '2px solid #cccccc';
             });
 

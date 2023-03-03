@@ -8,7 +8,8 @@ export async function clickOnTriggerButton(elementHandle: ElementHandle<HTMLButt
     await elementHandle.focus(/* [9] Redundant */);
     await elementHandle.evaluate((element) => {
         element.focus(/* [9] Redundant */);
-        element.style.outline = '2px solid #ff0000';
+        // TODO: [☮] Util markButton
+        element.style.outline = '2px solid #00ff00';
     });
 
     await elementHandle.click().catch((error) => {
