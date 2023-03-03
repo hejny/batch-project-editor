@@ -35,6 +35,23 @@ export async function likesOnFacebook({
                 continue;
             }
 
+            const type = await elementHandle.evaluate((element) => {
+                // Note: Post fontSize 14px ; Comment fontSize 12px;
+                //return parseInt(window.getComputedStyle(element).fontSize, 10);
+
+                // Note: Post width 195.328125px ; Comment width 22.578125px;
+                return element.getBoundingClientRect().width > 100 ? 'POST' : 'COMMENT';
+            });
+
+            if (type === 'COMMENT') {
+                await elementHandle.evaluate((element) => {
+                    // TODO: [☮] Util markButton
+                    element.style.outline = '2px solid #888888';
+                });
+                console.info(chalk.gray(`⏩ Skipping comment button`));
+                continue;
+            }
+
             await elementHandle.evaluate((element) => {
                 // TODO: [☮] Util markButton
                 element.style.outline = '2px solid #cccccc';
