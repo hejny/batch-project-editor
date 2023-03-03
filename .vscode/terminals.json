@@ -110,7 +110,9 @@
 
         {
             "name": "🤵 Interact on social networks",
-            "commands": ["ts-node ./src/index.ts --edit --loop --workflows social% --projects hejny"],
+            "commands": [
+                "ts-node ./src/index.ts --edit --loop --workflows social%,-socialFacebookEventInterest --projects hejny"
+            ],
             "onlySingle": true,
             "focus": true
         },
@@ -120,6 +122,12 @@
             "onlySingle": true,
             "focus": true
         },
+        {
+          "name": "🤵👍 Give likes on LinkedIn",
+          "commands": ["ts-node ./src/index.ts --edit --loop --workflows socialLinkedinLikes --projects hejny"],
+          "onlySingle": true,
+          "focus": true
+      },
         {
             "name": "🤵📅 Interested events for Czech.events",
             "commands": ["ts-node ./src/index.ts --edit --workflows socialFacebookEventInterest --projects hejny"],
