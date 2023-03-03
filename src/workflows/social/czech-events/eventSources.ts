@@ -140,7 +140,7 @@ export const eventSources = [
     'https://www.facebook.com/groups/wwebdeveloper/',
     'https://www.facebook.com/groups/webdevjs/',
     'https://www.facebook.com/groups/1499060723543914/',
-    'https://www.facebook.com/events/ical/upcoming/?uid=1416254989&key=F5PT0dSNSX2ywfUR',
+    // 'https://www.facebook.com/events/ical/upcoming/?uid=1416254989&key=F5PT0dSNSX2ywfUR',
 
     /**/
 ];

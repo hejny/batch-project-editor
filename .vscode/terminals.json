@@ -120,6 +120,12 @@
             "onlySingle": true,
             "focus": true
         },
+        {
+            "name": "🤵📅 Interested events for Czech.events",
+            "commands": ["ts-node ./src/index.ts --edit --workflows socialFacebookEventInterest --projects hejny"],
+            "onlySingle": true,
+            "focus": true
+        },
 
         {
             "name": "⏬🖼️ Download MidJourney gallery",
