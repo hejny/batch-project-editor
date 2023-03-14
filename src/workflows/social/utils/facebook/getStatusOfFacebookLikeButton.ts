@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import { ElementHandle } from 'puppeteer-core';
-import { forTime } from 'waitasecond';
 import { forPlay } from '../../../../utils/forPlay';
 
 export type FacebookLikeButtonStatus =
