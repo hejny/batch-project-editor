@@ -230,7 +230,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                             console.info(`💾 Changing file ${filePath}`);
                             await writeFile(filePath, newFileContent);
                         } else {
-                            // console.info(`⬜ Keeping file ${filePath}`);
+                            console.info(`⬜ Keeping file ${filePath}`);
                         }
                     }
 
@@ -257,7 +257,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                                 console.info(`💾 Changing file ${filePath}`);
                                 await writeFile(filePath, newFileContent);
                             } else {
-                                // console.info(`⬜ Keeping file ${filePath}`);
+                                 console.info(`⬜ Keeping file ${filePath}`);
                             }
                         }
                     }
