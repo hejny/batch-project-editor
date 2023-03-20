@@ -2,7 +2,7 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 export async function normalizeTodos({ modifyFiles, commit }: IWorkflowOptions): Promise<WorkflowResult> {
     await modifyFiles('**/*.{ts,tsx,js,jsx}', (filePath, fileContent) => {
-        for (let i = 20; i === 1; i--) {
+        for (let i = 20; i !== 1; i--) {
             const tag = '!'.repeat(i);
             fileContent = fileContent.split(tag).join(`TODO: ${tag}`);
         }
