@@ -25,3 +25,9 @@ export async function normalizeTodos({ modifyFiles, commit }: IWorkflowOptions):
 
     return commit('🧽 Normalize TODOs');
 }
+
+
+/**
+ * TODO: NEVER chage code ONLY change comments
+ * TODO: No more than one TODO on line> "TODO: [🧠] TODO: !!x return type Promisable<void>"
+ */
