@@ -131,6 +131,9 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         continue;
                     }
 
+                    /*
+                    !!!!!! Uncomment OR make flag --branch ...
+
                     if (currentBranch !== 'main' && currentBranch !== 'master') {
                         console.info(`👉 Switching from branch ${currentBranch} to main.`);
 
@@ -155,8 +158,8 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                             `⏩ Skipping project ${projectTitle} because current branch is not main (or master) but ${currentBranch}.`,
                         );
                         continue;
-                        */
-                    }
+                        * /
+                    }*/
 
                     console.info(`🔼 Running workflow ${workflowName} for project ${projectTitle}`);
 
