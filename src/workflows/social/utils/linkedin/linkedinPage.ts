@@ -2,17 +2,17 @@ import chalk from 'chalk';
 import { locateChrome } from 'locate-app';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
-import { pageContainer } from '../../../page';
+import { chromePageContainer } from '../../../page';
 
 export function getLinkedinPage(): puppeteer.Page {
-    if (!pageContainer.page) {
+    if (!chromePageContainer.page) {
         throw new Error(`Discord page not initialized`);
     }
-    return pageContainer.page;
+    return chromePageContainer.page;
 }
 
 export async function prepareLinkedinPage() {
-    if (pageContainer.page) {
+    if (chromePageContainer.page) {
         return;
     }
 
@@ -34,8 +34,8 @@ export async function prepareLinkedinPage() {
         // TODO: Do not show "Restore" dialog
     });
 
-    pageContainer.page = await browser.newPage();
-    await pageContainer.page.goto(`https://www.linkedin.com/feed/` /* <- TODO: Unhardcode */);
+    chromePageContainer.page = await browser.newPage();
+    await chromePageContainer.page.goto(`https://www.linkedin.com/feed/` /* <- TODO: Unhardcode */);
 
     console.info(
         chalk.bgYellow(
@@ -43,7 +43,7 @@ export async function prepareLinkedinPage() {
         ),
     );
 
-    await pageContainer.page.waitForSelector(
+    await chromePageContainer.page.waitForSelector(
         `.share-box-feed-entry__closed-share-box` /* <- !!! Unhardcode to config */,
         {
             timeout: 1000 * 60 * 15 /* minutes */,

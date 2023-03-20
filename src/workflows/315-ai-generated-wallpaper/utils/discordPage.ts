@@ -2,18 +2,18 @@ import chalk from 'chalk';
 import { locateChrome } from 'locate-app';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
-import { pageContainer } from '../../page';
+import { chromePageContainer } from '../../page';
 import { DISCORD_MESSAGE_QUERYSELECTOR } from './discordQuerySelectors';
 
 export function getDiscordPage(): puppeteer.Page {
-    if (!pageContainer.page) {
+    if (!chromePageContainer.page) {
         throw new Error(`Discord page not initialized`);
     }
-    return pageContainer.page;
+    return chromePageContainer.page;
 }
 
 export async function prepareDiscordPage() {
-    if (pageContainer.page) {
+    if (chromePageContainer.page) {
         return;
     }
 
@@ -35,8 +35,10 @@ export async function prepareDiscordPage() {
         // TODO: Do not show "Restore" dialog
     });
 
-    pageContainer.page = await browser.newPage();
-    await pageContainer.page.goto(`https://discord.com/channels/@me/994943513500336138` /* <- TODO: Unhardcode */);
+    chromePageContainer.page = await browser.newPage();
+    await chromePageContainer.page.goto(
+        `https://discord.com/channels/@me/994943513500336138` /* <- TODO: Unhardcode */,
+    );
 
     console.info(
         chalk.bgYellow(
@@ -44,9 +46,11 @@ export async function prepareDiscordPage() {
         ),
     );
 
-    await pageContainer.page.waitForSelector(DISCORD_MESSAGE_QUERYSELECTOR, { timeout: 1000 * 60 * 15 /* minutes */ });
+    await chromePageContainer.page.waitForSelector(DISCORD_MESSAGE_QUERYSELECTOR, {
+        timeout: 1000 * 60 * 15 /* minutes */,
+    });
 }
 
 /**
- * TODO: [🏏] Common stuff for discordPage and githubPage
+ * TODO: [🏏] Common stuff for discordPage, githubPage and chatBingPage
  */

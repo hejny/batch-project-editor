@@ -1,6 +1,11 @@
 import puppeteer from 'puppeteer-core';
 
-export const pageContainer: { browser: puppeteer.Browser | null; page: puppeteer.Page | null } = {
+export const chromePageContainer: { browser: puppeteer.Browser | null; page: puppeteer.Page | null } = {
+    browser: null,
+    page: null,
+};
+
+export const edgePageContainer: { browser: puppeteer.Browser | null; page: puppeteer.Page | null } = {
     browser: null,
     page: null,
 };

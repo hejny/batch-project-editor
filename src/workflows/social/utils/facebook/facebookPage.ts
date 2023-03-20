@@ -2,27 +2,25 @@ import chalk from 'chalk';
 import { locateChrome } from 'locate-app';
 import { join } from 'path';
 import puppeteer from 'puppeteer-core';
-import { pageContainer } from '../../../page';
-
+import { chromePageContainer } from '../../../page';
 
 export async function getAdditionalFacebookPage(): Promise<puppeteer.Page> {
-  if (!pageContainer.browser) {
-      throw new Error(`Discord page not initialized`);
-  }
-
-  return await pageContainer.browser.newPage();
-}
-
-
-export function getFacebookPage(): puppeteer.Page {
-    if (!pageContainer.page) {
+    if (!chromePageContainer.browser) {
         throw new Error(`Discord page not initialized`);
     }
-    return pageContainer.page;
+
+    return await chromePageContainer.browser.newPage();
+}
+
+export function getFacebookPage(): puppeteer.Page {
+    if (!chromePageContainer.page) {
+        throw new Error(`Discord page not initialized`);
+    }
+    return chromePageContainer.page;
 }
 
 export async function prepareFacebookPage() {
-    if (pageContainer.page) {
+    if (chromePageContainer.page) {
         return;
     }
 
@@ -44,9 +42,9 @@ export async function prepareFacebookPage() {
         // TODO: Do not show "Restore" dialog
     });
 
-    pageContainer.browser = browser;
-    pageContainer.page = await browser.newPage();
-    await pageContainer.page.goto(`https://www.facebook.com/`);
+    chromePageContainer.browser = browser;
+    chromePageContainer.page = await browser.newPage();
+    await chromePageContainer.page.goto(`https://www.facebook.com/`);
 
     console.info(
         chalk.bgYellow(
