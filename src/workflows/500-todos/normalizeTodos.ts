@@ -7,12 +7,14 @@ export async function normalizeTodos({ modifyFiles, commit }: IWorkflowOptions):
             fileContent = fileContent.split(tag).join(`TODO: ${tag}`);
         }
 
-        fileContent = fileContent.split('TODO: TODO:').join('TODO:');
+        for (let i = 0; i < 20; i++) {
+            fileContent = fileContent.split('TODO: TODO:').join('TODO:');
+        }
 
         /*
         TODO: Be aware about indentation
         fileContent = fileContent.split('TODO:').join(' TODO: ');
-        for (let i = 0; i <= 3; i++) {
+        for (let i = 0; i < 3; i++) {
             fileContent = fileContent.split('  TODO:').join(' TODO:');
             fileContent = fileContent.split('TODO:  ').join(' TODO: ');
         }
