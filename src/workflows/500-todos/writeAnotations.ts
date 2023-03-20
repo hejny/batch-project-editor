@@ -1,142 +1,376 @@
 import { ElementHandle } from 'puppeteer-core';
 import spaceTrim from 'spacetrim';
-import { forEver, forTime } from 'waitasecond';
+import { forTime } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { getChatBingPage, prepareChatBingPage } from './utils/chatBingPage';
 
 export async function writeAnotations({ modifyFiles, commit }: IWorkflowOptions): Promise<WorkflowResult> {
     const chatBingPage = getChatBingPage();
 
-    /**
-     * Finds a searchbox element inside multiple shadowRoot layers
-     * DRY [0]
-     */
-    const searchboxElementHandle = (await chatBingPage.evaluateHandle(() => {
-        function traverse(
-            node: Node,
-            depth: number,
-            callback: (node: Node, depth: number) => HTMLElement | null,
-        ): HTMLElement | null {
-            const result = callback(node, depth);
-
-            if (result !== null) {
-                return result;
-            }
-
-            if (node.nodeType == 1 /* <- Element node */) {
-                for (var i = 0; i < node.childNodes.length; i++) {
-                    const result = traverse(node.childNodes[i], depth + 1, callback);
-
-                    if (result !== null) {
-                        return result;
-                    }
-                }
-            } else if (node.nodeType == 3 /* <- Text node */) {
-                // Note: Text node can not be traversed
-            }
-
-            if (node instanceof HTMLElement && node.shadowRoot) {
-                for (var i = 0; i < node.shadowRoot.childNodes.length; i++) {
-                    const result = traverse(node.shadowRoot.childNodes[i], depth + 1, callback);
-
-                    if (result !== null) {
-                        return result;
-                    }
-                }
-            }
-
+    await modifyFiles('**/*.{ts,tsx,js,jsx}', async (filePath, fileContent) => {
+        if (fileContent.split('@@@').length !== 2) {
+            console.info(`⬜ File ${filePath} has none or multiple anotation missing marks `);
             return null;
         }
 
-        return traverse(window.document.body, 0, (node: Node, depth: number) => {
-            // console.log(depth, node, node instanceof HTMLElement, (node as any).tagName);
+        // TODO: !!! Omit things like imports, empty comments / anotations , code comments, indentation,...
 
-            if (!(node instanceof HTMLElement)) {
-                return null;
-            }
+        const requestText = spaceTrim(
+            (block) => `
 
-            const element = node;
+                Write anotation for the code, write only the description not the params and return types:
 
-            if (!(element.tagName === 'TEXTAREA' && element.id === 'searchbox')) {
-                return null;
-            }
+                ${block(fileContent)}
 
-            const searchboxElement = element;
+             `,
+        );
 
-            console.log(depth, searchboxElement);
+        /**
+         * Finds a new topic button inside multiple shadowRoot layers
+         * DRY [0]
+         */
+        const newTopicButtonElementHandle = (await chatBingPage.evaluateHandle(() => {
+            function traverse(
+                node: Node,
+                depth: number,
+                callback: (node: Node, depth: number) => HTMLElement | null,
+            ): HTMLElement | null {
+                const result = callback(node, depth);
 
-            return searchboxElement;
-        });
-    })) as ElementHandle<HTMLElement>;
+                if (result !== null) {
+                    return result;
+                }
 
-    /**
-     * Finds a searchbox element inside multiple shadowRoot layers
-     * DRY [0]
-     */
-    const submitElementHandle = (await chatBingPage.evaluateHandle(() => {
-        function traverse(
-            node: Node,
-            depth: number,
-            callback: (node: Node, depth: number) => HTMLElement | null,
-        ): HTMLElement | null {
-            const result = callback(node, depth);
+                if (node.nodeType == 1 /* <- Element node */) {
+                    for (var i = 0; i < node.childNodes.length; i++) {
+                        const result = traverse(node.childNodes[i], depth + 1, callback);
 
-            if (result !== null) {
-                return result;
-            }
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                } else if (node.nodeType == 3 /* <- Text node */) {
+                    // Note: Text node can not be traversed
+                }
 
-            if (node.nodeType == 1 /* <- Element node */) {
-                for (var i = 0; i < node.childNodes.length; i++) {
-                    const result = traverse(node.childNodes[i], depth + 1, callback);
+                if (node instanceof HTMLElement && node.shadowRoot) {
+                    for (var i = 0; i < node.shadowRoot.childNodes.length; i++) {
+                        const result = traverse(node.shadowRoot.childNodes[i], depth + 1, callback);
 
-                    if (result !== null) {
-                        return result;
+                        if (result !== null) {
+                            return result;
+                        }
                     }
                 }
-            } else if (node.nodeType == 3 /* <- Text node */) {
-                // Note: Text node can not be traversed
+
+                return null;
             }
 
-            if (node instanceof HTMLElement && node.shadowRoot) {
-                for (var i = 0; i < node.shadowRoot.childNodes.length; i++) {
-                    const result = traverse(node.shadowRoot.childNodes[i], depth + 1, callback);
+            return traverse(window.document.body, 0, (node: Node, depth: number) => {
+                if (!(node instanceof HTMLElement)) {
+                    return null;
+                }
 
-                    if (result !== null) {
-                        return result;
+                const element = node;
+
+                if (!(element.tagName === 'DIV' && element.innerText === 'New topic')) {
+                    return null;
+                }
+
+                return element;
+            });
+        })) as ElementHandle<HTMLElement>;
+
+        /**
+         * TODO: Make some util from this markElement + use in clickOnButton
+         */
+        await newTopicButtonElementHandle.evaluate((element) => {
+            element.focus(/* [9] Redundant */);
+            // TODO: [☮] Util markButton
+            element.style.outline = '2px solid #00ff00';
+        });
+
+        await newTopicButtonElementHandle.click();
+
+        await forTime(1000 * 5 /* seconds to switch new topic */);
+
+        /**
+         * Finds a new topic button inside multiple shadowRoot layers
+         * DRY [0]
+         */
+        const preciseButtonElementHandle = (await chatBingPage.evaluateHandle(() => {
+            function traverse(
+                node: Node,
+                depth: number,
+                callback: (node: Node, depth: number) => HTMLElement | null,
+            ): HTMLElement | null {
+                const result = callback(node, depth);
+
+                if (result !== null) {
+                    return result;
+                }
+
+                if (node.nodeType == 1 /* <- Element node */) {
+                    for (var i = 0; i < node.childNodes.length; i++) {
+                        const result = traverse(node.childNodes[i], depth + 1, callback);
+
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                } else if (node.nodeType == 3 /* <- Text node */) {
+                    // Note: Text node can not be traversed
+                }
+
+                if (node instanceof HTMLElement && node.shadowRoot) {
+                    for (var i = 0; i < node.shadowRoot.childNodes.length; i++) {
+                        const result = traverse(node.shadowRoot.childNodes[i], depth + 1, callback);
+
+                        if (result !== null) {
+                            return result;
+                        }
                     }
                 }
-            }
 
-            return null;
-        }
-
-        return traverse(window.document.body, 0, (node: Node, depth: number) => {
-            if (!(node instanceof HTMLElement)) {
                 return null;
             }
 
-            const element = node;
+            return traverse(window.document.body, 0, (node: Node, depth: number) => {
+                if (!(node instanceof HTMLElement)) {
+                    return null;
+                }
 
-            if (!(element.tagName === 'BUTTON' && element.ariaLabel === 'Submit')) {
-                return null;
-            }
+                const element = node;
 
-            const submitElement = element;
+                if (!(element.tagName === 'SPAN' && element.innerText === 'Precise')) {
+                    return null;
+                }
 
-            return submitElement;
+                return element;
+            });
+        })) as ElementHandle<HTMLElement>;
+
+        /**
+         * TODO: Make some util from this markElement + use in clickOnButton
+         */
+        await preciseButtonElementHandle.evaluate((element) => {
+            element.focus(/* [9] Redundant */);
+            // TODO: [☮] Util markButton
+            element.style.outline = '2px solid #00ff00';
         });
-    })) as ElementHandle<HTMLElement>;
 
-    await searchboxElementHandle.type('Hello');
-    await forTime(500);
-    await submitElementHandle.click();
+        await preciseButtonElementHandle.click();
 
-    // TODO: Scrape <cib-message><cib-shared/>
+        await forTime(1000 * 5 /* seconds to switch precision level */);
 
-    await forEver();
+        /**
+         * Finds a searchbox element inside multiple shadowRoot layers
+         * DRY [0]
+         */
+        const searchboxElementHandle = (await chatBingPage.evaluateHandle(() => {
+            function traverse(
+                node: Node,
+                depth: number,
+                callback: (node: Node, depth: number) => HTMLElement | null,
+            ): HTMLElement | null {
+                const result = callback(node, depth);
 
-    await modifyFiles('**/*.{ts,tsx,js,jsx}', (filePath, fileContent) => {
-        chatBingPage.type(`#searchbox`, 'Hello');
+                if (result !== null) {
+                    return result;
+                }
+
+                if (node.nodeType == 1 /* <- Element node */) {
+                    for (var i = 0; i < node.childNodes.length; i++) {
+                        const result = traverse(node.childNodes[i], depth + 1, callback);
+
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                } else if (node.nodeType == 3 /* <- Text node */) {
+                    // Note: Text node can not be traversed
+                }
+
+                if (node instanceof HTMLElement && node.shadowRoot) {
+                    for (var i = 0; i < node.shadowRoot.childNodes.length; i++) {
+                        const result = traverse(node.shadowRoot.childNodes[i], depth + 1, callback);
+
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            return traverse(window.document.body, 0, (node: Node, depth: number) => {
+                // console.log(depth, node, node instanceof HTMLElement, (node as any).tagName);
+
+                if (!(node instanceof HTMLElement)) {
+                    return null;
+                }
+
+                const element = node;
+
+                if (!(element.tagName === 'TEXTAREA' && element.id === 'searchbox')) {
+                    return null;
+                }
+
+                const searchboxElement = element;
+
+                console.log(depth, searchboxElement);
+
+                return searchboxElement;
+            });
+        })) as ElementHandle<HTMLElement>;
+
+        await searchboxElementHandle.type(requestText.split('\n').join(' '), { delay: 100 });
+        await forTime(1000 * 3 /* seconds after write */);
+
+        /**
+         * Finds a searchbox element inside multiple shadowRoot layers
+         * DRY [0]
+         */
+        const submitElementHandle = (await chatBingPage.evaluateHandle(() => {
+            function traverse(
+                node: Node,
+                depth: number,
+                callback: (node: Node, depth: number) => HTMLElement | null,
+            ): HTMLElement | null {
+                const result = callback(node, depth);
+
+                if (result !== null) {
+                    return result;
+                }
+
+                if (node.nodeType == 1 /* <- Element node */) {
+                    for (var i = 0; i < node.childNodes.length; i++) {
+                        const result = traverse(node.childNodes[i], depth + 1, callback);
+
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                } else if (node.nodeType == 3 /* <- Text node */) {
+                    // Note: Text node can not be traversed
+                }
+
+                if (node instanceof HTMLElement && node.shadowRoot) {
+                    for (var i = 0; i < node.shadowRoot.childNodes.length; i++) {
+                        const result = traverse(node.shadowRoot.childNodes[i], depth + 1, callback);
+
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            return traverse(window.document.body, 0, (node: Node, depth: number) => {
+                if (!(node instanceof HTMLElement)) {
+                    return null;
+                }
+
+                const element = node;
+
+                if (!(element.tagName === 'BUTTON' && element.ariaLabel === 'Submit')) {
+                    return null;
+                }
+
+                const submitElement = element;
+
+                return submitElement;
+            });
+        })) as ElementHandle<HTMLElement>;
+
+        console.info(`🤖 Clicking on submit`);
+        await submitElementHandle.click();
+
+        await forTime(1000 * 90 /* seconds to response */);
+
+        // TODO: Scrape <cib-message><cib-shared/>
+
+        /**
+         * Finds a searchbox element inside multiple shadowRoot layers
+         * DRY [0]
+         */
+        const responseElementHandle = (await chatBingPage.evaluateHandle(() => {
+            function traverse(
+                node: Node,
+                depth: number,
+                callback: (node: Node, depth: number) => HTMLElement | null,
+            ): HTMLElement | null {
+                const result = callback(node, depth);
+
+                if (result !== null) {
+                    return result;
+                }
+
+                if (node.nodeType == 1 /* <- Element node */) {
+                    for (var i = 0; i < node.childNodes.length; i++) {
+                        const result = traverse(node.childNodes[node.childNodes.length - 1 - i], depth + 1, callback);
+
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                } else if (node.nodeType == 3 /* <- Text node */) {
+                    // Note: Text node can not be traversed
+                }
+
+                if (node instanceof HTMLElement && node.shadowRoot) {
+                    for (var i = 0; i < node.shadowRoot.childNodes.length; i++) {
+                        const result = traverse(
+                            node.shadowRoot.childNodes[node.shadowRoot.childNodes.length - 1 - i],
+                            depth + 1,
+                            callback,
+                        );
+
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            return traverse(window.document.body, 0, (node: Node, depth: number) => {
+                if (!(node instanceof HTMLElement)) {
+                    return null;
+                }
+
+                const element = node;
+
+                if (!(element.tagName.toLowerCase() === 'cib-shared')) {
+                    return null;
+                }
+
+                const submitElement = element;
+
+                return submitElement;
+            });
+        })) as ElementHandle<HTMLElement>;
+
+        /**
+         * TODO: Make some util from this markElement + use in clickOnButton
+         */
+        await responseElementHandle.evaluate((element) => {
+            element.focus(/* [9] Redundant */);
+            // TODO: [☮] Util markButton
+            element.style.outline = '2px solid #00ff00';
+        });
+
+        let responseText = await responseElementHandle.evaluate((element) => {
+            return element.innerText;
+        });
+
+        responseText = responseText.split('\n').join(' ');
+
+        fileContent = fileContent.split('@@@').join(responseText);
 
         return fileContent;
     });

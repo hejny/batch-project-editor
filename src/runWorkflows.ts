@@ -236,7 +236,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
                     async function modifyFiles(
                         globPattern: string,
-                        fileModifier: (filePath: string, fileContent: string) => Promisable<string>,
+                        fileModifier: (filePath: string, fileContent: string) => Promisable<string | null>,
                     ): Promise<void> {
                         // TODO: DRY modifyFile, modifyFiles
 
@@ -253,11 +253,13 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
                             const newFileContent = await fileModifier(filePath, fileContent);
 
-                            if (fileContent !== newFileContent) {
+                            if (newFileContent === null) {
+                                console.info(`⬜ Keeping file ${filePath}`);
+                            } else if (fileContent !== newFileContent) {
                                 console.info(`💾 Changing file ${filePath}`);
                                 await writeFile(filePath, newFileContent);
                             } else {
-                                 console.info(`⬜ Keeping file ${filePath}`);
+                                console.info(`⬜ Keeping file ${filePath}`);
                             }
                         }
                     }
