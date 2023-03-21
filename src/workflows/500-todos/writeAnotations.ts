@@ -38,7 +38,7 @@ export async function writeAnotations({
         const requestText = spaceTrim(
             (block) => `
 
-                Describe the following code:
+                Complete jsdoc tags everywhere there is "@@@":
 
                 ${block(fileContentEssentials)}
 
