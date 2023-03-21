@@ -1,8 +1,6 @@
 import chalk from 'chalk';
-import { spawn } from 'child_process';
 import { readFile, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
-import { locateVSCode } from 'locate-app';
 import { basename, join } from 'path';
 import { PackageJson, Promisable } from 'type-fest';
 import { forTime } from 'waitasecond';
@@ -17,7 +15,6 @@ import { isFileExisting } from './utils/isFileExisting';
 import { isProjectArchived } from './utils/isProjectArchived';
 import { isProjectFork } from './utils/isProjectFork';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
-import { isWorkingTreeInMergeProgress } from './utils/isWorkingTreeInMergeProgress';
 import { colorSquare } from './utils/random/getColorSquare';
 import { WorkflowResult } from './workflows/IWorkflow';
 import { WORKFLOWS } from './workflows/workflows';
@@ -113,6 +110,10 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         cwd: projectPath,
                     });
 
+                    /*
+                    !!!!!! Uncomment OR make flag --unclean (Better name) ...
+
+
                     if (!(await isWorkingTreeClean(projectPath))) {
                         if (!(await isWorkingTreeInMergeProgress(projectPath))) {
                             // TODO: Probbably use standard skippingOfBecause
@@ -130,6 +131,8 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         }
                         continue;
                     }
+
+                    */
 
                     /*
                     !!!!!! Uncomment OR make flag --branch ...
