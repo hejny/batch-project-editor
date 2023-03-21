@@ -57,7 +57,7 @@ export async function aiGeneratedWallpaperPrepare({
     console.log(chalk.gray(`Creating folder ${wallpaperPath.split('\\').join('/')}`));
     await mkdir(wallpaperPath, { recursive: true });
 
-    await modifyFile(wallpaperImaginePath, () =>
+    await modifyFile(wallpaperImaginePath /* <- !!! This path is absolute BUT should be relative */, () =>
         spaceTrim(
             (block) => `
             # Note: Each part is new input for imagine command

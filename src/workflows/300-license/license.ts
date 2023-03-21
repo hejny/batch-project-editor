@@ -1,4 +1,3 @@
-import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
@@ -221,7 +220,7 @@ export async function license({
         return packageJson;
     });
 
-    await modifyFile(join(projectPath, 'LICENSE'), () => licenseText);
+    await modifyFile('LICENSE', () => licenseText);
 
     return commit('📝 License ');
 }

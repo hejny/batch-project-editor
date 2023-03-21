@@ -397,7 +397,7 @@ export async function writeAnotations({
         fileContent = fileContent.split('@@@').join(responseText.split('\n').join(' '));
 
         await modifyJsonFile<Array<{ requestText: string; responseText: string }>>(
-            `documents/ai/prompts.json` /* <- TODO: Best place for the file */,
+            `documents/ai/prompts.json` /* <- TODO: Best place for the file + probbably use YAML */,
             (fileContent) => [...(fileContent || []), { requestText, responseText }],
         );
 

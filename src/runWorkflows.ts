@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import { readFile, writeFile } from 'fs/promises';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
-import { basename, join } from 'path';
+import { basename, dirname, join } from 'path';
 import { PackageJson, Promisable } from 'type-fest';
 import { forTime } from 'waitasecond';
 import { LOOP_INTERVAL } from './config';
@@ -214,6 +214,8 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                     ): Promise<void> {
                         // TODO: DRY modifyFile, modifyFiles
 
+                        filePath = join(projectPath, filePath);
+
                         let oldFileContent: string | null;
 
                         if (!(await isFileExisting(filePath))) {
@@ -234,6 +236,9 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                             console.info(`⬜ Keeping file ${filePath}`);
                         } else if (newFileContent !== oldFileContent) {
                             console.info(`💾 Changing file ${filePath}`);
+                            await mkdir(dirname(filePath), {
+                                recursive: true,
+                            }); /* <- TODO: !!!! Make dir also on other places before try to writeFile which might not exist */
                             await writeFile(filePath, newFileContent);
                         } else {
                             console.info(`⬜ Keeping file ${filePath}`);
@@ -282,7 +287,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         filePath: string,
                         fileModifier: (fileContent: T | null) => Promisable<T | null>,
                     ): Promise<void> {
-                        // TODO: DRY modifyFile, modifyFiles
+                        filePath = join(projectPath, filePath);
 
                         let oldFileContent: T | null;
 
@@ -303,12 +308,15 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
 
                         if (newFileContent === null) {
                             // TODO: Maybe here delete the file if exists
-                            console.info(`⬜ Keeping file ${filePath}`);
+                            console.info(`⬜ Keeping JSON file ${filePath}`);
                         } else if (JSON.stringify(newFileContent) !== JSON.stringify(oldFileContent)) {
-                            console.info(`💾 Changing file ${filePath}`);
+                            console.info(`💾 Changing JSON file ${filePath}`);
+                            await mkdir(dirname(filePath), {
+                                recursive: true,
+                            });
                             await writeFile(filePath, JSON.stringify(newFileContent, null, 4) + '\n');
                         } else {
-                            console.info(`⬜ Keeping file ${filePath}`);
+                            console.info(`⬜ Keeping JSON file ${filePath}`);
                         }
                     }
 
@@ -333,7 +341,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                             if (JSON.stringify(oldContent) === JSON.stringify(newContent)) {
                                 // Note: Do not re-format the file when nothing changed
                                 console.info(
-                                    `⏩ Not changing ${basename(
+                                    `⏩ Not changing JSON file ${basename(
                                         filePath,
                                     )} because JSON contents does not changed and we do not want to do the re-format of the file`,
                                 );
