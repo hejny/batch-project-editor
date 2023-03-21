@@ -19,12 +19,20 @@ export async function writeAnotations({
 
         // TODO: !!! Omit things like imports, empty comments / anotations , code comments, indentation,...
 
+        const fileContentEssentials = fileContent
+            .split(/^import.*$/gm)
+            .join('')
+            .split(/^\s*\/\/.*$/gm)
+            .join('')
+            .split(/\/\*.*?\*\//gm)
+            .join('');
+
         const requestText = spaceTrim(
             (block) => `
 
                 Describe the following code:
 
-                ${block(fileContent)}
+                ${block(fileContentEssentials)}
 
              `,
         );
@@ -229,7 +237,10 @@ export async function writeAnotations({
             });
         })) as ElementHandle<HTMLElement>;
 
-        await searchboxElementHandle.type(requestText.split('\n').join(' ').split(/\s+/g).join(' '), { delay: 100 });
+        await searchboxElementHandle.type(
+            requestText.split('\n').join(' ').split(/\s+/g).join(' ') /* <- TODO: How to input code + multiline text */,
+            { delay: 100 },
+        );
         await forTime(1000 * 3 /* seconds after write */);
 
         /**
