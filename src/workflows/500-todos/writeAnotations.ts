@@ -45,6 +45,9 @@ export async function writeAnotations({
              `,
         );
 
+        // !!!!! requestMultilineText vs requestText
+        // !!! Limit requestText to 2000 characters
+
         /**
          * Finds a new topic button inside multiple shadowRoot layers
          * DRY [0]
