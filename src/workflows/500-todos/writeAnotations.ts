@@ -24,8 +24,16 @@ export async function writeAnotations({
             .join('')
             .split(/^\s*\/\/.*$/gm)
             .join('')
-            .split(/\/\*.*?\*\//gm)
+            .split(/\/\*.*?\*\//gs)
             .join('');
+
+        /*
+        console.log('---------------------------------');
+        console.log(fileContent);
+        console.log('---------------------------------');
+        console.log(fileContentEssentials);
+        console.log('---------------------------------');
+        */
 
         const requestText = spaceTrim(
             (block) => `
