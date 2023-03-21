@@ -4,7 +4,11 @@ import { forTime } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { getChatBingPage, prepareChatBingPage } from './utils/chatBingPage';
 
-export async function writeAnotations({ modifyFiles, commit }: IWorkflowOptions): Promise<WorkflowResult> {
+export async function writeAnotations({
+    modifyFiles,
+    modifyJsonFiles,
+    commit,
+}: IWorkflowOptions): Promise<WorkflowResult> {
     const chatBingPage = getChatBingPage();
 
     await modifyFiles('**/*.{ts,tsx,js,jsx}', async (filePath, fileContent) => {
@@ -18,7 +22,7 @@ export async function writeAnotations({ modifyFiles, commit }: IWorkflowOptions)
         const requestText = spaceTrim(
             (block) => `
 
-                Write anotation for the code, write only the description not the params and return types:
+                Describe the following code:
 
                 ${block(fileContent)}
 
@@ -225,7 +229,7 @@ export async function writeAnotations({ modifyFiles, commit }: IWorkflowOptions)
             });
         })) as ElementHandle<HTMLElement>;
 
-        await searchboxElementHandle.type(requestText.split('\n').join(' '), { delay: 100 });
+        await searchboxElementHandle.type(requestText.split('\n').join(' ').split(/\s+/g).join(' '), { delay: 100 });
         await forTime(1000 * 3 /* seconds after write */);
 
         /**
@@ -364,13 +368,17 @@ export async function writeAnotations({ modifyFiles, commit }: IWorkflowOptions)
             element.style.outline = '2px solid #00ff00';
         });
 
-        let responseText = await responseElementHandle.evaluate((element) => {
+        const responseText = await responseElementHandle.evaluate((element) => {
             return element.innerText;
         });
 
-        responseText = responseText.split('\n').join(' ');
+        fileContent = fileContent.split('@@@').join(responseText.split('\n').join(' '));
 
-        fileContent = fileContent.split('@@@').join(responseText);
+        // TODO: Use modifyJsonFile not modifyJsonFiles - editing just one file
+        await modifyJsonFiles<Array<{ requestText: string; responseText: string }>>(
+            `documents/ai/prompts.json` /* <- TODO: Best place for the file */,
+            (fileName, fileContent) => [...fileContent, { requestText, responseText }],
+        );
 
         return fileContent;
     });
