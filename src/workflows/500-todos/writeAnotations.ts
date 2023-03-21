@@ -6,7 +6,7 @@ import { getChatBingPage, prepareChatBingPage } from './utils/chatBingPage';
 
 export async function writeAnotations({
     modifyFiles,
-    modifyJsonFiles,
+    modifyJsonFile,
     commit,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     const chatBingPage = getChatBingPage();
@@ -396,10 +396,9 @@ export async function writeAnotations({
 
         fileContent = fileContent.split('@@@').join(responseText.split('\n').join(' '));
 
-        // TODO: Use modifyJsonFile not modifyJsonFiles - editing just one file
-        await modifyJsonFiles<Array<{ requestText: string; responseText: string }>>(
+        await modifyJsonFile<Array<{ requestText: string; responseText: string }>>(
             `documents/ai/prompts.json` /* <- TODO: Best place for the file */,
-            (fileName, fileContent) => [...fileContent, { requestText, responseText }],
+            (fileContent) => [...(fileContent || []), { requestText, responseText }],
         );
 
         return fileContent;

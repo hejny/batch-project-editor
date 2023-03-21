@@ -273,9 +273,45 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         return content;
                     }
 
-                    function modifyJsonFiles<T>(
+                    // !!!!!! DRY refactor by AI
+
+                    async function modifyJsonFile<T extends object>(
+                        filePath: string,
+                        fileModifier: (fileContent: T | null) => Promisable<T | null>,
+                    ): Promise<void> {
+                        // TODO: DRY modifyFile, modifyFiles
+
+                        let oldFileContent: T | null;
+
+                        if (!(await isFileExisting(filePath))) {
+                            oldFileContent = null;
+                        } else {
+                            const oldFileContentString = await readFile(filePath, 'utf8');
+
+                            if (oldFileContentString.includes(`@batch-project-editor ignore`)) {
+                                console.info(`⏩ Skipping file ${filePath} because ignore tag is present`);
+                                return;
+                            }
+
+                            oldFileContent = JSON.parse(oldFileContentString);
+                        }
+
+                        const newFileContent = await fileModifier(oldFileContent);
+
+                        if (newFileContent === null) {
+                            // TODO: Maybe here delete the file if exists
+                            console.info(`⬜ Keeping file ${filePath}`);
+                        } else if (JSON.stringify(newFileContent) !== JSON.stringify(oldFileContent)) {
+                            console.info(`💾 Changing file ${filePath}`);
+                            await writeFile(filePath, JSON.stringify(newFileContent, null, 4) + '\n');
+                        } else {
+                            console.info(`⬜ Keeping file ${filePath}`);
+                        }
+                    }
+
+                    function modifyJsonFiles<T extends object>(
                         globPattern: string,
-                        fileModifier: (filePath: string, fileContent: T) => Promisable<T>,
+                        fileModifier: (filePath: string, fileContent: T) => Promisable<T | null>,
                     ): Promise<void> {
                         return modifyFiles(globPattern, async (filePath, oldContentString) => {
                             let oldContent = JSON.parse(oldContentString);
@@ -343,6 +379,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         readFile: readProjectFile,
                         modifyFile,
                         modifyFiles,
+                        modifyJsonFile,
                         modifyJsonFiles,
                         modifyPackage,
                         madeSideEffect(whatWasDoneDescription: string) {

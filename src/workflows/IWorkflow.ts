@@ -48,10 +48,13 @@ export interface IWorkflowOptions {
         globPattern: string,
         fileModifier: (filePath: string, fileContent: string) => Promisable<string | null>,
     ): Promise<void>;
-    // TODO: modifyJsonFile
-    modifyJsonFiles<T>(
+    modifyJsonFile<T extends object>(
+        filePath: string,
+        fileModifier: (fileJson: T | null) => Promisable<T | null>,
+    ): Promise<void> /* <- !!!!!!! Use */;
+    modifyJsonFiles<T extends object>(
         globPattern: string,
-        fileModifier: (filePath: string, fileJson: T) => Promisable<T>,
+        fileModifier: (filePath: string, fileJson: T) => Promisable<T | null>,
     ): Promise<void>;
     modifyPackage(fileModifier: (packageContent: PackageJson) => Promisable<PackageJson | void>): Promise<void>;
     commit(message: string): Promise<WorkflowResult.Change | WorkflowResult.NoChange>;
