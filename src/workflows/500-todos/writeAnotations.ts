@@ -12,7 +12,7 @@ export async function writeAnotations({
     let commonMetadataText: null | string = null;
 
     await modifyFiles('**/*.{ts,tsx,js,jsx}', async (filePath, fileContent) => {
-        if (fileContent.split('@@@').length !== 2) {
+        if (fileContent.split('@@@').length - 1 !== 1) {
             // TODO: !!! Make this script work with multiple anotations / entities per file
             console.info(`⬜ File ${filePath} has none or multiple anotation missing marks `);
             return null;
@@ -48,7 +48,7 @@ export async function writeAnotations({
             fileEntities.push({ type: type as IEntityType, name, anotation, tags });
         }
 
-        if (fileEntities.length !== 2) {
+        if (fileEntities.length !== 1) {
             // TODO: !!! Make this script work with multiple anotations / entities per file
             console.info(`⬜ File ${filePath} has none or multiple entities `);
             return null;
