@@ -12,9 +12,9 @@ import { ElementHandle, Page } from 'puppeteer-core';
  */
 export async function findLastElementHandle(
     page: Page,
-    where: Record<string, string | number>,
+    where: Record<string, string | number | boolean>,
 ): Promise<ElementHandle<HTMLElement> | null> {
-    return (await page.evaluateHandle(
+    const elementHandle = await page.evaluateHandle(
         ({ where }) => {
             function traverse(
                 node: Node,
@@ -69,5 +69,11 @@ export async function findLastElementHandle(
             });
         },
         { where },
-    )) as ElementHandle<HTMLElement>;
+    );
+
+    if (elementHandle.asElement() === null) {
+        return null;
+    }
+
+    return elementHandle as ElementHandle<HTMLElement>;
 }

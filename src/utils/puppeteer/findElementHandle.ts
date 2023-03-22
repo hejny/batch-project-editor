@@ -12,11 +12,10 @@ import { ElementHandle, Page } from 'puppeteer-core';
  */
 export async function findElementHandle(
     page: Page,
-    where: Record<string, string | number>,
+    where: Record<string, string | number | boolean>,
 ): Promise<ElementHandle<HTMLElement> | null> {
-    return (await page.evaluateHandle(
+    const elementHandle = await page.evaluateHandle(
         ({ where }) => {
-
             function traverse(
                 node: Node,
                 depth: number,
@@ -61,6 +60,9 @@ export async function findElementHandle(
                 const element = node;
 
                 for (const [key, value] of Object.entries(where)) {
+                    if (typeof value === 'boolean') {
+                        console.log(key, element[key], value);
+                    }
                     if (element[key] !== value) {
                         return null;
                     }
@@ -70,5 +72,11 @@ export async function findElementHandle(
             });
         },
         { where },
-    )) as ElementHandle<HTMLElement>;
+    );
+
+    if (elementHandle.asElement() === null) {
+        return null;
+    }
+
+    return elementHandle as ElementHandle<HTMLElement>;
 }

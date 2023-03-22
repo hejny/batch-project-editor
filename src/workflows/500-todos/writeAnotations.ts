@@ -41,7 +41,7 @@ export async function writeAnotations({
         const fileEntities: Array<IEntity> = [];
         for (const match of fileContent.matchAll(
             // TODO: !!!!!!!!!!!!!! Also detect non-export entities
-            /(?<anotation>\/\*\*((?!\/\*\*).)*?\*\/\s*)?export(?:\s+declare)?(?:\s+abstract)?(?:\s+async)?(?:\s+(?<type>[a-z]+))(?:\s+(?<name>[a-zA-Z0-9_]+))/gs,
+            /(?<anotation>\/\*\*((?!\/\*\*).)*?\*\/\s*)?(?:\s+export)?(?:\s+declare)?(?:\s+abstract)?(?:\s+async)?(?:\s+(?<type>[a-z]+))(?:\s+(?<name>[a-zA-Z0-9_]+))/gs,
         )) {
             const { type, name, anotation } = match.groups!;
 
@@ -60,7 +60,7 @@ export async function writeAnotations({
         const requestText = spaceTrim(
             (block) => `
 
-                Write jsdoc anotation for ${entity.type} ${entity.name}:
+                Write jsdoc anotation for ${entity.type} ${entity.name}, here is the source code in TypeScript:
 
                 ${block(fileContentEssentials)}
 
@@ -70,34 +70,46 @@ export async function writeAnotations({
         // !!!!! requestMultilineText vs requestText
         // !!! Limit requestText to 2000 characters
 
-        const { responseText, metadataText, additional } = await askChatBing({ requestText });
+        try {
+            const { responseText, metadataText, additional } = await askChatBing({ requestText });
 
-        fileContent = fileContent.split('@@@').join(responseText.split('\n').join(' '));
+            fileContent = fileContent.split('@@@').join(responseText.split('\n').join(' '));
 
-        await modifyJsonFile<Array<{ requestText: string; responseText: string }>>(
-            `documents/ai/prompts.json` /* <- TODO: Best place for the file + probbably use YAML */,
-            (promptsContent) => [...(promptsContent || []), { requestText, responseText, additional }],
-        );
+            await modifyJsonFile<Array<{ requestText: string; responseText: string }>>(
+                `documents/ai/prompts.json` /* <- TODO: Best place for the file + probbably use YAML */,
+                (promptsContent) => [...(promptsContent || []), { requestText, responseText, additional }],
+            );
 
-        if (commonMetadataText !== null && commonMetadataText !== metadataText) {
-            throw new Error(
-                spaceTrim(
-                    (block) => `
+            if (commonMetadataText !== null && commonMetadataText !== metadataText) {
+                // TODO: This error should probbably end whole script NOT be captured just a level above
+                throw new Error(
+                    spaceTrim(
+                        (block) => `
 
-                        There is a difference between commonMetadataText and metadataText:
+                          There is a difference between commonMetadataText and metadataText:
 
-                        commonMetadataText:
-                        ${block(commonMetadataText!)}
+                          commonMetadataText:
+                          ${block(commonMetadataText!)}
 
-                        metadataText:
-                        ${block(metadataText)}
+                          metadataText:
+                          ${block(metadataText)}
 
-                    `,
-                ),
+                      `,
+                    ),
+                );
+            }
+
+            commonMetadataText = metadataText;
+        } catch (error) {
+            if (!(error instanceof Error)) {
+                throw error;
+            }
+
+            await modifyJsonFile<Array<{ requestText: string }>>(
+                `documents/ai/prompts.json` /* <- TODO: Best place for the file + probbably use YAML */,
+                (promptsContent) => [...(promptsContent || []), { requestText, errorMessage: error.message }],
             );
         }
-
-        commonMetadataText = metadataText;
 
         return fileContent;
     });
