@@ -12,8 +12,9 @@ export async function writeAnnotations({
 }: IWorkflowOptions): Promise<WorkflowResult> {
     let commonMetadataText: null | string = null;
 
+    // TODO: !!! Bring back whore repository not only SRC - but ignore things from .gitignore like config files
     // TODO: !!! Bring back js,jsx files, now temporarly suspended
-    await modifyFiles('**/*.{ts,tsx}', async (filePath, originalFileContent) => {
+    await modifyFiles('src/**/*.{ts,tsx}', async (filePath, originalFileContent) => {
         // TODO: !!! Omit things like imports, empty comments / annotations , code comments, indentation,...
 
         const fileContentEssentials = originalFileContent
