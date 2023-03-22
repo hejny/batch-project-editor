@@ -33,7 +33,7 @@ export async function prepareChatBingPage() {
 
     console.info(chalk.bgYellow(` 🚀  Please log in into Bing `));
 
-    // TODO: !!! Find the selector> await edgePageContainer.page.waitForSelector(`#searchbox`, { timeout: 1000 * 60 * 15 /* minutes */ });
+    // !!! Find the selector> await edgePageContainer.page.waitForSelector(`#searchbox`, { timeout: 1000 * 60 * 15 /* minutes */ });
 }
 
 /**

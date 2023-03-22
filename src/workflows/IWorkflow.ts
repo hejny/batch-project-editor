@@ -51,7 +51,7 @@ export interface IWorkflowOptions {
     modifyJsonFile<T extends object>(
         filePath: string,
         fileModifier: (fileJson: T | null) => Promisable<T | null>,
-    ): Promise<void> /* <- TODO: !!!TODO: !!TODO: !! Use */;
+    ): Promise<void> /* <- !!!!!!! Use */;
     modifyJsonFiles<T extends object>(
         globPattern: string,
         fileModifier: (filePath: string, fileJson: T) => Promisable<T | null>,

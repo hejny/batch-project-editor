@@ -13,7 +13,7 @@ export async function isProjectArchived(url: URL): Promise<boolean> {
     const text = await response.text();
     const isArchived = text.includes(`This repository has been archived by the owner. It is now read-only.`);
 
-    // TODO: !!! Remove test logging
+    // !!! Remove test logging
     // console.log({ isArchived, text });
     // await forEver();
 
