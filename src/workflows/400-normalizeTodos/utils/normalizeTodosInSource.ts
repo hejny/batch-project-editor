@@ -24,4 +24,5 @@ export function normalizeTodosInSource(source: string): string {
  * Note: The stupid name normalizeTodosInSource is because I want to avoid colision with the actual workflow normalizeTodos
  * TODO: NEVER chage code ONLY change comments
  * TODO: No more than one TODO on line> "TODO: [🧠] TODO: !!x return type Promisable<void>"
+ * @batch-project-editor ignore to not change TODOs here by itself
  */

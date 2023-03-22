@@ -5,3 +5,7 @@ export async function normalizeTodos({ modifyFiles, commit }: IWorkflowOptions):
     await modifyFiles('**/*.{ts,tsx,js,jsx}', (filePath, fileContent) => normalizeTodosInSource(fileContent));
     return commit('🧽 Normalize TODOs');
 }
+
+/**
+ * @batch-project-editor ignore to not change TODOs here by itself
+ */

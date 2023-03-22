@@ -1,6 +1,7 @@
 import spaceTrim from 'spacetrim';
 import { normalizeTodosInSource } from './normalizeTodosInSource';
 
+
 describe(`normalizeTodosInSource`, () => {
     it(`will work with important todos`, () => {
         const source = spaceTrim(`
@@ -77,3 +78,8 @@ describe(`normalizeTodosInSource`, () => {
         expect(normalizeTodosInSource(source)).toBe(output);
     });
 });
+
+
+/**
+ * @batch-project-editor ignore to not change TODOs here by itself
+ */
