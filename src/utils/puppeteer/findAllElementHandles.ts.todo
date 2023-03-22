@@ -1,22 +1,21 @@
 import { ElementHandle, Page } from 'puppeteer-core';
 
 /**
- * Finds the element with given conditions
+ * Finds all elements with given conditions
  *
  * Note: This function is going through shadowRoot structure
  * Note: We can not pass the filterCallback directly @see commit 8f8850cb77be2ce466735eef2b4a9d2246b2f61c
  *
  * @param page on which to search
  * @param where the conditions what attributes must element have
- * @returns ElementHandle or null
+ * @returns Array of ElementHandle
  */
-export async function findElementHandle(
+export async function findAllElementHandles(
     page: Page,
     where: Record<string, string | number>,
-): Promise<ElementHandle<HTMLElement> | null> {
+): Promise<Array<ElementHandle<HTMLElement>>> {
     return (await page.evaluateHandle(
         ({ where }) => {
-
             function traverse(
                 node: Node,
                 depth: number,
@@ -53,7 +52,7 @@ export async function findElementHandle(
                 return null;
             }
 
-            return traverse(window.document.body, 0, (node: Node, depth: number) => {
+            const element = traverse(window.document.body, 0, (node: Node, depth: number) => {
                 if (!(node instanceof HTMLElement)) {
                     return null;
                 }
@@ -68,7 +67,31 @@ export async function findElementHandle(
 
                 return element;
             });
+
+            return [element, element];
         },
         { where },
     )) as ElementHandle<HTMLElement>;
 }
+
+/*
+TODO: Finish the function
+
+Sample usage:
+
+
+const elementHandles = await findAllElementHandles(getChatBingPage(), {
+  tagName: 'TEXTAREA',
+  id: 'searchbox',
+}).catch((error) => {
+  console.error('error in findAllElementHandles', error);
+  return [];
+});
+console.log(elementHandles);
+for (const elementHandle of elementHandles) {
+  await markElement(elementHandle);
+}
+await forEver();
+
+
+*/

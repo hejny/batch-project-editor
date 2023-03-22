@@ -2,10 +2,25 @@ import chalk from 'chalk';
 import { forTime } from 'waitasecond';
 import { WAIT_MULTIPLICATOR } from '../../../config';
 import { findElementHandle } from '../../../utils/puppeteer/findElementHandle';
+import { findLastElementHandle } from '../../../utils/puppeteer/findLastElementHandle';
 import { markElement } from '../../../utils/puppeteer/markElement';
 import { getChatBingPage } from './chatBingPage';
 
-export async function askChatBing(requestText: string): Promise<string> {
+interface IAskChatBingOptions {
+    requestText: string;
+
+    // TODO: Precise vs Normal vs Creative here
+}
+
+interface IAskChatBingReturn {
+    responseText: string;
+    metadataText: string;
+    additional: Record<string, string>;
+}
+
+export async function askChatBing(options: IAskChatBingOptions): Promise<IAskChatBingReturn> {
+    const { requestText } = options;
+
     const chatBingPage = getChatBingPage();
 
     const newTopicButtonElementHandle = await findElementHandle(chatBingPage, {
@@ -58,7 +73,7 @@ export async function askChatBing(requestText: string): Promise<string> {
     console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterAsk} seconds after asking Chat Bing`));
     await forTime(1000 * secondsToWaitAfterAsk);
 
-    const responseElementHandle = await findElementHandle(chatBingPage, {
+    const responseElementHandle = await findLastElementHandle(chatBingPage, {
         // TODO: Scrape <cib-message><cib-shared/>
         tagName: 'CIB-SHARED',
     });
@@ -69,11 +84,17 @@ export async function askChatBing(requestText: string): Promise<string> {
     const responseText = await responseElementHandle.evaluate((element) => {
         return element.innerText;
     });
+    const responseHtml = await responseElementHandle.evaluate((element) => {
+        return element.innerHTML;
+    });
 
-    return responseText;
+    return {
+        responseText,
+        metadataText: `@generator ChatBing from ${new Date().toDateString()}` /* <- TODO: Better */,
+        additional: { responseHtml },
+    };
 }
 
 /**
- * TODO: !!!!! Return some metadata
  * TODO: [🏯]
  */

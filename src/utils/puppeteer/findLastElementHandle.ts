@@ -1,7 +1,7 @@
 import { ElementHandle, Page } from 'puppeteer-core';
 
 /**
- * Finds the element with given conditions
+ * Finds the last element with given conditions
  *
  * Note: This function is going through shadowRoot structure
  * Note: We can not pass the filterCallback directly @see commit 8f8850cb77be2ce466735eef2b4a9d2246b2f61c
@@ -10,13 +10,12 @@ import { ElementHandle, Page } from 'puppeteer-core';
  * @param where the conditions what attributes must element have
  * @returns ElementHandle or null
  */
-export async function findElementHandle(
+export async function findLastElementHandle(
     page: Page,
     where: Record<string, string | number>,
 ): Promise<ElementHandle<HTMLElement> | null> {
     return (await page.evaluateHandle(
         ({ where }) => {
-
             function traverse(
                 node: Node,
                 depth: number,
@@ -29,7 +28,7 @@ export async function findElementHandle(
                 }
 
                 if (node.nodeType == 1 /* <- Element node */) {
-                    for (var i = 0; i < node.childNodes.length; i++) {
+                    for (var i = node.childNodes.length - 1; i >= 0; i--) {
                         const result = traverse(node.childNodes[i], depth + 1, callback);
 
                         if (result !== null) {
@@ -41,7 +40,7 @@ export async function findElementHandle(
                 }
 
                 if (node instanceof HTMLElement && node.shadowRoot) {
-                    for (var i = 0; i < node.shadowRoot.childNodes.length; i++) {
+                    for (var i = node.shadowRoot.childNodes.length - 1; i >= 0; i--) {
                         const result = traverse(node.shadowRoot.childNodes[i], depth + 1, callback);
 
                         if (result !== null) {
