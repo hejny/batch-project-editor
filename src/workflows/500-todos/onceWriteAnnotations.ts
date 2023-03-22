@@ -15,8 +15,8 @@ export async function onceWriteAnnotations({
     // TODO: !!! Bring back whore repository not only SRC - but ignore things from .gitignore like config files
     // TODO: !!! Bring back js,jsx files, now temporarly suspended
     await modifyFiles('src/**/*.{ts,tsx}', async (filePath, originalFileContent) => {
-        // !!!!!! Exclude .test.tsx? files
-        // !!!!!! Exclude finished files - There must be at least one @@@ mark
+        // TODO: !!!TODO: !!! Exclude .test.tsx? files
+        // TODO: !!!TODO: !!! Exclude finished files - There must be at least one @@@ mark
 
         // TODO: !!! Omit things like imports, empty comments / annotations , code comments, indentation,...
 
@@ -53,8 +53,8 @@ export async function onceWriteAnnotations({
             return null;
         }
 
-        // !!!!! requestMultilineText vs requestText
-        // !!! Limit requestText to 2000 characters
+        // TODO: !!TODO: !!! requestMultilineText vs requestText
+        // TODO: !!! Limit requestText to 2000 characters
 
         let newFileContent = originalFileContent;
 
@@ -84,7 +84,7 @@ export async function onceWriteAnnotations({
                     throw new Error(`Missing ${fileEntity.name} in response`);
                 }
 
-                // !!!!!!!!! Change ONLY if in original annotation is @@@ + ONLY send to chat when at least one entity has this mark
+                // TODO: !!TODO: !!TODO: !!TODO: !!! Change ONLY if in original annotation is @@@ + ONLY send to chat when at least one entity has this mark
                 newFileContent = changeAnnotationOfEntity({
                     source: originalFileContent,
                     entityName: fileEntity.name,

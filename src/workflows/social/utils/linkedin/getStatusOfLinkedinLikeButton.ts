@@ -10,7 +10,7 @@ export type LinkedinLikeButtonStatus =
     | 'LIKE_FUNNY'
     | 'LIKE_LOVE'
     | 'LIKE_INSIGHTFUL'
-    | 'UNKNOWN' /* <- !!! TODO: Add all */;
+    | 'UNKNOWN' /* <- TODO: !!! TODO: Add all */;
 
 export async function getStatusOfLinkedinLikeButton(
     elementHandle: ElementHandle<HTMLButtonElement>,

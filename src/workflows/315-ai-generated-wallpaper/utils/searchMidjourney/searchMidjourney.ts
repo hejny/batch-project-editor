@@ -101,7 +101,7 @@ async function searchMidjourneyOnPage(
     }
 
     if (!Array.isArray(json)) {
-        // TODO: [🏯][🏯]!! This error should not occur on any project - TODO: Make some warning mechanism
+        // TODO: [🏯][🏯]TODO: !! This error should not occur on any project - TODO: Make some warning mechanism
         throw new Error(`Expected array, got ${JSON.stringify(json)}`);
     }
 
