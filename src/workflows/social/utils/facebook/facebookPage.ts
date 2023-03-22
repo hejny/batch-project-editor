@@ -6,7 +6,9 @@ import { chromePageContainer } from '../../../page';
 
 export async function getAdditionalFacebookPage(): Promise<puppeteer.Page> {
     if (!chromePageContainer.browser) {
-        throw new Error(`Facebook page not initialized\n In workflow you are using the page you need to add initialize.`);
+        throw new Error(
+            `Facebook page not initialized\n In workflow you are using the page you need to add initialize.`,
+        );
     }
 
     return await chromePageContainer.browser.newPage();
@@ -53,7 +55,7 @@ export async function prepareFacebookPage() {
     );
 
     /*
-    TODO: !!!!! Wait for FB ready
+    TODO: Wait for FB ready
     await pageContainer.page.waitForSelector(
         `.share-box-feed-entry__closed-share-box` /* <- !!! Unhardcode to config * /,
         {
