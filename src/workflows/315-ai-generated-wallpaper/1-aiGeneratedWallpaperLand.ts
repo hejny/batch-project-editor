@@ -42,7 +42,7 @@ export async function aiGeneratedWallpaperLand({
 
         //-------------
         if (false) {
-            // !!!!!!!!! Temporary blocked because searchMidjourney not working properly
+            // TODO: !!TODO: !!TODO: !!TODO: !!! Temporary blocked because searchMidjourney not working properly
             // Note: Test if already landed
             const searchResult = await searchMidjourney({
                 prompt: stripFlagsFromPrompt(imagine),
@@ -61,7 +61,7 @@ export async function aiGeneratedWallpaperLand({
 
         //-------------
         // Note: Test if already harvested
-        // !!!!!!!!! Temporary solution - skipping all harvested
+        // TODO: !!TODO: !!TODO: !!TODO: !!! Temporary solution - skipping all harvested
         const allWallpapersPaths = await glob(join(wallpaperGalleryPath, '*.png'));
         console.log({ allWallpapersPaths });
         if (allWallpapersPaths.length !== 0) {

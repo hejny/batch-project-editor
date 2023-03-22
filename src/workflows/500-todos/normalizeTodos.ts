@@ -8,7 +8,7 @@ export async function normalizeTodos({ modifyFiles, commit }: IWorkflowOptions):
         }
 
         for (let i = 0; i < 20; i++) {
-            fileContent = fileContent.split('TODO: TODO:').join('TODO:');
+            fileContent = fileContent.split('TODO:').join('TODO:');
         }
 
         /*
