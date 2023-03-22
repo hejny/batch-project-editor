@@ -43,6 +43,11 @@ export async function writeAnnotations({
              `,
         );
 
+        if (requestText.length > 1000) {
+            console.info(`⏩ Skipping file ${filePath} because requestText to chat is too long`);
+            return null;
+        }
+
         // !!!!! requestMultilineText vs requestText
         // !!! Limit requestText to 2000 characters
 
