@@ -22,7 +22,7 @@ export function changeAnnotationOfEntity({
     return spaceTrim(
         (block) => `
 
-            ${source}
+            ${block(source)}
 
             /*
             In ${entityName} there is new annotation:

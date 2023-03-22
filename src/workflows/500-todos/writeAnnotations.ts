@@ -52,6 +52,8 @@ export async function writeAnnotations({
         // !!!!! requestMultilineText vs requestText
         // !!! Limit requestText to 2000 characters
 
+        let newFileContent = originalFileContent;
+
         const prompt: IPrompt = { requestText, additional: {} };
 
         try {
@@ -69,7 +71,6 @@ export async function writeAnnotations({
 
             prompt.additional = { ...prompt.additional, fileEntities, responseEntities };
 
-            let newFileContent = originalFileContent;
             for (const fileEntity of fileEntities) {
                 const responseEntity = responseEntities.find(
                     (responseEntity) => responseEntity.name === fileEntity.name,
@@ -121,7 +122,8 @@ export async function writeAnnotations({
             commonMetadataText = prompt.metadataText;
         }
 
-        return originalFileContent;
+        // TODO: Format/prettify the source code HERE (or in some next workflow)
+        return newFileContent;
     });
 
     return commit(
