@@ -1,10 +1,11 @@
 import spaceTrim from 'spacetrim';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { IEntity, IEntityType } from './interfaces/entity';
 import { askChatBing } from './utils/askChatBing';
+import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
 import { prepareChatBingPage } from './utils/chatBingPage';
+import { parseEntities } from './utils/parseEntities';
 
-export async function writeAnotations({
+export async function writeAnnotations({
     modifyFiles,
     modifyJsonFile,
     commit,
@@ -12,13 +13,7 @@ export async function writeAnotations({
     let commonMetadataText: null | string = null;
 
     await modifyFiles('**/*.{ts,tsx,js,jsx}', async (filePath, fileContent) => {
-        if (fileContent.split('@@@').length - 1 !== 1) {
-            // TODO: !!! Make this script work with multiple anotations / entities per file
-            console.info(`⬜ File ${filePath} has none or multiple anotation missing marks `);
-            return null;
-        }
-
-        // TODO: !!! Omit things like imports, empty comments / anotations , code comments, indentation,...
+        // TODO: !!! Omit things like imports, empty comments / annotations , code comments, indentation,...
 
         const fileContentEssentials = fileContent
             .split(/^import.*$/gm)
@@ -38,29 +33,10 @@ export async function writeAnotations({
         console.log('---------------------------------');
         */
 
-        const fileEntities: Array<IEntity> = [];
-        for (const match of fileContent.matchAll(
-            // TODO: !!!!!!!!!!!!!! Also detect non-export entities
-            /(?<anotation>\/\*\*((?!\/\*\*).)*?\*\/\s*)?(?:\s+export)?(?:\s+declare)?(?:\s+abstract)?(?:\s+async)?(?:\s+(?<type>[a-z]+))(?:\s+(?<name>[a-zA-Z0-9_]+))/gs,
-        )) {
-            const { type, name, anotation } = match.groups!;
-
-            const tags = Array.from(anotation?.match(/@([a-zA-Z0-9_-]+)*/g) || []);
-            fileEntities.push({ type: type as IEntityType, name, anotation, tags });
-        }
-
-        if (fileEntities.length !== 1) {
-            // TODO: !!! Make this script work with multiple anotations / entities per file
-            console.info(`⬜ File ${filePath} has none or multiple entities `);
-            return null;
-        }
-
-        const [entity] = fileEntities;
-
         const requestText = spaceTrim(
             (block) => `
 
-                Write jsdoc anotation for ${entity.type} ${entity.name}, here is the source code in TypeScript:
+                Write jsdoc annotation for source code in TypeScript:
 
                 ${block(fileContentEssentials)}
 
@@ -70,45 +46,65 @@ export async function writeAnotations({
         // !!!!! requestMultilineText vs requestText
         // !!! Limit requestText to 2000 characters
 
+        const prompt: IPrompt = { requestText, additional: {} };
+
         try {
             const { responseText, metadataText, additional } = await askChatBing({ requestText });
+            prompt.responseText = responseText;
+            prompt.metadataText = metadataText;
+            prompt.additional = { ...prompt.additional, ...additional };
 
-            fileContent = fileContent.split('@@@').join(responseText.split('\n').join(' '));
+            const fileEntities = parseEntities(fileContent);
+            const responseEntities = parseEntities(responseText);
 
-            await modifyJsonFile<Array<{ requestText: string; responseText: string }>>(
-                `documents/ai/prompts.json` /* <- TODO: Best place for the file + probbably use YAML */,
-                (promptsContent) => [...(promptsContent || []), { requestText, responseText, additional }],
-            );
+            prompt.additional = { ...prompt.additional, fileEntities, responseEntities };
 
-            if (commonMetadataText !== null && commonMetadataText !== metadataText) {
-                // TODO: This error should probbably end whole script NOT be captured just a level above
-                throw new Error(
-                    spaceTrim(
-                        (block) => `
-
-                          There is a difference between commonMetadataText and metadataText:
-
-                          commonMetadataText:
-                          ${block(commonMetadataText!)}
-
-                          metadataText:
-                          ${block(metadataText)}
-
-                      `,
-                    ),
+            for (const fileEntity of fileEntities) {
+                const responseEntity = responseEntities.find(
+                    (responseEntity) => responseEntity.name === fileEntity.name,
                 );
-            }
 
-            commonMetadataText = metadataText;
+                if (!responseEntity) {
+                    throw new Error(`Missing ${fileEntity.name} in response`);
+                }
+
+                fileContent = changeAnnotationOfEntity({
+                    source: fileContent,
+                    entityName: fileEntity.name,
+                    annotation: responseEntity.name,
+                });
+            }
         } catch (error) {
             if (!(error instanceof Error)) {
                 throw error;
             }
 
+            prompt.errorMessage = error.message;
+        } finally {
             await modifyJsonFile<Array<{ requestText: string }>>(
                 `documents/ai/prompts.json` /* <- TODO: Best place for the file + probbably use YAML */,
-                (promptsContent) => [...(promptsContent || []), { requestText, errorMessage: error.message }],
+                (prompts) => [...(prompts || []), prompt],
             );
+        }
+
+        if (prompt.metadataText && commonMetadataText !== null && commonMetadataText !== prompt.metadataText) {
+            throw new Error(
+                spaceTrim(
+                    (block) => `
+
+                    There is a difference between commonMetadataText and metadataText:
+
+                    commonMetadataText:
+                    ${block(commonMetadataText!)}
+
+                    metadataText:
+                    ${block(prompt.metadataText!)}
+
+                `,
+                ),
+            );
+        } else if (prompt.metadataText) {
+            commonMetadataText = prompt.metadataText;
         }
 
         return fileContent;
@@ -116,11 +112,19 @@ export async function writeAnotations({
 
     return commit(
         spaceTrim(`
-            💭 Write anotations
+            💭 Write annotations
 
             ${commonMetadataText}
         `), // <- TODO: More info about the chat thread, GPT version, date,...
     );
 }
 
-writeAnotations.initialize = prepareChatBingPage;
+writeAnnotations.initialize = prepareChatBingPage;
+
+interface IPrompt {
+    requestText: string;
+    responseText?: string;
+    metadataText?: string;
+    errorMessage?: string;
+    additional: Record<string, any>;
+}
