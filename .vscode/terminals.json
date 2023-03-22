@@ -204,6 +204,12 @@
             "command": "ts-node ./src/index.ts --list-workflows",
             "onlySingle": true,
             "focus": true
+        },
+        {
+            "name": "🔙 Revert last BPE commit",
+            "command": "ts-node ./src/index.ts --edit --workflows onceRevertLastBpeCommit --projects %",
+            "onlySingle": true,
+            "focus": true
         }
     ]
 }

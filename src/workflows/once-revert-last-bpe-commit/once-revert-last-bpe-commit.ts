@@ -22,13 +22,12 @@ export async function onceRevertLastBpeCommit({
             // return skippingBecauseOf(`Last commit is not by Batch project editor`);
         }
 
-        /*
-        // TODO: !!! [0] Extra condition
-        if (!recentCommit.subject.includes('Update contributing')) {
+        /**/
+        // Note: Extra condition
+        if (!recentCommit.subject.includes('Normalize TODOs')) {
             continue;
-            // return skippingBecauseOf(`@@@`);
         }
-        */
+        /**/
 
         if (recentCommit.subject.includes('Revert') && recentCommit.body.includes('This reverts commit')) {
             continue;
@@ -49,7 +48,6 @@ export async function onceRevertLastBpeCommit({
 
     return skippingBecauseOf(`No recent commit for revent.`);
 }
-
 
 /**
  * TODO: Make some better system for workflows not connected with project
