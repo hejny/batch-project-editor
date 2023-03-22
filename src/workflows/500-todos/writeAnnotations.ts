@@ -73,6 +73,7 @@ export async function writeAnnotations({
                     throw new Error(`Missing ${fileEntity.name} in response`);
                 }
 
+                // !!!!!!!!! Change ONLY if in original annotation is @@@ + ONLY send to chat when at least one entity has this mark
                 newFileContent = changeAnnotationOfEntity({
                     source: originalFileContent,
                     entityName: fileEntity.name,
