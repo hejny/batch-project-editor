@@ -85,7 +85,7 @@ export async function writeAnnotations({
                 newFileContent = changeAnnotationOfEntity({
                     source: originalFileContent,
                     entityName: fileEntity.name,
-                    annotation: responseEntity.name,
+                    annotation: responseEntity.annotation! /* <- TODO: !!! Test if there is a new annotation */,
                 });
             }
 
