@@ -1,19 +1,22 @@
 import { ElementHandle, Page } from 'puppeteer-core';
 
+/**
+ * Finds the element
+ *
+ * Note: This function is going through shadowRoot structure
+ * Note: We can not pass the filterCallback directly @see commit 8f8850cb77be2ce466735eef2b4a9d2246b2f61c
+ *
+ * @param page on which to search
+ * @param where the conditions what attributes must element have
+ * @returns ElementHandle or null
+ */
 export async function findElementHandle(
     page: Page,
-    filterCallback: (element: HTMLElement) => boolean,
-): Promise<ElementHandle<HTMLElement>> {
-    /**
-     * Finds a new topic button inside multiple shadowRoot layers
-     * DRY [0]
-     */
-    const elementHandle = await page.evaluateHandle(
-        ({ filterCallbackSerialized, foo }) => {
-            const filterCallback = new Function(filterCallbackSerialized);
-
-            console.log(new Function(`(n) => n+1`));
-            console.log({ filterCallbackSerialized, filterCallback, foo });
+    where: Record<string, string | number>,
+): Promise<ElementHandle<HTMLElement> | null> {
+    return (await page.evaluateHandle(
+        ({ where }) => {
+            console.log({ where });
 
             function traverse(
                 node: Node,
@@ -58,21 +61,17 @@ export async function findElementHandle(
 
                 const element = node;
 
-                if (!filterCallback(element)) {
-                    return null;
+                for (const [key, value] of Object.entries(where)) {
+                    if (element[key] !== value) {
+                        return null;
+                    }
                 }
 
                 return element;
             });
         },
-        { filterCallbackSerialized: filterCallback.toString(), foo: 'bar' },
-    );
-
-    if (!(elementHandle instanceof ElementHandle)) {
-        throw new Error(`Something get wrong; Expected ElementHandle but got something else`);
-    }
-
-    return elementHandle as ElementHandle<HTMLElement>;
+        { where },
+    )) as ElementHandle<HTMLElement>;
 }
 
 /**
