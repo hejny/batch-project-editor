@@ -15,6 +15,9 @@ export async function onceWriteAnnotations({
     // TODO: !!! Bring back whore repository not only SRC - but ignore things from .gitignore like config files
     // TODO: !!! Bring back js,jsx files, now temporarly suspended
     await modifyFiles('src/**/*.{ts,tsx}', async (filePath, originalFileContent) => {
+        // !!!!!! Exclude .test.tsx? files
+        // !!!!!! Exclude finished files - There must be at least one @@@ mark
+
         // TODO: !!! Omit things like imports, empty comments / annotations , code comments, indentation,...
 
         const fileContentEssentials = originalFileContent
