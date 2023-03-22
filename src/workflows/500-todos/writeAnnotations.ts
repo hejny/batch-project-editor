@@ -12,10 +12,10 @@ export async function writeAnnotations({
 }: IWorkflowOptions): Promise<WorkflowResult> {
     let commonMetadataText: null | string = null;
 
-    await modifyFiles('**/*.{ts,tsx,js,jsx}', async (filePath, fileContent) => {
+    await modifyFiles('**/*.{ts,tsx,js,jsx}', async (filePath, originalFileContent) => {
         // TODO: !!! Omit things like imports, empty comments / annotations , code comments, indentation,...
 
-        const fileContentEssentials = fileContent
+        const fileContentEssentials = originalFileContent
             .split(/^import.*$/gm)
             .join('')
             .split(/^\s*\/\/.*$/gm)
@@ -54,11 +54,16 @@ export async function writeAnnotations({
             prompt.metadataText = metadataText;
             prompt.additional = { ...prompt.additional, ...additional };
 
-            const fileEntities = parseEntities(fileContent);
+            console.info({ responseText, metadataText, additional });
+
+            const fileEntities = parseEntities(originalFileContent);
             const responseEntities = parseEntities(responseText);
+
+            console.info({ fileEntities, responseEntities });
 
             prompt.additional = { ...prompt.additional, fileEntities, responseEntities };
 
+            let newFileContent = originalFileContent;
             for (const fileEntity of fileEntities) {
                 const responseEntity = responseEntities.find(
                     (responseEntity) => responseEntity.name === fileEntity.name,
@@ -68,12 +73,14 @@ export async function writeAnnotations({
                     throw new Error(`Missing ${fileEntity.name} in response`);
                 }
 
-                fileContent = changeAnnotationOfEntity({
-                    source: fileContent,
+                newFileContent = changeAnnotationOfEntity({
+                    source: originalFileContent,
                     entityName: fileEntity.name,
                     annotation: responseEntity.name,
                 });
             }
+
+            console.info({ originalFileContent, newFileContent });
         } catch (error) {
             if (!(error instanceof Error)) {
                 throw error;
@@ -107,7 +114,7 @@ export async function writeAnnotations({
             commonMetadataText = prompt.metadataText;
         }
 
-        return fileContent;
+        return originalFileContent;
     });
 
     return commit(
