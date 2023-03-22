@@ -17,7 +17,7 @@ import { aiGeneratedWallpaperUseInGithub } from './315-ai-generated-wallpaper/6-
 import { authors } from './320-authors/authors';
 import { repository } from './325-repository/repository';
 import { normalizePackage } from './330-normalizePackage/normalizePackage';
-import { writeAnnotations } from './500-todos/writeAnnotations';
+import { onceWriteAnnotations } from './500-todos/onceWriteAnnotations';
 import { badges } from './800-badges/badges';
 import { contributing } from './810-contributing/contributing';
 import { partners } from './820-partners/partners';
@@ -63,7 +63,7 @@ export const WORKFLOWS: IWorkflow[] = [
     repository,
     normalizePackage,
     // TODO: Allow> normalizeTodos,
-    writeAnnotations,
+    onceWriteAnnotations,
     badges,
     contributing,
     partners,

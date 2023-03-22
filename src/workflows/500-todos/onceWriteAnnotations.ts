@@ -5,7 +5,7 @@ import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
 import { prepareChatBingPage } from './utils/chatBingPage';
 import { parseEntities } from './utils/parseEntities';
 
-export async function writeAnnotations({
+export async function onceWriteAnnotations({
     modifyFiles,
     modifyJsonFile,
     commit,
@@ -136,7 +136,7 @@ export async function writeAnnotations({
     );
 }
 
-writeAnnotations.initialize = prepareChatBingPage;
+onceWriteAnnotations.initialize = prepareChatBingPage;
 
 interface IPrompt {
     requestText: string;

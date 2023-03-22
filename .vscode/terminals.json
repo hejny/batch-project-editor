@@ -107,7 +107,12 @@
             "onlySingle": true,
             "focus": true
         },
-
+        {
+            "name": "🤖🚜 Land AIdeas",
+            "commands": ["ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects AIdeas"],
+            "onlySingle": true,
+            "focus": true
+        },
         {
             "name": "🤵 Interact on social networks",
             "commands": [
@@ -117,17 +122,17 @@
             "focus": true
         },
         {
-            "name": "🤵👍 Give likes on Facebook",
-            "commands": ["ts-node ./src/index.ts --edit --loop --workflows socialFacebookLikes --projects hejny"],
+            "name": "🤖💭",
+            "commands": ["ts-node ./src/index.ts --edit --loop --workflows socialFacebookLikes --projects %"],
             "onlySingle": true,
             "focus": true
         },
         {
-          "name": "🤵👍 Give likes on LinkedIn",
-          "commands": ["ts-node ./src/index.ts --edit --loop --workflows socialLinkedinLikes --projects hejny"],
-          "onlySingle": true,
-          "focus": true
-      },
+            "name": "🤵👍 Give likes on LinkedIn",
+            "commands": ["ts-node ./src/index.ts --edit --loop --workflows socialLinkedinLikes --projects hejny"],
+            "onlySingle": true,
+            "focus": true
+        },
         {
             "name": "🤵📅 Interested events for Czech.events",
             "commands": ["ts-node ./src/index.ts --edit --workflows socialFacebookEventInterest --projects hejny"],
