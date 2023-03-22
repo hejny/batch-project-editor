@@ -12,7 +12,8 @@ export async function writeAnnotations({
 }: IWorkflowOptions): Promise<WorkflowResult> {
     let commonMetadataText: null | string = null;
 
-    await modifyFiles('**/*.{ts,tsx,js,jsx}', async (filePath, originalFileContent) => {
+    // TODO: !!! Bring back js,jsx files, now temporarly suspended
+    await modifyFiles('**/*.{ts,tsx}', async (filePath, originalFileContent) => {
         // TODO: !!! Omit things like imports, empty comments / annotations , code comments, indentation,...
 
         const fileContentEssentials = originalFileContent
