@@ -1,4 +1,6 @@
+import chalk from 'chalk';
 import { forTime } from 'waitasecond';
+import { WAIT_MULTIPLICATOR } from '../../../config';
 import { findElementHandle } from '../../../utils/puppeteer/findElementHandle';
 import { markElement } from '../../../utils/puppeteer/markElement';
 import { getChatBingPage } from './chatBingPage';
@@ -50,7 +52,11 @@ export async function askChatBing(requestText: string): Promise<string> {
     }
     console.info(`🤖 Clicking on submit`);
     await submitElementHandle.click();
-    await forTime(1000 * 90 /* seconds to response */);
+
+    // TODO: [🏯] Configurable waiting time
+    let secondsToWaitAfterAsk = 60 * WAIT_MULTIPLICATOR;
+    console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterAsk} seconds after asking Chat Bing`));
+    await forTime(1000 * secondsToWaitAfterAsk);
 
     const responseElementHandle = await findElementHandle(chatBingPage, {
         // TODO: Scrape <cib-message><cib-shared/>

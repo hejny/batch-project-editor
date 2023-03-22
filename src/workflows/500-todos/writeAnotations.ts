@@ -45,7 +45,7 @@ export async function writeAnotations({
         // !!!!! requestMultilineText vs requestText
         // !!! Limit requestText to 2000 characters
 
-        const responseText = await askChatBing('requestText');
+        const responseText = await askChatBing(requestText);
 
         fileContent = fileContent.split('@@@').join(responseText.split('\n').join(' '));
 
