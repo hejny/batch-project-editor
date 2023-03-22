@@ -40,6 +40,7 @@ export async function writeAnotations({
 
         const fileEntities: Array<IEntity> = [];
         for (const match of fileContent.matchAll(
+            // TODO: !!!!!!!!!!!!!! Also detect non-export entities
             /(?<anotation>\/\*\*((?!\/\*\*).)*?\*\/\s*)?export(?:\s+declare)?(?:\s+abstract)?(?:\s+async)?(?:\s+(?<type>[a-z]+))(?:\s+(?<name>[a-zA-Z0-9_]+))/gs,
         )) {
             const { type, name, anotation } = match.groups!;
