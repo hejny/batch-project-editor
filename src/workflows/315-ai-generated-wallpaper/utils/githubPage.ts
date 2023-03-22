@@ -6,7 +6,7 @@ import { chromePageContainer } from '../../page';
 
 export function getGithubPage(): puppeteer.Page {
     if (!chromePageContainer.page) {
-        throw new Error(`Github page not initialized`);
+        throw new Error(`Github page not initialized\n In workflow you are using the page you need to add initialize.`);
     }
     return chromePageContainer.page;
 }

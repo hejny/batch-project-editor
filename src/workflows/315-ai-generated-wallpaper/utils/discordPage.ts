@@ -7,7 +7,9 @@ import { DISCORD_MESSAGE_QUERYSELECTOR } from './discordQuerySelectors';
 
 export function getDiscordPage(): puppeteer.Page {
     if (!chromePageContainer.page) {
-        throw new Error(`Discord page not initialized`);
+        throw new Error(
+            `Discord page not initialized\n In workflow you are using the page you need to add initialize.`,
+        );
     }
     return chromePageContainer.page;
 }

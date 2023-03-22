@@ -6,7 +6,7 @@ import { chromePageContainer } from '../../../page';
 
 export async function getAdditionalFacebookPage(): Promise<puppeteer.Page> {
     if (!chromePageContainer.browser) {
-        throw new Error(`Discord page not initialized`);
+        throw new Error(`Facebook page not initialized\n In workflow you are using the page you need to add initialize.`);
     }
 
     return await chromePageContainer.browser.newPage();
@@ -14,7 +14,7 @@ export async function getAdditionalFacebookPage(): Promise<puppeteer.Page> {
 
 export function getFacebookPage(): puppeteer.Page {
     if (!chromePageContainer.page) {
-        throw new Error(`Discord page not initialized`);
+        throw new Error(`Facebook page not initialized`);
     }
     return chromePageContainer.page;
 }

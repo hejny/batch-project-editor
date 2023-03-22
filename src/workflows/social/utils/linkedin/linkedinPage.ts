@@ -6,7 +6,9 @@ import { chromePageContainer } from '../../../page';
 
 export function getLinkedinPage(): puppeteer.Page {
     if (!chromePageContainer.page) {
-        throw new Error(`Discord page not initialized`);
+        throw new Error(
+            `LinkedIn page not initialized\n In workflow you are using the page you need to add initialize.`,
+        );
     }
     return chromePageContainer.page;
 }

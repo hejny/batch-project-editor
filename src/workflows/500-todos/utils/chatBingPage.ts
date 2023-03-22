@@ -6,7 +6,9 @@ import { edgePageContainer } from '../../page';
 
 export function getChatBingPage(): puppeteer.Page {
     if (!edgePageContainer.page) {
-        throw new Error(`Discord page not initialized`);
+        throw new Error(
+            `Chat Bing page not initialized\n In workflow you are using the page you need to add initialize.`,
+        );
     }
     return edgePageContainer.page;
 }
