@@ -57,7 +57,7 @@ export async function prepareFacebookPage() {
     /*
     TODO: Wait for FB ready
     await pageContainer.page.waitForSelector(
-        `.share-box-feed-entry__closed-share-box` /* <- TODO: !!! Unhardcode to config * /,
+        `.share-box-feed-entry__closed-share-box` /* <- !!! Unhardcode to config * /,
         {
             timeout: 1000 * 60 * 15 /* minutes * /,
         },

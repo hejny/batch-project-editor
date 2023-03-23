@@ -4,7 +4,7 @@ import { BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE } from '../../config';
 import { IAggregator, IAggregatorOptions } from '../IAggregator';
 
 interface IGitHoursResult {
-    // TODO: !!! Anotate
+    // !!! Anotate
     outCommitsCount: number;
     allCommitsCount: number;
     leadingCommitsCount: number;
@@ -41,7 +41,7 @@ export class gitHours implements IAggregator<IGitHoursResult> {
 
         const commits = allCommits.filter(({ body }) => !body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE));
 
-        // TODO: !!! Better name for outCommitsCount
+        // !!! Better name for outCommitsCount
         let outCommitsCount = 0;
         let leadingCommitsCount = 0;
         let time = moment.duration({ minutes: 0 });
