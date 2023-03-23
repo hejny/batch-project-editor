@@ -54,9 +54,25 @@ describe(`unwrapAnnotation`, () => {
 
         expect(unwrapAnnotation(source)).toBe(output);
     });
+
+    it(`will unwrap JSDoc annotation`, () => {
+        const source = spaceTrim(`
+            /**
+             * @function
+             * @name myFunction
+             * @description This is my function.
+             */
+        `);
+        const output = spaceTrim(`
+            @function
+            @name myFunction
+            @description This is my function.
+        `);
+
+        expect(unwrapAnnotation(source)).toBe(output);
+    });
 });
 
 /**
- * TODO: Test case for annotation with jsdoc
  * TODO: Test case for corrupted annotation
  */
