@@ -71,6 +71,17 @@ describe(`unwrapAnnotation`, () => {
 
         expect(unwrapAnnotation(source)).toBe(output);
     });
+
+    it(`will throw error for corrupted annotation`, () => {
+        const source = spaceTrim(`
+          /**
+           * @function
+           * @name myFunction
+           * @description This is my function.
+      `);
+
+        expect(() => unwrapAnnotation(source)).toThrowError('Corrupted annotation');
+    });
 });
 
 /**

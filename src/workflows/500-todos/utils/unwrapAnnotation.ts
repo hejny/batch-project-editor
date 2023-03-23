@@ -1,4 +1,4 @@
-import spaceTrim from "spacetrim";
+import spaceTrim from 'spacetrim';
 
 export function unwrapAnnotation(annotation: string): string {
     const lines = annotation.split('\n');
@@ -8,6 +8,9 @@ export function unwrapAnnotation(annotation: string): string {
         if (line.startsWith('*')) {
             output += line.slice(1).trim().replace(/\/$/, '') + '\n';
         }
+    }
+    if (!annotation.trim().endsWith('*/')) {
+        throw new Error('Corrupted annotation');
     }
     return spaceTrim(output);
 }
