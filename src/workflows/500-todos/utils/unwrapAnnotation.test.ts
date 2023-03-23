@@ -21,7 +21,7 @@ describe(`unwrapAnnotation`, () => {
 });
 
 /**
- * TODO: !!! Test case for multi-line annotation
- * TODO: !!! Test case for annotation with jsdoc
- * TODO: !!! Test case for corrupted annotation
+ * TODO: Test case for multi-line annotation
+ * TODO: Test case for annotation with jsdoc
+ * TODO: Test case for corrupted annotation
  */

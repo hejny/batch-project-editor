@@ -35,5 +35,5 @@ export function changeAnnotationOfEntity({
 }
 
 /**
- * TODO: !!!!! Implement by aiTDD
+ * TODO: Implement by aiTDD
  */
