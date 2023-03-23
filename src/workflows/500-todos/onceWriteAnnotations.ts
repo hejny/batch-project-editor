@@ -18,8 +18,17 @@ export async function onceWriteAnnotations({
         // !!!!!! Exclude .test.tsx? files
         // !!!!!! Exclude finished files - There must be at least one @@@ mark
 
-        // TODO: !!! Omit things like imports, empty comments / annotations , code comments, indentation,...
+        if (/\.test.\tsx?$/.test(filePath)) {
+            console.info(`⏩ Skipping file ${filePath} because it is a test`);
+            return null;
+        }
 
+        if (!originalFileContent.includes('@@@')) {
+            console.info(`⏩ Skipping file ${filePath} because it does not includes missing annotation mark @${''}@@`);
+            return null;
+        }
+
+        // TODO: Omit things like imports, empty comments / annotations , code comments, indentation,...
         const fileContentEssentials = originalFileContent
             .split(/^import.*$/gm)
             .join('')
