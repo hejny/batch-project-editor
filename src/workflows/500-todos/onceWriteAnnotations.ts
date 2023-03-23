@@ -60,9 +60,6 @@ export async function onceWriteAnnotations({
             return null;
         }
 
-        // !!!!! requestMultilineText vs requestText
-        // !!! Limit requestText to 2000 characters
-
         let newFileContent = originalFileContent;
 
         const prompt: IPrompt = { requestText, additional: {} };
@@ -87,10 +84,6 @@ export async function onceWriteAnnotations({
                     (responseEntity) => responseEntity.name === fileEntity.name,
                 );
 
-                if (!responseEntity) {
-                    throw new Error(`Missing ${fileEntity.name} in response`);
-                }
-
                 if (!(fileEntity.annotation === '@@@' || fileEntity.annotation === '')) {
                     console.info(
                         `⏩ Skipping entity ${fileEntity.name} because has complete annotation`,
@@ -98,10 +91,20 @@ export async function onceWriteAnnotations({
                     continue;
                 }
 
+                if (!responseEntity) {
+                    console.error({ responseEntity });
+                    throw new Error(`Missing ${fileEntity.name} in response`);
+                }
+
+                if (!responseEntity.annotation) {
+                    console.error({ responseEntity });
+                    throw new Error(`Missing annotation in ${fileEntity.name} from response`);
+                }
+
                 newFileContent = changeAnnotationOfEntity({
                     source: originalFileContent,
                     entityName: fileEntity.name,
-                    annotation: responseEntity.annotation! /* <- TODO: !!! Test if there is a new annotation */,
+                    annotation: responseEntity.annotation,
                 });
             }
 
@@ -161,3 +164,7 @@ interface IPrompt {
     errorMessage?: string;
     additional: Record<string, any>;
 }
+
+/**
+ * TODO: requestMultilineText vs requestText
+ */
