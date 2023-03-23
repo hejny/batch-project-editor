@@ -12,12 +12,10 @@ export async function onceWriteAnnotations({
 }: IWorkflowOptions): Promise<WorkflowResult> {
     let commonMetadataText: null | string = null;
 
-    // TODO: !!! Bring back whore repository not only SRC - but ignore things from .gitignore like config files
-    // TODO: !!! Bring back js,jsx files, now temporarly suspended
-    await modifyFiles('src/**/*.{ts,tsx}', async (filePath, originalFileContent) => {
-        // !!!!!! Exclude .test.tsx? files
-        // !!!!!! Exclude finished files - There must be at least one @@@ mark
+    // TODO: Bring back whore repository not only SRC - but ignore things from .gitignore like config files
+    // TODO: Bring back js,jsx files, now temporarly suspended
 
+    await modifyFiles('src/**/*.{ts,tsx}', async (filePath, originalFileContent) => {
         if (/\.test.\tsx?$/.test(filePath)) {
             console.info(`⏩ Skipping file ${filePath} because it is a test`);
             return null;
