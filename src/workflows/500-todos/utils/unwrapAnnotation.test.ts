@@ -2,7 +2,7 @@ import spaceTrim from 'spacetrim';
 import { unwrapAnnotation } from './unwrapAnnotation';
 
 describe(`unwrapAnnotation`, () => {
-    it(`will unwrap single-line annotation`, () => {
+    it(`will unwrap simple single-line annotation`, () => {
         const source = spaceTrim(`
 
           /**
@@ -15,6 +15,23 @@ describe(`unwrapAnnotation`, () => {
           Hello
 
         `);
+
+        expect(unwrapAnnotation(source)).toBe(output);
+    });
+
+    it(`will unwrap simple different single-line annotation`, () => {
+        const source = spaceTrim(`
+
+        /**
+         * Hello world
+         */
+
+      `);
+        const output = spaceTrim(`
+
+        Hello world
+
+      `);
 
         expect(unwrapAnnotation(source)).toBe(output);
     });
