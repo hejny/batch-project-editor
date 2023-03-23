@@ -7,18 +7,20 @@ interface ITerminal {
     focus: boolean;
 }
 
-export async function terminalsVersion({ commit, modifyJsonFiles }: IWorkflowOptions): Promise<WorkflowResult> {
-    await modifyJsonFiles<{ terminals: ITerminal[] }>('.vscode/terminals.json', (filePath, fileJson) => {
+export async function terminalsVersion({ commit, modifyJsonFile }: IWorkflowOptions): Promise<WorkflowResult> {
+    await modifyJsonFile<{ terminals: ITerminal[] }>('.vscode/terminals.json', (fileJson) => {
+        fileJson = fileJson || { terminals: [] };
+
         function addTerminal(newTerminal: ITerminal) {
-            if (fileJson.terminals.some((existingTerminal) => existingTerminal.name === newTerminal.name)) {
+            if (fileJson!.terminals.some((existingTerminal) => existingTerminal.name === newTerminal.name)) {
                 return;
             }
 
-            if (fileJson.terminals.some((existingTerminal) => existingTerminal.command === newTerminal.command)) {
+            if (fileJson!.terminals.some((existingTerminal) => existingTerminal.command === newTerminal.command)) {
                 return;
             }
 
-            fileJson.terminals.push(newTerminal);
+            fileJson!.terminals.push(newTerminal);
         }
 
         addTerminal({

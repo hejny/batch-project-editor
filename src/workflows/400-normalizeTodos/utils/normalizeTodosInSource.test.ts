@@ -1,32 +1,35 @@
 import spaceTrim from 'spacetrim';
 import { normalizeTodosInSource } from './normalizeTodosInSource';
 
+function code(source: string) {
+    return spaceTrim(source).split('❗').join('!');
+}
 
 describe(`normalizeTodosInSource`, () => {
     it(`will work with important todos`, () => {
-        const source = spaceTrim(`
+        const source = code(`
 
-            // !!! This need to be done
-
-          `);
-        const output = spaceTrim(`
-
-            // TODO: !!! This need to be done
+            // ❗❗❗ This need to be done
 
           `);
+        const output = code(`
+
+          // TODO: ❗❗❗ This need to be done
+
+        `);
 
         expect(normalizeTodosInSource(source)).toBe(output);
     });
 
     it(`is tolerant about the colon ":"`, () => {
-        const source = spaceTrim(`
+        const source = code(`
 
-          // TODO !!! This need to be done
+          // TODO ❗❗❗ This need to be done
 
         `);
-        const output = spaceTrim(`
+        const output = code(`
 
-          // TODO: !!! This need to be done
+          // TODO: ❗❗❗ This need to be done
 
         `);
 
@@ -34,14 +37,14 @@ describe(`normalizeTodosInSource`, () => {
     });
 
     it(`is tolerant about the case`, () => {
-        const source = spaceTrim(`
+        const source = code(`
 
-          // todo: !!! This need to be done
+          // todo: ❗❗❗ This need to be done
 
         `);
-        const output = spaceTrim(`
+        const output = code(`
 
-          // TODO: !!! This need to be done
+          // TODO: ❗❗❗ This need to be done
 
         `);
 
@@ -49,14 +52,14 @@ describe(`normalizeTodosInSource`, () => {
     });
 
     it(`will work with super-important todos`, () => {
-        const source = spaceTrim(`
+        const source = code(`
 
-          // !!!! This need to be done
+          // ❗❗❗❗ This need to be done
 
         `);
-        const output = spaceTrim(`
+        const output = code(`
 
-          // TODO: !!!! This need to be done
+          // TODO: ❗❗❗❗ This need to be done
 
         `);
 
@@ -64,21 +67,20 @@ describe(`normalizeTodosInSource`, () => {
     });
 
     it(`will work with super-super-super-important todos`, () => {
-        const source = spaceTrim(`
+        const source = code(`
 
-        // !!!!!! This need to be done
+        // ❗❗❗❗❗❗ This need to be done
 
       `);
-        const output = spaceTrim(`
+        const output = code(`
 
-        // TODO: !!!!!! This need to be done
+        // TODO: ❗❗❗❗❗❗ This need to be done
 
       `);
 
         expect(normalizeTodosInSource(source)).toBe(output);
     });
 });
-
 
 /**
  * @batch-project-editor ignore to not change TODOs here by itself

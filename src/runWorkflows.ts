@@ -245,7 +245,7 @@ export async function runWorkflows({
                             console.info(`💾 Changing file ${filePath}`);
                             await mkdir(dirname(filePath), {
                                 recursive: true,
-                            }); /* <- TODO: !!!! Make dir also on other places before try to writeFile which might not exist */
+                            });
                             await writeFile(filePath, newFileContent);
                         } else {
                             console.info(`⬜ Keeping file ${filePath}`);
@@ -288,7 +288,7 @@ export async function runWorkflows({
                         return content;
                     }
 
-                    // !!!!!! DRY refactor by AI
+                    // TODO: DRY all modify files utils - maybe refactor by AI
 
                     async function modifyJsonFile<T extends object>(
                         filePath: string,
