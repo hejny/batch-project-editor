@@ -1,3 +1,5 @@
+import { unwrapAnnotation } from './unwrapAnnotation';
+
 /**
  * All possible entity types in javascript and typescript
  */
@@ -25,7 +27,7 @@ export function parseEntities(content: string): Array<IEntity> {
         const { type, name, annotation } = match.groups!;
 
         const tags = Array.from(annotation?.match(/@([a-zA-Z0-9_-]+)*/g) || []);
-        entities.push({ type: type as IEntityType, name, annotation, tags });
+        entities.push({ type: type as IEntityType, name, annotation: unwrapAnnotation(annotation), tags });
     }
 
     return entities;
