@@ -22,23 +22,41 @@ describe(`unwrapAnnotation`, () => {
     it(`will unwrap simple different single-line annotation`, () => {
         const source = spaceTrim(`
 
-        /**
-         * Hello world
-         */
+          /**
+           * Hello world
+           */
 
-      `);
+        `);
         const output = spaceTrim(`
 
-        Hello world
+          Hello world
 
-      `);
+        `);
+
+        expect(unwrapAnnotation(source)).toBe(output);
+    });
+
+    it(`will unwrap multi-line annotation`, () => {
+        const source = spaceTrim(`
+
+          /**
+           * Hello
+           * World
+           */
+
+        `);
+        const output = spaceTrim(`
+
+          Hello
+          World
+
+        `);
 
         expect(unwrapAnnotation(source)).toBe(output);
     });
 });
 
 /**
- * TODO: Test case for multi-line annotation
  * TODO: Test case for annotation with jsdoc
  * TODO: Test case for corrupted annotation
  */
