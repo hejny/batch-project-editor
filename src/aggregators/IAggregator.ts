@@ -8,7 +8,7 @@ export interface IAggregatorOptions {
     projectName: string;
     packageJson: PackageJson;
     readmeContent: string;
-    mainBranch: 'master' | 'main';
+    mainBranch: 'main' | string;
 
     execCommandOnProject(command: string): Promise<string>;
     readFile(filePath: string): Promise<string>;

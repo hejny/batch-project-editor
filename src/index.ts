@@ -32,6 +32,22 @@ async function main() {
     program.option('--aggregate', `Run aggregation; Note: Specify --aggregators and --projects`, false);
     program.option('--loop', `Should be looping after few minutes during --edit`, false);
     program.option(
+        '--branch',
+        spaceTrim(`
+            What branch to checkout during --edit
+            Note: "main" also covers "master"
+        `),
+        'main',
+    );
+    program.option(
+        '--allow-dirty-cwd',
+        spaceTrim(`
+            Allow uncommited  changes during --edit
+            Warning: Theese changes will be included in whatever commit BPE makes
+        `),
+        false,
+    );
+    program.option(
         '--workflows <workflows>',
         spaceTrim(`
             Which of thr workflows to run during --edit
@@ -63,6 +79,8 @@ async function main() {
         workflows,
         projects,
         aggregator,
+        branch,
+        allowDirtyCwd,
     } = program.opts();
 
     //----------------------------------
@@ -152,6 +170,8 @@ async function main() {
             isLooping: loop,
             runWorkflows: patternToRegExp(...workflows.split(',')),
             runProjects: patternToRegExp(...projects.split(',')),
+            branch,
+            isDirtyCwdAllowed: allowDirtyCwd,
         });
     }
     //----------------------------------

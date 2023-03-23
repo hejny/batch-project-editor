@@ -1,6 +1,8 @@
 import chalk from 'chalk';
+import { spawn } from 'child_process';
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
+import { locateVSCode } from 'locate-app';
 import { basename, dirname, join } from 'path';
 import { PackageJson, Promisable } from 'type-fest';
 import { forTime } from 'waitasecond';
@@ -15,6 +17,7 @@ import { isFileExisting } from './utils/isFileExisting';
 import { isProjectArchived } from './utils/isProjectArchived';
 import { isProjectFork } from './utils/isProjectFork';
 import { isWorkingTreeClean } from './utils/isWorkingTreeClean';
+import { isWorkingTreeInMergeProgress } from './utils/isWorkingTreeInMergeProgress';
 import { colorSquare } from './utils/random/getColorSquare';
 import { WorkflowResult } from './workflows/IWorkflow';
 import { WORKFLOWS } from './workflows/workflows';
@@ -23,9 +26,17 @@ interface IRunWorkflowsOptions {
     isLooping: boolean;
     runWorkflows: RegExp;
     runProjects: RegExp;
+    isDirtyCwdAllowed: boolean;
+    branch: string;
 }
 
-export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRunWorkflowsOptions) {
+export async function runWorkflows({
+    isLooping,
+    runWorkflows,
+    runProjects,
+    isDirtyCwdAllowed,
+    branch: expectedBranch,
+}: IRunWorkflowsOptions) {
     // TODO: DRY Interfaces
     const errors: {
         tag: string;
@@ -110,16 +121,14 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         cwd: projectPath,
                     });
 
-                    /*
-                    !!!!!! Uncomment OR make flag --unclean (Better name) ...
-
-
                     if (!(await isWorkingTreeClean(projectPath))) {
                         if (!(await isWorkingTreeInMergeProgress(projectPath))) {
-                            // TODO: Probbably use standard skippingOfBecause
-                            console.info(
-                                chalk.gray(`⏩ Skipping project ${projectTitle} because working dir is not clean`),
-                            );
+                            if (!isDirtyCwdAllowed) {
+                                // TODO: Probbably use standard skippingOfBecause
+                                console.info(
+                                    chalk.gray(`⏩ Skipping project ${projectTitle} because working dir is not clean`),
+                                );
+                            }
                         } else {
                             console.info(
                                 chalk.gray(
@@ -132,12 +141,10 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         continue;
                     }
 
-                    */
-
-                    /*
-                    !!!!!! Uncomment OR make flag --branch ...
-
-                    if (currentBranch !== 'main' && currentBranch !== 'master') {
+                    if (currentBranch === 'master') {
+                        currentBranch = 'main';
+                    } /* not else */
+                    if (currentBranch !== expectedBranch) {
                         console.info(`👉 Switching from branch ${currentBranch} to main.`);
 
                         const result = await execCommand({
@@ -161,8 +168,8 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                             `⏩ Skipping project ${projectTitle} because current branch is not main (or master) but ${currentBranch}.`,
                         );
                         continue;
-                        * /
-                    }*/
+                        */
+                    }
 
                     console.info(`🔼 Running workflow ${workflowName} for project ${projectTitle}`);
 
@@ -385,7 +392,7 @@ export async function runWorkflows({ isLooping, runWorkflows, runProjects }: IRu
                         projectOrg,
                         packageJson,
                         readmeContent,
-                        mainBranch: currentBranch as 'main' | 'master',
+                        mainBranch: currentBranch,
                         execCommandOnProject,
                         readFile: readProjectFile,
                         modifyFile,
