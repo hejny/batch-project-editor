@@ -196,9 +196,23 @@ describe(`changeAnnotationOfEntity`, () => {
 
         expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
     });
+
+    it(`will throw error when entity is not found in source`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+
+          const bar = 'baz';
+
+        `);
+        const annotation = 'Hello';
+
+        expect(() => changeAnnotationOfEntity({ source, entityName, annotation })).toThrowError(
+            `Entity '${entityName}' not found in source`,
+        );
+    });
 });
 
 /**
- * TODO: Test case for mame nismatch, throws error when entity is not found in given `source`
+ *
  * TODO: Simmilar test case for empty `source`
  */

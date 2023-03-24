@@ -9,7 +9,7 @@ export function changeAnnotationOfEntity({ source, entityName, annotation }: Cha
     const entityLineIndex = lines.findIndex((line) =>
         entityTypes.some((type) => line.includes(`${type} ${entityName}`)),
     );
-    if (entityLineIndex === -1) return source;
+    if (entityLineIndex === -1) throw new Error(`Entity '${entityName}' not found in source`);
 
     const annotationLines = annotation.split('\n').map((line) => ` * ${line}`);
     annotationLines.unshift('/**');
