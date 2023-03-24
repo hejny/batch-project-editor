@@ -157,7 +157,7 @@ export async function runWorkflows({
                             // TODO: Probbably use standard skippingOfBecause
                             console.info(
                                 chalk.gray(
-                                    `⏩ Skipping project ${projectTitle} because can not switch to ${currentBranch} branch`,
+                                    `⏩ Skipping project ${projectTitle} because can not switch to "${expectedBranch}" but "${currentBranch}" branch`,
                                 ),
                             );
                             continue;
