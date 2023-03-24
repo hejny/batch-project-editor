@@ -148,7 +148,7 @@ export async function runWorkflows({
                         console.info(`👉 Switching from branch "${currentBranch}" to "${expectedBranch}".`);
 
                         const result = await execCommand({
-                            command: `git switch "${expectedBranch}"`,
+                            command: `git switch ${expectedBranch}`,
                             cwd: projectPath,
                             crashOnError: false,
                         });
