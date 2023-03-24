@@ -13,8 +13,8 @@ interface IAskChatBingOptions {
 
 interface IAskChatBingReturn {
     responseText: string;
+    responseHtml: string;
     metadataText: string;
-    additional: Record<string, string>;
 }
 
 export async function askChatBing(options: IAskChatBingOptions): Promise<IAskChatBingReturn> {
@@ -101,8 +101,8 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
 
     return {
         responseText,
+        responseHtml,
         metadataText: `@generator ChatBing from ${new Date().toDateString()}` /* <- TODO: Better */,
-        additional: { responseHtml },
     };
 }
 

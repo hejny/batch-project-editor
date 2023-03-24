@@ -1,8 +1,8 @@
 import spaceTrim from 'spacetrim';
+import { forEver } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { askChatBing } from './utils/askChatBing';
+import { askChatMock } from './utils/askChatMock';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
-import { prepareChatBingPage } from './utils/chatBingPage';
 import { parseEntities } from './utils/parseEntities';
 
 export async function onceWriteAnnotations({
@@ -15,29 +15,40 @@ export async function onceWriteAnnotations({
     // TODO: Bring back whore repository not only SRC - but ignore things from .gitignore like config files
     // TODO: Bring back js,jsx files, now temporarly suspended
 
-    await modifyFiles('src/**/*.{ts,tsx}', async (filePath, originalFileContent) => {
-        if (/\.test.\tsx?$/.test(filePath)) {
-            console.info(`⏩ Skipping file ${filePath} because it is a test`);
+    await modifyFiles(
+        //'src/**/*.{ts,tsx}'
+        'src/**/TakeChain.ts',
+        async (filePath, originalFileContent) => {
+            /*
+        if (basename(filePath) === 'TakeChain.ts') {
             return null;
         }
+        */
 
-        if (!originalFileContent.includes('@@@')) {
-            console.info(`⏩ Skipping file ${filePath} because it does not includes missing annotation mark @${''}@@`);
-            return null;
-        }
+            if (/\.test.\tsx?$/.test(filePath)) {
+                console.info(`⏩ Skipping file ${filePath} because it is a test`);
+                return null;
+            }
 
-        // TODO: Omit things like imports, empty comments / annotations , code comments, indentation,...
-        const fileContentEssentials = originalFileContent
-            .split(/^import.*$/gm)
-            .join('')
-            .split(/^\s*\/\/.*$/gm)
-            .join('')
-            .split(/\/\*.*?\*\//gs)
-            .join('')
-            .split('export ')
-            .join('');
+            if (!originalFileContent.includes('@@@')) {
+                console.info(
+                    `⏩ Skipping file ${filePath} because it does not includes missing annotation mark @${''}@@`,
+                );
+                return null;
+            }
 
-        /*
+            // TODO: Omit things like imports, empty comments / annotations , code comments, indentation,...
+            const fileContentEssentials = originalFileContent
+                .split(/^import.*$/gm)
+                .join('')
+                .split(/^\s*\/\/.*$/gm)
+                .join('')
+                .split(/\/\*.*?\*\//gs)
+                .join('')
+                .split('export ')
+                .join('');
+
+            /*
         console.log('---------------------------------');
         console.log(fileContent);
         console.log('---------------------------------');
@@ -45,87 +56,87 @@ export async function onceWriteAnnotations({
         console.log('---------------------------------');
         */
 
-        const requestText = spaceTrim(
-            (block) => `
+            const requestText = spaceTrim(
+                (block) => `
 
                 Write JSDoc annotations for TypeScript code:
 
                 ${block(fileContentEssentials)}
 
              `,
-        );
-
-        if (requestText.length > 1000) {
-            console.info(`⏩ Skipping file ${filePath} because requestText to chat is too long`);
-            return null;
-        }
-
-        let newFileContent = originalFileContent;
-
-        const prompt: IPrompt = { requestText, additional: {} };
-
-        try {
-            const { responseText, metadataText, additional } = await askChatBing({ requestText });
-            prompt.responseText = responseText;
-            prompt.metadataText = metadataText;
-            prompt.additional = { ...prompt.additional, ...additional };
-
-            console.info({ responseText, metadataText, additional });
-
-            const fileEntities = parseEntities(originalFileContent);
-            const responseEntities = parseEntities(responseText);
-
-            console.info({ fileEntities, responseEntities });
-
-            prompt.additional = { ...prompt.additional, fileEntities, responseEntities };
-
-            for (const fileEntity of fileEntities) {
-                const responseEntity = responseEntities.find(
-                    (responseEntity) => responseEntity.name === fileEntity.name,
-                );
-
-                if (!(fileEntity.annotation === '@@@' || fileEntity.annotation === '')) {
-                    console.info(
-                        `⏩ Skipping entity ${fileEntity.name} because has complete annotation`,
-                    ) /* <- TODO: !!! Check if skipping only in right cases */;
-                    continue;
-                }
-
-                if (!responseEntity) {
-                    console.error({ responseEntity });
-                    throw new Error(`Missing ${fileEntity.name} in response`);
-                }
-
-                if (!responseEntity.annotation) {
-                    console.error({ responseEntity });
-                    throw new Error(`Missing annotation in ${fileEntity.name} from response`);
-                }
-
-                newFileContent = changeAnnotationOfEntity({
-                    source: originalFileContent,
-                    entityName: fileEntity.name,
-                    annotation: responseEntity.annotation,
-                });
-            }
-
-            console.info({ originalFileContent, newFileContent });
-        } catch (error) {
-            if (!(error instanceof Error)) {
-                throw error;
-            }
-
-            prompt.errorMessage = error.message;
-        } finally {
-            await modifyJsonFile<Array<{ requestText: string }>>(
-                `documents/ai/prompts.json` /* <- TODO: Best place for the file + probbably use YAML */,
-                (prompts) => [...(prompts || []), prompt],
             );
-        }
 
-        if (prompt.metadataText && commonMetadataText !== null && commonMetadataText !== prompt.metadataText) {
-            throw new Error(
-                spaceTrim(
-                    (block) => `
+            if (requestText.length > 1000) {
+                console.info(`⏩ Skipping file ${filePath} because requestText to chat is too long`);
+                return null;
+            }
+
+            let newFileContent = originalFileContent;
+
+            const prompt: IPrompt = { requestText, additional: {} };
+
+            try {
+                const { responseText, responseHtml, metadataText } = await askChatMock({ requestText });
+                prompt.responseText = responseText;
+                prompt.metadataText = metadataText;
+                prompt.additional = { ...prompt.additional, responseHtml };
+
+                console.info({ responseText, metadataText });
+
+                const fileEntities = parseEntities(originalFileContent);
+                const responseEntities = parseEntities(responseText);
+
+                console.info({ fileEntities, responseEntities });
+
+                prompt.additional = { ...prompt.additional, fileEntities, responseEntities };
+
+                for (const fileEntity of fileEntities) {
+                    const responseEntity = responseEntities.find(
+                        (responseEntity) => responseEntity.name === fileEntity.name,
+                    );
+
+                    if (!(fileEntity.annotation === '@@@' || fileEntity.annotation === '')) {
+                        console.info(
+                            `⏩ Skipping entity ${fileEntity.name} because has complete annotation`,
+                        ) /* <- TODO: !!! Check if skipping only in right cases */;
+                        continue;
+                    }
+
+                    if (!responseEntity) {
+                        console.error({ responseEntity });
+                        throw new Error(`Missing ${fileEntity.name} in response`);
+                    }
+
+                    if (!responseEntity.annotation) {
+                        console.error({ responseEntity });
+                        throw new Error(`Missing annotation in ${fileEntity.name} from response`);
+                    }
+
+                    newFileContent = changeAnnotationOfEntity({
+                        source: originalFileContent,
+                        entityName: fileEntity.name,
+                        annotation: responseEntity.annotation,
+                    });
+                }
+
+                console.info({ originalFileContent, newFileContent });
+            } catch (error) {
+                if (!(error instanceof Error)) {
+                    throw error;
+                }
+
+                prompt.errorMessage = error.message;
+            } finally {
+                await modifyJsonFile<Array<{ requestText: string }>>(
+                    `documents/ai/prompts.json` /* <- TODO: Best place for the file + probbably use YAML */,
+                    (prompts) => [...(prompts || []), prompt],
+                );
+            }
+
+            if (prompt.metadataText && commonMetadataText !== null && commonMetadataText !== prompt.metadataText) {
+                throw new Error(
+                    spaceTrim(
+                        (block) => `
 
                     There is a difference between commonMetadataText and metadataText:
 
@@ -136,15 +147,18 @@ export async function onceWriteAnnotations({
                     ${block(prompt.metadataText!)}
 
                 `,
-                ),
-            );
-        } else if (prompt.metadataText) {
-            commonMetadataText = prompt.metadataText;
-        }
+                    ),
+                );
+            } else if (prompt.metadataText) {
+                commonMetadataText = prompt.metadataText;
+            }
 
-        // TODO: Format/prettify the source code HERE (or in some next workflow)
-        return newFileContent;
-    });
+            // TODO: Format/prettify the source code HERE (or in some next workflow)
+            return newFileContent;
+        },
+    );
+
+    await forEver();
 
     return commit(
         spaceTrim(`
@@ -155,7 +169,7 @@ export async function onceWriteAnnotations({
     );
 }
 
-onceWriteAnnotations.initialize = prepareChatBingPage;
+// onceWriteAnnotations.initialize = prepareChatBingPage;
 
 interface IPrompt {
     requestText: string;

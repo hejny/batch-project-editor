@@ -243,14 +243,14 @@ export async function runWorkflows({
                         if (newFileContent === null) {
                             // TODO: Maybe here delete the file if exists
                             console.info(`⬜ Keeping file ${filePath}`);
-                        } else if (newFileContent !== oldFileContent) {
+                        } else if (newFileContent === oldFileContent) {
+                            console.info(`🟪 Keeping file ${filePath}`);
+                        } else {
                             console.info(`💾 Changing file ${filePath}`);
                             await mkdir(dirname(filePath), {
                                 recursive: true,
                             });
                             await writeFile(filePath, newFileContent);
-                        } else {
-                            console.info(`⬜ Keeping file ${filePath}`);
                         }
                     }
 
@@ -275,11 +275,11 @@ export async function runWorkflows({
 
                             if (newFileContent === null) {
                                 console.info(`⬜ Keeping file ${filePath}`);
-                            } else if (fileContent !== newFileContent) {
+                            } else if (fileContent === newFileContent) {
+                                console.info(`🟪 Keeping file ${filePath}`);
+                            } else {
                                 console.info(`💾 Changing file ${filePath}`);
                                 await writeFile(filePath, newFileContent);
-                            } else {
-                                console.info(`⬜ Keeping file ${filePath}`);
                             }
                         }
                     }
