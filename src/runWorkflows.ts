@@ -156,7 +156,9 @@ export async function runWorkflows({
                         if (!result.includes(`Switched to branch 'main'`)) {
                             // TODO: Probbably use standard skippingOfBecause
                             console.info(
-                                chalk.gray(`⏩ Skipping project ${projectTitle} because can not switch to main branch`),
+                                chalk.gray(
+                                    `⏩ Skipping project ${projectTitle} because can not switch to ${currentBranch} branch`,
+                                ),
                             );
                             continue;
                         }
