@@ -32,7 +32,7 @@ async function main() {
     program.option('--aggregate', `Run aggregation; Note: Specify --aggregators and --projects`, false);
     program.option('--loop', `Should be looping after few minutes during --edit`, false);
     program.option(
-        '--branch',
+        '--branch <branch>',
         spaceTrim(`
             What branch to checkout during --edit
             Note: "main" also covers "master"
