@@ -104,10 +104,37 @@ describe(`changeAnnotationOfEntity`, () => {
 
         expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
     });
+
+    it(`will change annotation in simple file to include JSDoc tags`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+
+          const foo = 'bar';
+
+        `);
+        const annotation = spaceTrim(`
+
+          This is a function.
+          @param {string} bar - A string param.
+          @return {string} This is the result of the function.
+
+        `);
+        const output = spaceTrim(`
+
+          /**
+           * This is a function.
+           * @param {string} bar - A string param.
+           * @return {string} This is the result of the function.
+           */
+          const foo = 'bar';
+
+        `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
 });
 
 /**
- * TODO: Test case for multiline annotation which contains jsdoc tags
  * TODO: Test case for more entities per file, the mentioned entity (in `entityName`) will be annotated, others should be ignored
  * TODO: Test case for confusing things inside an entity like /* mark etc.
  * TODO: Test case for mame nismatch, throws error when entity is not found in given `source`
