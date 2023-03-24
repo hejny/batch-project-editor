@@ -176,6 +176,26 @@ describe(`changeAnnotationOfEntity`, () => {
 
         expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
     });
+
+    it(`will change annotation with potentially confusing characters`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+
+          const foo = 'bar';
+
+        `);
+        const annotation = 'Hello /* world */';
+        const output = spaceTrim(`
+
+          /**
+           * Hello /* world */
+           */
+          const foo = 'bar';
+
+        `); /* <- TODO: This is not an ideal solution, nested annotation should be escaped, fix this test+implementation */
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
 });
 
 /**
