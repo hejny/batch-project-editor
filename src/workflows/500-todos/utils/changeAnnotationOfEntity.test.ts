@@ -156,10 +156,29 @@ describe(`changeAnnotationOfEntity`, () => {
 
         expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
     });
+
+    it(`will change annotation of entity with potentially confusing characters`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+
+          const foo = '/* mark */';
+
+        `);
+        const annotation = 'Hello';
+        const output = spaceTrim(`
+
+          /**
+           * Hello
+           */
+          const foo = '/* mark */';
+
+        `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
 });
 
 /**
- * TODO: Test case for confusing things inside an entity like /* mark etc.
  * TODO: Test case for mame nismatch, throws error when entity is not found in given `source`
  * TODO: Simmilar test case for empty `source`
  */
