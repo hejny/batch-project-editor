@@ -1,39 +1,49 @@
-import spaceTrim from 'spacetrim';
-
-/**
- * Changes the annotation of a given entity in the source code.
- *
- * @param {Object} options - An options object.
- * @param {string} options.source - The source code to modify.
- * @param {string} options.entityName - The name of the entity to modify.
- * @param {string} options.annotation - The new annotation to add to the entity.
- * @returns {string} - The modified source code with the new annotation added.
- * @throws {Error} - If the entity to modify cannot be found in the source code.
- */
-export function changeAnnotationOfEntity({
-    source,
-    entityName,
-    annotation,
-}: {
+interface ChangeAnnotationOfEntityParams {
     source: string;
     entityName: string;
     annotation: string;
-}): string {
-    return spaceTrim(
-        (block) => `
-
-            ${block(source)}
-
-            /*
-            In ${entityName} there is new annotation:
-                ${annotation}
-
-            */
-
-        `,
-    );
 }
-
-/**
- * TODO: Implement by aiTDD
- */
+export function changeAnnotationOfEntity({ source, entityName, annotation }: ChangeAnnotationOfEntityParams): string {
+    const lines = source.split('\n');
+    const outputLines: string[] = [];
+    let foundEntity = false;
+    let inExistingAnnotation = false;
+    let existingAnnotation = '';
+    for (const line of lines) {
+        if (line.includes(`/**`) && !foundEntity) {
+            inExistingAnnotation = true;
+            continue;
+        }
+        if (inExistingAnnotation) {
+            if (line.includes(`*/`)) {
+                inExistingAnnotation = false;
+            } else {
+                existingAnnotation += line.trim().slice(2).trim();
+            }
+            continue;
+        }
+        if (
+            line.includes(`const ${entityName} =`) ||
+            line.includes(`let ${entityName} =`) ||
+            line.includes(`var ${entityName} =`) ||
+            line.includes(`function ${entityName}(`) ||
+            line.includes(`async function ${entityName}(`) ||
+            line.includes(`class ${entityName}`) ||
+            line.includes(`interface ${entityName}`) ||
+            line.includes(`type ${entityName} =`)
+        ) {
+            if (existingAnnotation !== annotation) {
+                outputLines.push(`/**`);
+                outputLines.push(` * ${annotation}`);
+                outputLines.push(` */`);
+                existingAnnotation = '';
+            }
+            foundEntity = true;
+        }
+        outputLines.push(line);
+    }
+    if (!foundEntity) {
+        throw new Error(`Could not find entity with name: ${entityName}`);
+    }
+    return outputLines.join('\n');
+}

@@ -3,11 +3,13 @@ import { changeAnnotationOfEntity } from './changeAnnotationOfEntity';
 
 describe(`changeAnnotationOfEntity`, () => {
     it(`will change annotation in simple file`, () => {
+        const entityName = 'foo';
         const source = spaceTrim(`
 
           const foo = 'bar';
 
         `);
+        const annotation = 'Hello';
         const output = spaceTrim(`
 
           /**
@@ -17,19 +19,97 @@ describe(`changeAnnotationOfEntity`, () => {
 
         `);
 
-        expect(changeAnnotationOfEntity({ source, entityName: 'foo', annotation: 'Hello' })).toBe(output);
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
+
+    it(`will replace existing annotation in simple file`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+            /**
+             * Old annotation
+             */
+            const foo = 'bar';
+        `);
+        const annotation = 'New annotation';
+        const output = spaceTrim(`
+            /**
+             * New annotation
+             */
+            const foo = 'bar';
+        `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
+
+    it(`will replace existing annotation in simple file`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+            /**
+             * Same annotation
+             */
+            const foo = 'bar';
+        `);
+        const annotation = 'Same annotation';
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(source);
+    });
+
+    it.each([
+        ['const', 'const foo = "bar";'],
+        ['let', 'let foo = "bar";'],
+        ['var', 'var foo = "bar";'],
+        ['function', 'function foo() {}'],
+        ['async function', 'async function foo() {}'],
+        ['class', 'class foo {}'],
+        ['interface', 'interface foo {}'],
+        ['type', 'type foo = {};'],
+    ])(`will add annotation to %s entity`, (_, entityDeclaration) => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+          ${entityDeclaration}
+      `);
+        const annotation = 'Hello';
+        const output = spaceTrim(`
+            /**
+             * Hello
+             */
+            ${entityDeclaration}
+        `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
+
+    it(`will change annotation in simple file`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+
+          const foo = 'bar';
+
+        `);
+        const annotation = spaceTrim(`
+            Hello
+            This is a
+            Multiline annotation
+        `);
+        const output = spaceTrim(`
+
+          /**
+           * Hello
+           * This is a
+           * Multiline annotation
+           */
+          const foo = 'bar';
+
+        `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
     });
 });
 
 /**
- * TODO: Test case for negative case
- * TODO: Test the case when there is already an annotation in given `source`, it should be replaced by the new one
- * TODO: Test the case when there is already an annotation in given `source` BUT this annotation is same as the new one - nothing should happen
- * TODO: Test case for more entity types, like annotating a functions, async functions, exported entities, classes, interfaces, types,... (all possible typescript/javascript things)
- * TODO: Test case for multiline annotation
  * TODO: Test case for multiline annotation which contains jsdoc tags
  * TODO: Test case for more entities per file, the mentioned entity (in `entityName`) will be annotated, others should be ignored
  * TODO: Test case for confusing things inside an entity like /* mark etc.
- * TODO: Test case for mame nismatch, throws error when entity (by `entityName`) is not found in given `source`
+ * TODO: Test case for mame nismatch, throws error when entity is not found in given `source`
  * TODO: Simmilar test case for empty `source`
  */
