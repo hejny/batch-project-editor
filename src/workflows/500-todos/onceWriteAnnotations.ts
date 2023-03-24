@@ -48,7 +48,7 @@ export async function onceWriteAnnotations({
         const requestText = spaceTrim(
             (block) => `
 
-                Write jsdoc annotation for source code in TypeScript:
+                Write JSDoc annotations for TypeScript code:
 
                 ${block(fileContentEssentials)}
 
@@ -170,4 +170,3 @@ interface IPrompt {
  * Note: To run start:
  *     > ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects collboard --allow-dirty-cwd --branch feature/complete-annotations
  */
-
