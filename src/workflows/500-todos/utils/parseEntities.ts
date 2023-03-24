@@ -27,6 +27,10 @@ export function parseEntities(content: string): Array<IEntity> {
         const { type, name, annotation } = match.groups!;
 
         const tags = Array.from(annotation?.match(/@([a-zA-Z0-9_-]+)*/g) || []);
+
+        if (!['const', 'let', 'var', 'class', 'interface', 'type', 'function','enum'].includes(type)) {
+            continue;
+        }
         entities.push({ type: type as IEntityType, name, annotation: unwrapAnnotation(annotation), tags });
     }
 

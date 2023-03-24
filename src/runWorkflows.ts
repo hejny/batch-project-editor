@@ -128,6 +128,8 @@ export async function runWorkflows({
                                 console.info(
                                     chalk.gray(`⏩ Skipping project ${projectTitle} because working dir is not clean`),
                                 );
+
+                                continue;
                             }
                         } else {
                             console.info(
@@ -137,8 +139,9 @@ export async function runWorkflows({
                             );
 
                             spawn(await locateVSCode(), [projectPath]);
+
+                            continue;
                         }
-                        continue;
                     }
 
                     if (currentBranch === 'master') {

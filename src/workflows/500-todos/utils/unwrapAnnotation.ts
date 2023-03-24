@@ -1,6 +1,9 @@
 import spaceTrim from 'spacetrim';
 
-export function unwrapAnnotation(annotation: string): string {
+export function unwrapAnnotation(annotation?: string): string {
+    if (!annotation) {
+        return '';
+    }
     const lines = annotation.split('\n');
     let output = '';
     for (let i = 0; i < lines.length; i++) {

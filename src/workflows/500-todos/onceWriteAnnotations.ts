@@ -1,8 +1,8 @@
 import spaceTrim from 'spacetrim';
-import { forEver } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { askChatMock } from './utils/askChatMock';
+import { askChatBing } from './utils/askChatBing';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
+import { prepareChatBingPage } from './utils/chatBingPage';
 import { parseEntities } from './utils/parseEntities';
 
 export async function onceWriteAnnotations({
@@ -16,14 +16,14 @@ export async function onceWriteAnnotations({
     // TODO: Bring back js,jsx files, now temporarly suspended
 
     await modifyFiles(
-        //'src/**/*.{ts,tsx}'
-        'src/**/TakeChain.ts',
+        'src/**/*.{ts,tsx}',
+        //'src/**/TakeChain.ts',
         async (filePath, originalFileContent) => {
             /*
-        if (basename(filePath) === 'TakeChain.ts') {
-            return null;
-        }
-        */
+            if (basename(filePath) === 'TakeChain.ts') {
+                return null;
+            }
+            */
 
             if (/\.test.\tsx?$/.test(filePath)) {
                 console.info(`⏩ Skipping file ${filePath} because it is a test`);
@@ -36,6 +36,8 @@ export async function onceWriteAnnotations({
                 );
                 return null;
             }
+
+            console.info(`👾 Completing annotations for ${filePath}`);
 
             // TODO: Omit things like imports, empty comments / annotations , code comments, indentation,...
             const fileContentEssentials = originalFileContent
@@ -73,10 +75,10 @@ export async function onceWriteAnnotations({
 
             let newFileContent = originalFileContent;
 
-            const prompt: IPrompt = { requestText, additional: {} };
+            const prompt: IPrompt = { requestText, additional: {}, errors: [] };
 
             try {
-                const { responseText, responseHtml, metadataText } = await askChatMock({ requestText });
+                const { responseText, responseHtml, metadataText } = await askChatBing({ requestText });
                 prompt.responseText = responseText;
                 prompt.metadataText = metadataText;
                 prompt.additional = { ...prompt.additional, responseHtml };
@@ -91,32 +93,44 @@ export async function onceWriteAnnotations({
                 prompt.additional = { ...prompt.additional, fileEntities, responseEntities };
 
                 for (const fileEntity of fileEntities) {
-                    const responseEntity = responseEntities.find(
-                        (responseEntity) => responseEntity.name === fileEntity.name,
-                    );
+                    try {
+                        console.info(`👾👾 Taking annotation of ${fileEntity.type} ${fileEntity.name}`);
 
-                    if (!(fileEntity.annotation === '@@@' || fileEntity.annotation === '')) {
-                        console.info(
-                            `⏩ Skipping entity ${fileEntity.name} because has complete annotation`,
-                        ) /* <- TODO: !!! Check if skipping only in right cases */;
-                        continue;
+                        const responseEntity = responseEntities.find(
+                            (responseEntity) => responseEntity.name === fileEntity.name,
+                        );
+
+                        if (!(fileEntity.annotation?.includes('@@@') || fileEntity.annotation === '')) {
+                            console.info(
+                                `⏩ Skipping entity ${fileEntity.name} because has complete annotation`,
+                            ) /* <- TODO: !!! Check if skipping only in right cases */;
+                            continue;
+                        }
+
+                        if (!responseEntity) {
+                            console.error({ responseEntity });
+                            throw new Error(`Missing ${fileEntity.name} in response`);
+                        }
+
+                        if (!responseEntity.annotation) {
+                            console.error({ responseEntity });
+                            throw new Error(`Missing annotation for ${fileEntity.name} from response`);
+                        }
+
+                        console.info(`👾👾👾👾👾👾👾👾`);
+                        newFileContent = changeAnnotationOfEntity({
+                            source: newFileContent,
+                            entityName: fileEntity.name,
+                            annotation: responseEntity.annotation,
+                        });
+                    } catch (error) {
+                        if (!(error instanceof Error)) {
+                            throw error;
+                        }
+
+                        console.error(error);
+                        prompt.errors.push(error.message);
                     }
-
-                    if (!responseEntity) {
-                        console.error({ responseEntity });
-                        throw new Error(`Missing ${fileEntity.name} in response`);
-                    }
-
-                    if (!responseEntity.annotation) {
-                        console.error({ responseEntity });
-                        throw new Error(`Missing annotation in ${fileEntity.name} from response`);
-                    }
-
-                    newFileContent = changeAnnotationOfEntity({
-                        source: originalFileContent,
-                        entityName: fileEntity.name,
-                        annotation: responseEntity.annotation,
-                    });
                 }
 
                 console.info({ originalFileContent, newFileContent });
@@ -125,7 +139,8 @@ export async function onceWriteAnnotations({
                     throw error;
                 }
 
-                prompt.errorMessage = error.message;
+                console.error(error);
+                prompt.errors.push(error.message);
             } finally {
                 await modifyJsonFile<Array<{ requestText: string }>>(
                     `documents/ai/prompts.json` /* <- TODO: Best place for the file + probbably use YAML */,
@@ -158,7 +173,7 @@ export async function onceWriteAnnotations({
         },
     );
 
-    await forEver();
+    // await forEver();
 
     return commit(
         spaceTrim(`
@@ -169,13 +184,13 @@ export async function onceWriteAnnotations({
     );
 }
 
-// onceWriteAnnotations.initialize = prepareChatBingPage;
+onceWriteAnnotations.initialize = prepareChatBingPage;
 
 interface IPrompt {
     requestText: string;
     responseText?: string;
     metadataText?: string;
-    errorMessage?: string;
+    errors: Array<string>;
     additional: Record<string, any>;
 }
 

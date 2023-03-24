@@ -26,7 +26,7 @@ interface ChangeAnnotationOfEntityParams {
  */
 export function changeAnnotationOfEntity({ source, entityName, annotation }: ChangeAnnotationOfEntityParams): string {
     const lines = source.split('\n');
-    const entityTypes = ['const', 'let', 'var', 'class', 'interface', 'type', 'function'];
+    const entityTypes = ['const', 'let', 'var', 'class', 'interface', 'type', 'function', 'enum'];
     const entityLineIndex = lines.findIndex((line) =>
         entityTypes.some((type) => line.includes(`${type} ${entityName}`)),
     );
