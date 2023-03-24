@@ -132,7 +132,7 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
             projectOrg,
             packageJson,
             readmeContent,
-            mainBranch: currentBranch as 'main' | 'master',
+            currentBranch: currentBranch as 'main' | 'master',
             execCommandOnProject,
             readFile: readProjectFile,
         });

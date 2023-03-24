@@ -145,15 +145,15 @@ export async function runWorkflows({
                         currentBranch = 'main';
                     } /* not else */
                     if (currentBranch !== expectedBranch) {
-                        console.info(`👉 Switching from branch ${currentBranch} to main.`);
+                        console.info(`👉 Switching from branch "${currentBranch}" to "${expectedBranch}".`);
 
                         const result = await execCommand({
-                            command: 'git switch main',
+                            command: `git switch "${expectedBranch}"`,
                             cwd: projectPath,
                             crashOnError: false,
                         });
 
-                        if (!result.includes(`Switched to branch 'main'`)) {
+                        if (!result.includes(`Switched to branch '${expectedBranch}'`)) {
                             // TODO: Probbably use standard skippingOfBecause
                             console.info(
                                 chalk.gray(
@@ -163,7 +163,7 @@ export async function runWorkflows({
                             continue;
                         }
 
-                        currentBranch = 'main';
+                        currentBranch = expectedBranch;
 
                         /*
                         console.info(
@@ -394,7 +394,7 @@ export async function runWorkflows({
                         projectOrg,
                         packageJson,
                         readmeContent,
-                        mainBranch: currentBranch,
+                        currentBranch,
                         execCommandOnProject,
                         readFile: readProjectFile,
                         modifyFile,

@@ -10,7 +10,7 @@ export async function partners({
     projectOrg,
     modifyFile,
     commit,
-    mainBranch,
+    currentBranch,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     const organizations = pickPartnersForProject({
         projectUrl,

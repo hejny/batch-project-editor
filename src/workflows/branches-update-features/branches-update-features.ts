@@ -12,10 +12,12 @@ export async function branchesUpdateFeatures({
     projectTitle,
     commit,
     execCommandOnProject,
-    mainBranch,
+    currentBranch,
     projectPath,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    const remoteBranches = (await execCommandOnProject(`git branch --remotes --no-merged ${mainBranch}`)).split('\n');
+    const remoteBranches = (await execCommandOnProject(`git branch --remotes --no-merged ${currentBranch}`)).split(
+        '\n',
+    );
     const fetureRemoteBranches = remoteBranches.filter((branch) => /(origin\/)?feature\//.test(branch));
     const recentFeatureRemoteBranches = await fetureRemoteBranches.filterAsync(async (branch) => {
         const lastCommitDateRaw = (await execCommandOnProject(`git log -1 --format=%ct ${branch}`)).trim();
@@ -43,7 +45,7 @@ export async function branchesUpdateFeatures({
         await execCommandOnProject('git pull');
         isChanged =
             isChanged ||
-            (await execCommandOnProject(`git merge ${mainBranch}`)
+            (await execCommandOnProject(`git merge ${currentBranch}`)
                 .catch((error) => {
                     return error.message as string;
                 })
@@ -65,7 +67,7 @@ export async function branchesUpdateFeatures({
                 }));
 
         // Note: Here is already merge commit commited, now just push it.
-        // return commit(`🍴 Update ${localBranch} with latest commit from ${mainBranch}`);
+        // return commit(`🍴 Update ${localBranch} with latest commit from ${currentBranch}`);
 
         await execCommandOnProject(`git push --quiet`);
     }

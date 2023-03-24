@@ -36,7 +36,7 @@ export interface IWorkflowOptions {
     projectName: string;
     packageJson: PackageJson;
     readmeContent: string;
-    mainBranch: 'main' | string;
+    currentBranch: 'main' | string;
 
     execCommandOnProject(command: string): Promise<string>;
     readFile(filePath: string): Promise<string>;

@@ -16,7 +16,7 @@ export async function badges({
     projectOrg,
     modifyFile,
     commit,
-    mainBranch,
+    currentBranch,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     const badges: Array<{
         title: string;
@@ -27,7 +27,7 @@ export async function badges({
     badges.push({
         title: `License of ${projectTitle}`,
         imageSrc: `https://img.shields.io/github/license/${projectOrg}/${projectName}.svg?style=flat`,
-        href: `https://github.com/${projectOrg}/${projectName}/blob/${mainBranch}/LICENSE`,
+        href: `https://github.com/${projectOrg}/${projectName}/blob/${currentBranch}/LICENSE`,
     });
 
     const published = await findPackagePublished({ projectOrg, projectName });

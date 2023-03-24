@@ -8,7 +8,7 @@ export async function contributing({
     projectOrg,
     modifyFiles,
     commit,
-    mainBranch,
+    currentBranch,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     const contributingMarkdown =
         projectOrg !== 'hejny'
