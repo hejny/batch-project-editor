@@ -132,10 +132,33 @@ describe(`changeAnnotationOfEntity`, () => {
 
         expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
     });
+
+    it(`will change annotation of specific entity in file with multiple entities`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+
+          const foo = 'bar';
+          let baz = 42;
+          var qux = true;
+
+        `);
+        const annotation = 'Hello';
+        const output = spaceTrim(`
+
+          /**
+           * Hello
+           */
+          const foo = 'bar';
+          let baz = 42;
+          var qux = true;
+
+        `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
 });
 
 /**
- * TODO: Test case for more entities per file, the mentioned entity (in `entityName`) will be annotated, others should be ignored
  * TODO: Test case for confusing things inside an entity like /* mark etc.
  * TODO: Test case for mame nismatch, throws error when entity is not found in given `source`
  * TODO: Simmilar test case for empty `source`
