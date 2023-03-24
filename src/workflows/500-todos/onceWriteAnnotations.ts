@@ -167,4 +167,7 @@ interface IPrompt {
 
 /**
  * TODO: requestMultilineText vs requestText
+ * Note: To run start:
+ *     > ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects collboard --allow-dirty-cwd --branch feature/complete-annotations/index.ts
  */
+
