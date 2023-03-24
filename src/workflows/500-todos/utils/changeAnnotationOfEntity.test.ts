@@ -210,9 +210,14 @@ describe(`changeAnnotationOfEntity`, () => {
             `Entity '${entityName}' not found in source`,
         );
     });
-});
 
-/**
- *
- * TODO: Simmilar test case for empty `source`
- */
+    it(`will throw error when source is empty`, () => {
+        const entityName = 'foo';
+        const source = '';
+        const annotation = 'Hello';
+
+        expect(() => changeAnnotationOfEntity({ source, entityName, annotation })).toThrowError(
+            `Entity '${entityName}' not found in source`,
+        );
+    });
+});
