@@ -195,6 +195,10 @@ interface IPrompt {
 }
 
 /**
+ * TODO: !!!!!!! Skip (or try next repply) if there is just jsdoc without a description
+ * TODO: !!!!!!! Await forPlay
+ * TODO: !!!!!!! Mark AI written annotations (+ Add somewhere metadata, maybe as markdown file)
+ * TODO: !!!!!!! Skip already AI written
  * TODO: requestMultilineText vs requestText
  * Note: To run start:
  *     > ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects collboard --allow-dirty-cwd --branch feature/complete-annotations

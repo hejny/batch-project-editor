@@ -263,10 +263,12 @@ export async function runWorkflows({
                     ): Promise<void> {
                         // TODO: DRY modifyFile, modifyFiles
 
-                        for (const filePath of await glob(join(projectPath, globPattern), {
-                            dot: true,
-                            ignore: ['**/node_modules/**', '**/.git/**'],
-                        })) {
+                        for (const filePath of (
+                            await glob(join(projectPath, globPattern), {
+                                dot: true,
+                                ignore: ['**/node_modules/**', '**/.git/**'],
+                            })
+                        ).reverse(/* !!!!!!!!!!!!!!!!! Remove reverse */)) {
                             const fileContent = await readFile(filePath, 'utf8');
 
                             if (fileContent.includes(`@batch-project-editor ignore`)) {
