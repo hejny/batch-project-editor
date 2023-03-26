@@ -1,6 +1,6 @@
 import { normalizeWhitespaces } from 'n12';
 import { IWorkflowOptions } from '../../IWorkflow';
-import { IAskChatBingOptions, IAskChatBingReturn, askChatBing } from './askChatBing';
+import { askChatBing, IAskChatBingOptions, IAskChatBingReturn } from './askChatBing';
 
 const PROMPTS_CACHE_PATH = `documents/ai/prompts.json`;
 
