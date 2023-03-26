@@ -1,5 +1,5 @@
 import spaceTrim from 'spacetrim';
-import { AUTOMATED_ANNOTATION_MARK } from '../onceWriteAnnotations';
+import { AUTOMATED_ANNOTATION_MARK } from '../../../config';
 
 export function normalizeAnnotation(annotation: string): string {
     const newLines = [];

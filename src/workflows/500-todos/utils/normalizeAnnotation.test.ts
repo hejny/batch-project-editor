@@ -19,7 +19,7 @@ describe(`unwrapAnnotation`, () => {
         ).toBe(
             spaceTrim(`
 
-                    Hello․
+                    Hello⁘
                     Hello
 
             `),
@@ -40,7 +40,7 @@ describe(`unwrapAnnotation`, () => {
         ).toBe(
             spaceTrim(`
 
-                  Hello․
+                  Hello⁘
                   Hello
 
                   @returns {JSX.Element} A JSX element representing a square.

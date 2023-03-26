@@ -1,12 +1,11 @@
 import spaceTrim from 'spacetrim';
 import { forEver } from 'waitasecond';
+import { AUTOMATED_ANNOTATION_MARK } from '../../config';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { askChatBingCached } from './utils/askChatBingCached';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
 import { normalizeAnnotation } from './utils/normalizeAnnotation';
 import { parseEntities } from './utils/parseEntities';
-
-export const AUTOMATED_ANNOTATION_MARK = '․';
 
 export async function onceWriteAnnotations({
     modifyFiles,
@@ -38,6 +37,11 @@ export async function onceWriteAnnotations({
                 console.info(
                     `⏩ Skipping file ${filePath} because it does not includes missing annotation mark @${''}@@`,
                 );
+                return null;
+            }
+
+            if (originalFileContent.includes(AUTOMATED_ANNOTATION_MARK)) {
+                console.info(`⏩ Skipping entity ${filePath} because it includes AUTOMATED_ANNOTATION_MARK`);
                 return null;
             }
 

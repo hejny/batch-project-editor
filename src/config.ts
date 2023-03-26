@@ -33,6 +33,8 @@ export const githubOctokit = new Octokit({ auth: GITHUB_TOKEN });
 
 export const WAIT_MULTIPLICATOR = 1;
 
+export const AUTOMATED_ANNOTATION_MARK = '⁘';
+
 //
 
 /**
