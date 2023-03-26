@@ -19,7 +19,7 @@ export async function askChatBingCached(
         return prompt;
     }
 
-    /**/
+    /*/
     console.info({ requestText });
     throw new Error(`Request not cached`);
     /**/

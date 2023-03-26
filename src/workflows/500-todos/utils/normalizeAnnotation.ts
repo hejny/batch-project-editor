@@ -17,6 +17,7 @@ export function normalizeAnnotation(annotation: string): string {
 
         if (!isMarkAdded) {
             if (isJsdoc) {
+                console.info('annotation:', annotation);
                 throw new Error(`Annotation must contain at least one line of human text`);
             }
 

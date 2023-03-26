@@ -1,11 +1,11 @@
 import spaceTrim from 'spacetrim';
-import { forEver } from 'waitasecond';
 import { AUTOMATED_ANNOTATION_MARK } from '../../config';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { askChatBingCached } from './utils/askChatBingCached';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
 import { normalizeAnnotation } from './utils/normalizeAnnotation';
 import { parseEntities } from './utils/parseEntities';
+import { prepareChatBingPage } from './utils/chatBingPage';
 
 export async function onceWriteAnnotations({
     modifyFiles,
@@ -90,12 +90,12 @@ export async function onceWriteAnnotations({
 
             metadataTexts.add(metadataText);
 
-            console.info({ responseText });
+            // console.info({ responseText });
 
             const fileEntities = parseEntities(originalFileContent);
             const responseEntities = parseEntities(responseText);
 
-            console.info({ fileEntities, responseEntities });
+            // console.info({ fileEntities, responseEntities });
 
             for (const fileEntity of fileEntities) {
                 try {
@@ -137,14 +137,14 @@ export async function onceWriteAnnotations({
                 }
             }
 
-            console.info({ originalFileContent, newFileContent });
+            // console.info({ originalFileContent, newFileContent });
 
             // TODO: Format/prettify the source code HERE (or in some next workflow)
             return newFileContent;
         },
     );
 
-    await forEver();
+    // await forEver();
 
     return commit(
         spaceTrim(
@@ -157,7 +157,7 @@ export async function onceWriteAnnotations({
     );
 }
 
-// onceWriteAnnotations.initialize = prepareChatBingPage;
+onceWriteAnnotations.initialize = prepareChatBingPage;
 
 interface IPrompt {
     requestText: string;
