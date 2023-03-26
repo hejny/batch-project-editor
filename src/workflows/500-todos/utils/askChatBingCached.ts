@@ -13,7 +13,7 @@ export async function askChatBingCached(
     const { readJsonFile, modifyJsonFile } = utils;
 
     const prompts = await readJsonFile<Array<IPrompt>>(PROMPTS_CACHE_PATH);
-    const prompt = prompts.find((prompt) => prompt.requestText === requestText);
+    const prompt = prompts && prompts.find((prompt) => prompt.requestText === requestText);
 
     if (prompt) {
         return prompt;

@@ -12,7 +12,7 @@ export async function description({
     commit,
     skippingBecauseOf,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    const description = (await readFile('README.md')).match(DESCRIPTION_IN_README)?.groups?.description;
+    const description = ((await readFile('README.md')) || '').match(DESCRIPTION_IN_README)?.groups?.description;
 
     if (!description) {
         return skippingBecauseOf(`no description extracted from README.md`);

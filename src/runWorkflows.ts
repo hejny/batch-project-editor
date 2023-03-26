@@ -4,6 +4,7 @@ import { mkdir, readFile, writeFile } from 'fs/promises';
 import glob from 'glob-promise';
 import { locateVSCode } from 'locate-app';
 import { basename, dirname, join } from 'path';
+import spaceTrim from 'spacetrim';
 import { PackageJson, Promisable } from 'type-fest';
 import { forTime } from 'waitasecond';
 import { LOOP_INTERVAL } from './config';
@@ -287,14 +288,24 @@ export async function runWorkflows({
                         }
                     }
 
-                    async function readProjectFile(filePath: string): Promise<string> {
-                        let content = await readFile(join(projectPath, filePath), 'utf8');
+                    async function readProjectFile(filePath: string): Promise<string | null> {
+                        filePath = join(projectPath, filePath);
+
+                        if (await isFileExisting(filePath)) {
+                            return null;
+                        }
+                        let content = await readFile(filePath, 'utf8');
                         content = content.split(`\r\n`).join('\n');
                         return content;
                     }
 
-                    async function readJsonFile<T extends object>(filePath: string): Promise<T> {
-                        return JSON.parse(await readProjectFile(filePath));
+                    async function readJsonFile<T extends object>(filePath: string): Promise<T | null> {
+                        const fileContent = await readProjectFile(filePath);
+
+                        if (fileContent === null || spaceTrim(fileContent) === '') {
+                            return null;
+                        }
+                        return JSON.parse(fileContent);
                     }
 
                     // TODO: DRY all modify files utils - maybe refactor by AI

@@ -39,8 +39,8 @@ export interface IWorkflowOptions {
     currentBranch: 'main' | string;
 
     execCommandOnProject(command: string): Promise<string>;
-    readFile(filePath: string): Promise<string>;
-    readJsonFile<T extends object>(filePath: string): Promise<T>;
+    readFile(filePath: string): Promise<string | null>;
+    readJsonFile<T extends object>(filePath: string): Promise<T | null>;
     modifyFile(
         filePath: string,
         fileModifier: (fileContent: string | null) => Promisable<string | null>,
