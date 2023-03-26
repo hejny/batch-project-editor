@@ -263,12 +263,10 @@ export async function runWorkflows({
                     ): Promise<void> {
                         // TODO: DRY modifyFile, modifyFiles
 
-                        for (const filePath of (
-                            await glob(join(projectPath, globPattern), {
-                                dot: true,
-                                ignore: ['**/node_modules/**', '**/.git/**'],
-                            })
-                        ).reverse(/* !!!!!!!!!!!!!!!!! Remove reverse */)) {
+                        for (const filePath of await glob(join(projectPath, globPattern), {
+                            dot: true,
+                            ignore: ['**/node_modules/**', '**/.git/**'],
+                        }) /* TODO: .reverse( Reverse + shuffle as CLI flag ) */) {
                             const fileContent = await readFile(filePath, 'utf8');
 
                             if (fileContent.includes(`@batch-project-editor ignore`)) {
@@ -293,6 +291,10 @@ export async function runWorkflows({
                         let content = await readFile(join(projectPath, filePath), 'utf8');
                         content = content.split(`\r\n`).join('\n');
                         return content;
+                    }
+
+                    async function readJsonFile<T extends object>(filePath: string): Promise<T> {
+                        return JSON.parse(await readProjectFile(filePath));
                     }
 
                     // TODO: DRY all modify files utils - maybe refactor by AI
@@ -402,6 +404,7 @@ export async function runWorkflows({
                         currentBranch,
                         execCommandOnProject,
                         readFile: readProjectFile,
+                        readJsonFile,
                         modifyFile,
                         modifyFiles,
                         modifyJsonFile,

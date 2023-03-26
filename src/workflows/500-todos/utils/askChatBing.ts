@@ -5,13 +5,13 @@ import { findLastElementHandle } from '../../../utils/puppeteer/findLastElementH
 import { markElement } from '../../../utils/puppeteer/markElement';
 import { getChatBingPage } from './chatBingPage';
 
-interface IAskChatBingOptions {
+export interface IAskChatBingOptions {
     requestText: string;
 
     // TODO: Precise vs Normal vs Creative here
 }
 
-interface IAskChatBingReturn {
+export interface IAskChatBingReturn {
     responseText: string;
     responseHtml: string;
     metadataText: string;
@@ -102,7 +102,7 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
     return {
         responseText,
         responseHtml,
-        metadataText: `@generator ChatBing from ${new Date().toDateString()}` /* <- TODO: Better */,
+        metadataText: `@generator ChatBing from ${new Date().toDateString()}`, // <- TODO: More info about the chat thread, GPT version, date,...,
     };
 }
 

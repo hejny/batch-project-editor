@@ -40,6 +40,7 @@ export interface IWorkflowOptions {
 
     execCommandOnProject(command: string): Promise<string>;
     readFile(filePath: string): Promise<string>;
+    readJsonFile<T extends object>(filePath: string): Promise<T>;
     modifyFile(
         filePath: string,
         fileModifier: (fileContent: string | null) => Promisable<string | null>,
@@ -68,5 +69,6 @@ export interface IWorkflow {
 }
 
 /**
+ * TODO: !!! Rename to IWorkflowUtils
  * TODO: [🥗] There should be 2 different returns: skippingBecauseOf VS notingChangedBecauseOf
  */
