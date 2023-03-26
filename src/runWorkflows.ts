@@ -291,7 +291,7 @@ export async function runWorkflows({
                     async function readProjectFile(filePath: string): Promise<string | null> {
                         filePath = join(projectPath, filePath);
 
-                        if (await isFileExisting(filePath)) {
+                        if (!(await isFileExisting(filePath))) {
                             return null;
                         }
                         let content = await readFile(filePath, 'utf8');
