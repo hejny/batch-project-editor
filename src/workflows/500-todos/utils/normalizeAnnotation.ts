@@ -20,8 +20,8 @@ export function normalizeAnnotation(annotation: string): string {
                 throw new Error(`Annotation must contain at least one line of human text`);
             }
 
-            line.replace(/\.$/, '');
-            line += AUTOMATED_ANNOTATION_MARK;
+            line = line.replace(/\.$/, '');
+            line += ' ' + AUTOMATED_ANNOTATION_MARK;
 
             isMarkAdded = true;
         }

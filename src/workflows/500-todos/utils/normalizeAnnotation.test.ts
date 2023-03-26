@@ -3,7 +3,7 @@ import { normalizeAnnotation } from './normalizeAnnotation';
 
 describe(`unwrapAnnotation`, () => {
     it(`will work with single message`, () => {
-        expect(normalizeAnnotation(spaceTrim(`Hello`))).toBe(spaceTrim(`Hello․`));
+        expect(normalizeAnnotation(spaceTrim(`Hello`))).toBe(spaceTrim(`Hello ⁘`));
     });
 
     it(`will work with multiline message`, () => {
@@ -19,7 +19,27 @@ describe(`unwrapAnnotation`, () => {
         ).toBe(
             spaceTrim(`
 
-                    Hello⁘
+                    Hello ⁘
+                    Hello
+
+            `),
+        );
+    });
+
+    it(`will work with multiline message with dot`, () => {
+        expect(
+            normalizeAnnotation(
+                spaceTrim(`
+
+                    Hello
+                    Hello
+
+                `),
+            ),
+        ).toBe(
+            spaceTrim(`
+
+                    Hello ⁘
                     Hello
 
             `),
@@ -40,7 +60,7 @@ describe(`unwrapAnnotation`, () => {
         ).toBe(
             spaceTrim(`
 
-                  Hello⁘
+                  Hello ⁘
                   Hello
 
                   @returns {JSX.Element} A JSX element representing a square.
