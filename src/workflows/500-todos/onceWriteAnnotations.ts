@@ -3,8 +3,10 @@ import { forEver } from 'waitasecond';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { askChatBingCached } from './utils/askChatBingCached';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
-import { prepareChatBingPage } from './utils/chatBingPage';
+import { normalizeAnnotation } from './utils/normalizeAnnotation';
 import { parseEntities } from './utils/parseEntities';
+
+export const AUTOMATED_ANNOTATION_MARK = '․';
 
 export async function onceWriteAnnotations({
     modifyFiles,
@@ -120,7 +122,7 @@ export async function onceWriteAnnotations({
                     newFileContent = changeAnnotationOfEntity({
                         source: newFileContent,
                         entityName: fileEntity.name,
-                        annotation: responseEntity.annotation,
+                        annotation: normalizeAnnotation(responseEntity.annotation),
                     });
                 } catch (error) {
                     if (!(error instanceof Error)) {
@@ -151,7 +153,7 @@ export async function onceWriteAnnotations({
     );
 }
 
-onceWriteAnnotations.initialize = prepareChatBingPage;
+// onceWriteAnnotations.initialize = prepareChatBingPage;
 
 interface IPrompt {
     requestText: string;
