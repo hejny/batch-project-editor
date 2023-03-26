@@ -24,11 +24,14 @@ export async function askChatBingCached(
     throw new Error(`Request not cached`);
     /**/
 
-    const response = await askChatBing(options);
+    const { responseText, responseHtml, metadataText } = await askChatBing(options);
 
-    await modifyJsonFile<Array<IPrompt>>(PROMPTS_CACHE_PATH, (prompts) => [...(prompts || ([] as any)), prompt]);
+    await modifyJsonFile<Array<IPrompt>>(PROMPTS_CACHE_PATH, (prompts) => [
+        ...(prompts || ([] as any)),
+        { requestText, responseText, responseHtml, metadataText },
+    ]);
 
-    return response;
+    return { responseText, responseHtml, metadataText };
 }
 
 /**
