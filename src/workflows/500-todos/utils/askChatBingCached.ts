@@ -1,3 +1,4 @@
+import { normalizeWhitespaces } from 'n12';
 import { IWorkflowOptions } from '../../IWorkflow';
 import { IAskChatBingOptions, IAskChatBingReturn, askChatBing } from './askChatBing';
 
@@ -13,7 +14,9 @@ export async function askChatBingCached(
     const { readJsonFile, modifyJsonFile } = utils;
 
     const prompts = await readJsonFile<Array<IPrompt>>(PROMPTS_CACHE_PATH);
-    const prompt = prompts && prompts.find((prompt) => prompt.requestText === requestText);
+    const prompt =
+        prompts &&
+        prompts.find((prompt) => normalizeWhitespaces(prompt.requestText) === normalizeWhitespaces(requestText));
 
     if (prompt) {
         return prompt;
