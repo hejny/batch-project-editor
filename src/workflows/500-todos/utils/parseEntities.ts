@@ -1,3 +1,4 @@
+import { removeComments } from './removeComments';
 import { unwrapAnnotation } from './unwrapAnnotation';
 
 /**
@@ -20,6 +21,8 @@ export interface IEntity {
  * Parse all entities in the given (file) content
  */
 export function parseEntities(content: string): Array<IEntity> {
+    content = removeComments(content);
+
     const entities: Array<IEntity> = [];
     for (const match of content.matchAll(
         /(?<annotation>\/\*\*((?!\/\*\*).)*?\*\/\s*)?(?:\s+export)?(?:\s+declare)?(?:\s+abstract)?(?:\s+async)?(?:\s+(?<type>[a-z]+))(?:\s+(?<name>[a-zA-Z0-9_]+))/gs,

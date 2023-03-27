@@ -167,7 +167,7 @@ export async function onceWriteAnnotations({
     );
 }
 
-// onceWriteAnnotations.initialize = prepareChatBingPage;
+onceWriteAnnotations.initialize = prepareChatBingPage;
 
 interface IPrompt {
     requestText: string;

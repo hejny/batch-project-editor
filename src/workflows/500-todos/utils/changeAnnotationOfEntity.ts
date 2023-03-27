@@ -28,6 +28,7 @@ export function changeAnnotationOfEntity(options: ChangeAnnotationOfEntityParams
     const { source, entityName, annotation } = options;
 
     if (annotation.includes('*/')) {
+        // TODO: Maybe use here removeComments
         throw new Error(`Annotation can not contain comments`);
     }
 
