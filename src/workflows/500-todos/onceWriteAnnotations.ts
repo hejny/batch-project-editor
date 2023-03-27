@@ -138,6 +138,7 @@ export async function onceWriteAnnotations({
                         throw error;
                     }
 
+                    // !!!! Regenerate the annotation here if error occures here - analyze which error are the problem
                     console.error(chalk.yellow('⚠ ' + error.message));
                 }
             }
