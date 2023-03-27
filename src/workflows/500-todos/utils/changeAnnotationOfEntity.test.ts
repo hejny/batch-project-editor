@@ -30,6 +30,28 @@ describe(`changeAnnotationOfEntity`, () => {
              */
             const foo = 'bar';
         `);
+
+        const annotation = 'New annotation';
+        const output = spaceTrim(`
+            /**
+             * New annotation
+             */
+            const foo = 'bar';
+        `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
+
+    it(`will replace existing annotation with jsdoc in simple file`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+            /**
+             * Old annotation
+             * ${``}
+             * @interface IAttributeCommon
+             */
+            const foo = 'bar';
+        `);
         const annotation = 'New annotation';
         const output = spaceTrim(`
             /**
@@ -88,6 +110,7 @@ describe(`changeAnnotationOfEntity`, () => {
         `);
         const annotation = spaceTrim(`
             Hello
+
             This is a
             Multiline annotation
         `);
@@ -95,6 +118,7 @@ describe(`changeAnnotationOfEntity`, () => {
 
           /**
            * Hello
+           * ${``}
            * This is a
            * Multiline annotation
            */
@@ -150,6 +174,49 @@ describe(`changeAnnotationOfEntity`, () => {
            */
           const foo = 'bar';
           let baz = 42;
+          var qux = true;
+
+        `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
+
+    it(`will change annotation of specific entity in file with multiple annotated entities`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+
+          /**
+           * Old foo
+           */
+          const foo = 'bar';
+
+          /**
+           * Old baz
+           */
+          let baz = 42;
+
+          /**
+           * Old qux
+           */
+          var qux = true;
+
+        `);
+        const annotation = 'New foo';
+        const output = spaceTrim(`
+
+          /**
+           * New foo
+           */
+          const foo = 'bar';
+
+          /**
+           * Old baz
+           */
+          let baz = 42;
+
+          /**
+           * Old qux
+           */
           var qux = true;
 
         `);
@@ -270,8 +337,9 @@ describe(`changeAnnotationOfEntity`, () => {
 
           /**
            * Common properties for all attributes ⁘
-           *${` `}
+           * ${``}
            * @interface IAttributeCommon
+           * ${``}
            */
           interface IAttributeCommon {
             name: string_attribute;
@@ -279,6 +347,7 @@ describe(`changeAnnotationOfEntity`, () => {
           }
 
         `);
+
         const annotation = spaceTrim(`
 
           Common properties for all attributes ⁘
@@ -290,7 +359,7 @@ describe(`changeAnnotationOfEntity`, () => {
 
           /**
            * Common properties for all attributes ⁘
-           *${` `}
+           * ${``}
            * @interface IAttributeCommon
            */
           interface IAttributeCommon {

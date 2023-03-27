@@ -35,7 +35,7 @@ export function changeAnnotationOfEntity(options: ChangeAnnotationOfEntityParams
     const lines = source.split('\n');
     const entityTypes = ['const', 'let', 'var', 'class', 'interface', 'type', 'function', 'enum'];
     const entityLineIndex = lines.findIndex((line) =>
-        entityTypes.some((type) => line.includes(`${type} ${entityName}`)),
+        entityTypes.some((type) => new RegExp(`(\\s|^)${type}\\s+${entityName}`).test(line)),
     );
     if (entityLineIndex === -1) throw new Error(`Entity '${entityName}' not found in source`);
 
