@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import spaceTrim from 'spacetrim';
 import { AUTOMATED_ANNOTATION_MARK } from '../../config';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
@@ -5,7 +6,6 @@ import { askChatBingCached } from './utils/askChatBingCached';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
 import { normalizeAnnotation } from './utils/normalizeAnnotation';
 import { parseEntities } from './utils/parseEntities';
-import { prepareChatBingPage } from './utils/chatBingPage';
 
 export async function onceWriteAnnotations({
     modifyFiles,
@@ -114,26 +114,28 @@ export async function onceWriteAnnotations({
 
                     if (!responseEntity) {
                         console.error({ responseEntity });
-                        throw new Error(`Missing ${fileEntity.name} in response`);
+                        throw new Error(`In response there is no  ${fileEntity.type} ${fileEntity.name}`);
                     }
 
                     if (!responseEntity.annotation) {
                         console.error({ responseEntity });
-                        throw new Error(`Missing annotation for ${fileEntity.name} from response`);
+                        throw new Error(`In response there is no annotation for ${fileEntity.type} ${fileEntity.name}`);
                     }
+
+                    const annotation = normalizeAnnotation(responseEntity.annotation);
 
                     console.info(`👾👾👾👾👾👾👾👾`);
                     newFileContent = changeAnnotationOfEntity({
                         source: newFileContent,
                         entityName: fileEntity.name,
-                        annotation: normalizeAnnotation(responseEntity.annotation),
+                        annotation,
                     });
                 } catch (error) {
                     if (!(error instanceof Error)) {
                         throw error;
                     }
 
-                    console.error(error);
+                    console.error(chalk.yellow('⚠ ' + error.message));
                 }
             }
 
@@ -157,7 +159,7 @@ export async function onceWriteAnnotations({
     );
 }
 
-onceWriteAnnotations.initialize = prepareChatBingPage;
+// onceWriteAnnotations.initialize = prepareChatBingPage;
 
 interface IPrompt {
     requestText: string;
