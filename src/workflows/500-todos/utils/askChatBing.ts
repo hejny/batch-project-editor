@@ -5,6 +5,7 @@ import { findElementHandle } from '../../../utils/puppeteer/findElementHandle';
 import { findLastElementHandle } from '../../../utils/puppeteer/findLastElementHandle';
 import { markElement } from '../../../utils/puppeteer/markElement';
 import { getChatBingPage } from './chatBingPage';
+import { normalizeChatRequestText } from './normalizeChatRequestText';
 
 export interface IAskChatBingOptions {
     requestText: string;
@@ -54,10 +55,7 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
     if (searchboxElementHandle === null) {
         throw new Error(`Can not find searchboxElementHandle`);
     }
-    await searchboxElementHandle.type(
-        requestText.split('\n').join(' ').split(/\s+/g).join(' ') /* <- TODO: How to input code + multiline text */,
-        { delay: 100 },
-    );
+    await searchboxElementHandle.type(normalizeChatRequestText(requestText), { delay: 50 });
     await forTime(1000 * 3 /* seconds after write */);
     await forPlay();
 

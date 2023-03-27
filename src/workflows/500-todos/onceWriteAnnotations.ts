@@ -7,7 +7,9 @@ import { askChatBingCached } from './utils/askChatBingCached';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
 import { prepareChatBingPage } from './utils/chatBingPage';
 import { normalizeAnnotation } from './utils/normalizeAnnotation';
+import { normalizeChatRequestText } from './utils/normalizeChatRequestText';
 import { parseEntities } from './utils/parseEntities';
+import { removeComments } from './utils/removeComments';
 
 export async function onceWriteAnnotations({
     modifyFiles,
@@ -47,15 +49,13 @@ export async function onceWriteAnnotations({
             console.info(`👾 Completing annotations for ${filePath}`);
 
             // TODO: Omit things like imports, empty comments / annotations , code comments, indentation,...
-            const fileContentEssentials = originalFileContent
+            let fileContentEssentials = originalFileContent
                 .split(/^import.*$/gm)
-                .join('')
-                .split(/^\s*\/\/.*$/gm)
-                .join('')
-                .split(/\/\*.*?\*\//gs)
                 .join('')
                 .split('export ')
                 .join('');
+
+            fileContentEssentials = removeComments(fileContentEssentials);
 
             /*
             console.log('---------------------------------');
@@ -75,7 +75,7 @@ export async function onceWriteAnnotations({
              `,
             );
 
-            if (requestText.length > 1000) {
+            if (normalizeChatRequestText(requestText).length > 2000) {
                 console.info(`⏩ Skipping file ${filePath} because requestText to chat is too long`);
                 return null;
             }
