@@ -263,4 +263,43 @@ describe(`changeAnnotationOfEntity`, () => {
             `Entity '${entityName}' not found in source`,
         );
     });
+
+    it(`will work on real-world example 1`, () => {
+        const entityName = 'IAttributeCommon';
+        const source = spaceTrim(`
+
+          /**
+           * Common properties for all attributes ⁘
+           *
+           * @interface IAttributeCommon
+           */
+          interface IAttributeCommon {
+            name: string_attribute;
+            // TODO: Is this needed? description?: string;
+          }
+
+        `);
+        const annotation = spaceTrim(`
+
+          Common properties for all attributes ⁘
+
+          @interface IAttributeCommon
+
+        `);
+        const output = spaceTrim(`
+
+          /**
+           * Common properties for all attributes ⁘
+           *
+           * @interface IAttributeCommon
+           */
+          interface IAttributeCommon {
+            name: string_attribute;
+            // TODO: Is this needed? description?: string;
+          }
+
+        `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
 });
