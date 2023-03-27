@@ -41,14 +41,14 @@ export async function aiGeneratedWallpaperLand({
 
         //-------------
         if (false) {
-            // TODO: !!! Temporary blocked because searchMidjourney not working properly
+            // TODO: !! Temporary blocked because searchMidjourney not working properly
             // Note: Test if already landed
             const searchResult = await searchMidjourney({
                 prompt: stripFlagsFromPrompt(imagine),
                 version: IMAGINE_VERSION,
                 isRetrying: false,
             }).catch((error) => {
-                // TODO: !!! What is the best strategy here?
+                // TODO: !! What is the best strategy here?
                 console.error(chalk.gray(error));
                 return [];
             });
@@ -60,7 +60,7 @@ export async function aiGeneratedWallpaperLand({
 
         //-------------
         // Note: Test if already harvested
-        // TODO: !!! Temporary solution - skipping all harvested
+        // TODO: !! Temporary solution - skipping all harvested
         const allWallpapersPaths = await glob(join(wallpaperGalleryPath, '*.png'));
         console.log({ allWallpapersPaths });
         if (allWallpapersPaths.length !== 0) {
@@ -109,7 +109,7 @@ aiGeneratedWallpaperLand.initialize = prepareDiscordPage;
 /**
  * TODO: Why there is duplicite flags
  *     > Background patterns for virtual online whiteboard --version 4 --aspect 3:2 --v 4 --q 2
- * TODO: !!! Re-land if landed loot of time ago with no upscale
+ * TODO: !! Re-land if landed loot of time ago with no upscale
  * TODO: Maybe rename to aiGeneratedWallpaperImagine
  * [🏯] ??? DigitalOcean Referral Badge
  * TODO: LIB spacetrim should be able to modify prototype of string and add there a .spaceTrim() method

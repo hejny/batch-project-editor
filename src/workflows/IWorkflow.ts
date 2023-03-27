@@ -69,6 +69,6 @@ export interface IWorkflow {
 }
 
 /**
- * TODO: !!! Rename to IWorkflowUtils
+ * TODO: !! Rename to IWorkflowUtils
  * TODO: [🥗] There should be 2 different returns: skippingBecauseOf VS notingChangedBecauseOf
  */

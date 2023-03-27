@@ -146,7 +146,7 @@ export const eventSources = [
 ];
 
 /**
- * TODO: !!! Unhardcode - fetch via DB OR API - then the sources will be objects not just strings
+ * TODO: !! Unhardcode - fetch via DB OR API - then the sources will be objects not just strings
  */
 
 /*

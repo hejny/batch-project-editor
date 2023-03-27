@@ -383,7 +383,7 @@ export async function runWorkflows({
 
                     const packageJson = await readFile(join(projectPath, 'package.json'), 'utf8')
                         .then((packageContent) => JSON.parse(packageContent))
-                        // !!! Comment and keep only for testing
+                        // !! Comment and keep only for testing
                         .catch(() => ({
                             // Note: When the package.json is corrupted then pass empty object
                         }));

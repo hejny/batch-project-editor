@@ -11,7 +11,7 @@ export async function onceRevertLastBpeCommit({
 }: IWorkflowOptions): Promise<WorkflowResult> {
     const recentCommits = await gitlog({
         repo: projectPath,
-        number: 1 /* <- TODO: !!! [0] Configurable - how far should I search */,
+        number: 1 /* <- TODO: !! [0] Configurable - how far should I search */,
         // author: "Dom Harrington",
         fields: ['hash', 'subject', 'body'],
     });
@@ -43,7 +43,7 @@ export async function onceRevertLastBpeCommit({
             This reverts commit ${recentCommit.hash}.
         `),
         );
-        // TODO: !!! [0] Allow to make multiple reverts
+        // TODO: !! [0] Allow to make multiple reverts
     }
 
     return skippingBecauseOf(`No recent commit for revent.`);

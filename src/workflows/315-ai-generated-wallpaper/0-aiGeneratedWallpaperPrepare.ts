@@ -27,12 +27,12 @@ export async function aiGeneratedWallpaperPrepare({
 
     let descriptionSentence = packageJson.description;
 
-    // TODO: !!! Following should be in config:
+    // TODO: !! Following should be in config NOT hardcoded:
     descriptionSentence = descriptionSentence.replace(/Collboard(.com)?/i, 'virtual online whiteboard');
     descriptionSentence = descriptionSentence.replace('See all file support modules for Collboard', '');
     descriptionSentence = stripsLinks(descriptionSentence);
 
-    // TODO: !!! Trim descriptionSentence + trim also .
+    // TODO: !! Trim descriptionSentence + trim also .
 
     // const imagineFlagsSeed = `--seed ${randomInteger(1111111, 9999999)}`;
 
@@ -57,7 +57,7 @@ export async function aiGeneratedWallpaperPrepare({
     console.log(chalk.gray(`Creating folder ${wallpaperPath.split('\\').join('/')}`));
     await mkdir(wallpaperPath, { recursive: true });
 
-    await modifyFile(wallpaperImaginePath /* <- !!! This path is absolute BUT should be relative */, () =>
+    await modifyFile(wallpaperImaginePath /* <- !! This path is absolute BUT should be relative */, () =>
         spaceTrim(
             (block) => `
             # Note: Each part is new input for imagine command

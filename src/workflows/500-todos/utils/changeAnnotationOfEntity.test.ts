@@ -157,6 +157,35 @@ describe(`changeAnnotationOfEntity`, () => {
         expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
     });
 
+    /* TODO: [🎆]
+    it(`will change annotation nested entity`, () => {
+        const entityName = 'baz';
+        const source = spaceTrim(`
+
+          interface IFoo {
+            bar: string;
+            baz: string;
+          }
+
+      `);
+        const annotation = 'Hello';
+        const output = spaceTrim(`
+
+          interface IFoo {
+            bar: string;
+
+            /**
+             * Hello
+             * /
+            baz: string;
+          }
+
+      `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
+    */
+
     it(`will change annotation of entity with potentially confusing characters`, () => {
         const entityName = 'foo';
         const source = spaceTrim(`

@@ -46,7 +46,7 @@ export async function prepareLinkedinPage() {
     );
 
     await chromePageContainer.page.waitForSelector(
-        `.share-box-feed-entry__closed-share-box` /* <- !!! Unhardcode to config */,
+        `.share-box-feed-entry__closed-share-box` /* <- !! Unhardcode to config */,
         {
             timeout: 1000 * 60 * 15 /* minutes */,
         },

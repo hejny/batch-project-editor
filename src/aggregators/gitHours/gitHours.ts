@@ -3,13 +3,17 @@ import moment from 'moment';
 import { BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE } from '../../config';
 import { IAggregator, IAggregatorOptions } from '../IAggregator';
 
+/**
+ * @@@
+ */
 interface IGitHoursResult {
-    // !!! Anotate
     outCommitsCount: number;
     allCommitsCount: number;
     leadingCommitsCount: number;
     commitsCount: number;
     time: moment.Duration;
+
+    // <- TODO: [🎆] Would be this automatically annotated even if there is not @ mark for each prop
 }
 
 export class gitHours implements IAggregator<IGitHoursResult> {
@@ -41,7 +45,7 @@ export class gitHours implements IAggregator<IGitHoursResult> {
 
         const commits = allCommits.filter(({ body }) => !body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE));
 
-        // !!! Better name for outCommitsCount
+        // !! Better name for outCommitsCount
         let outCommitsCount = 0;
         let leadingCommitsCount = 0;
         let time = moment.duration({ minutes: 0 });
@@ -56,8 +60,8 @@ export class gitHours implements IAggregator<IGitHoursResult> {
                     currentDate.getTime() > new Date(`2022-12-31`).getTime()
                 )
             ) {
-                // TODO: !!! Time span should be passed as a parameter
-                // TODO: !!! leading times should be before this
+                // TODO: !! Time span should be passed as a parameter
+                // TODO: !! leading times should be before this
                 outCommitsCount++;
                 continue;
             }

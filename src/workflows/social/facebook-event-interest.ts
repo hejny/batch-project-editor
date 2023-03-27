@@ -102,6 +102,6 @@ DISCORD_MESSAGE__QUERYSELECTOR;
 */
 
 /**
- * TODO: !!! Put CzechEvents into the name
+ * TODO: !! Put CzechEvents into the name
  * TODO: Make some better system for workflows not connected with project
  */

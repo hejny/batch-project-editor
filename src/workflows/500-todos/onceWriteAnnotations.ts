@@ -114,7 +114,7 @@ export async function onceWriteAnnotations({
                     ) {
                         console.info(
                             `⏩ Skipping entity ${fileEntity.name} because has complete annotation`,
-                        ) /* <- TODO: !!! Check if skipping only in right cases */;
+                        ) /* <- TODO: !! Check if skipping only in right cases */;
                         continue;
                     }
 
