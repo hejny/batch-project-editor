@@ -5,6 +5,7 @@ import { forPlay } from '../../utils/forPlay';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { askChatBingCached } from './utils/askChatBingCached';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
+import { prepareChatBingPage } from './utils/chatBingPage';
 import { normalizeAnnotation } from './utils/normalizeAnnotation';
 import { parseEntities } from './utils/parseEntities';
 
