@@ -112,5 +112,6 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
 }
 
 /**
+ * TODO: requestMultilineText vs requestText
  * TODO: [🏯]
  */
