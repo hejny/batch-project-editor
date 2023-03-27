@@ -270,7 +270,7 @@ describe(`changeAnnotationOfEntity`, () => {
 
           /**
            * Common properties for all attributes ⁘
-           *
+           *${` `}
            * @interface IAttributeCommon
            */
           interface IAttributeCommon {
@@ -290,7 +290,7 @@ describe(`changeAnnotationOfEntity`, () => {
 
           /**
            * Common properties for all attributes ⁘
-           *
+           *${` `}
            * @interface IAttributeCommon
            */
           interface IAttributeCommon {
