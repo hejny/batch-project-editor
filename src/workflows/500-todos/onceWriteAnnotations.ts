@@ -40,11 +40,6 @@ export async function onceWriteAnnotations({
                 return null;
             }
 
-            if (originalFileContent.includes(AUTOMATED_ANNOTATION_MARK)) {
-                console.info(`⏩ Skipping entity ${filePath} because it includes AUTOMATED_ANNOTATION_MARK`);
-                return null;
-            }
-
             console.info(`👾 Completing annotations for ${filePath}`);
 
             // TODO: Omit things like imports, empty comments / annotations , code comments, indentation,...
@@ -105,7 +100,15 @@ export async function onceWriteAnnotations({
                         (responseEntity) => responseEntity.name === fileEntity.name,
                     );
 
-                    if (!(fileEntity.annotation?.includes('@@@') || fileEntity.annotation === '')) {
+                    if (
+                        !(
+                            fileEntity.annotation === null ||
+                            fileEntity.annotation === undefined ||
+                            fileEntity.annotation?.includes('@@@') ||
+                            fileEntity.annotation?.includes(AUTOMATED_ANNOTATION_MARK) ||
+                            fileEntity.annotation === ''
+                        )
+                    ) {
                         console.info(
                             `⏩ Skipping entity ${fileEntity.name} because has complete annotation`,
                         ) /* <- TODO: !!! Check if skipping only in right cases */;
