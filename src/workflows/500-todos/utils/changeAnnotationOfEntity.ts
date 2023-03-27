@@ -24,7 +24,13 @@ interface ChangeAnnotationOfEntityParams {
  * @returns {string} The updated source code with the new annotation added to the specified entity.
  * @throws {Error} Throws an error if the specified entity is not found in the given source code.
  */
-export function changeAnnotationOfEntity({ source, entityName, annotation }: ChangeAnnotationOfEntityParams): string {
+export function changeAnnotationOfEntity(options: ChangeAnnotationOfEntityParams): string {
+    const { source, entityName, annotation } = options;
+
+    if (annotation.includes('*/')) {
+        throw new Error(`Annotation can not contain comments`);
+    }
+
     const lines = source.split('\n');
     const entityTypes = ['const', 'let', 'var', 'class', 'interface', 'type', 'function', 'enum'];
     const entityLineIndex = lines.findIndex((line) =>

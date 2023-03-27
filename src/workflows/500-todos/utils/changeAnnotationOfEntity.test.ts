@@ -181,20 +181,34 @@ describe(`changeAnnotationOfEntity`, () => {
         const entityName = 'foo';
         const source = spaceTrim(`
 
+        const foo = 'bar';
+
+      `);
+        const annotation = 'Hello **world** 🕶';
+        const output = spaceTrim(`
+
+        /**
+         * Hello **world** 🕶
+         */
+        const foo = 'bar';
+
+      `);
+
+        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+    });
+
+    it(`will NOT change annotation with comments`, () => {
+        const entityName = 'foo';
+        const source = spaceTrim(`
+
           const foo = 'bar';
 
         `);
         const annotation = 'Hello /* world */';
-        const output = spaceTrim(`
 
-          /**
-           * Hello /* world */
-           */
-          const foo = 'bar';
-
-        `); /* <- TODO: This is not an ideal solution, nested annotation should be escaped, fix this test+implementation */
-
-        expect(changeAnnotationOfEntity({ source, entityName, annotation })).toBe(output);
+        expect(() => changeAnnotationOfEntity({ source, entityName, annotation })).toThrowError(
+            `Annotation can not contain comments`,
+        );
     });
 
     it(`will throw error when entity is not found in source`, () => {
