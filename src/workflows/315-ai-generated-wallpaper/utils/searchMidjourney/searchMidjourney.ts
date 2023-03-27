@@ -4,6 +4,7 @@ import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
 import { MIDJOURNEY_COOKIES } from '../../../../config';
 import { IMidjourneyJob } from './IMidjourneyJob';
+import { forPlay } from '../../../../utils/forPlay';
 
 const MIDJOURNEY_AMOUNT_ON_PAGE = 50;
 
@@ -97,6 +98,8 @@ async function searchMidjourneyOnPage(
         );
 
         await forTime(1000 * 60 * 5);
+        await forPlay();
+
         return searchMidjourney(options);
     }
 

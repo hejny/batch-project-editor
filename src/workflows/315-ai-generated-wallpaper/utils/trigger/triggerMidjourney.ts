@@ -79,6 +79,7 @@ export async function triggerMidjourney({
                     ),
                 );
                 await forTime(1000 * secondsToWaitToFinishUpQueue);
+                await forPlay();
 
                 continue;
             } else if (statusAfterClick === 'UNKNOWN') {
@@ -90,6 +91,8 @@ export async function triggerMidjourney({
             // TODO: [🏯] Configurable waiting time
             let secondsToWaitBeforeClickingOnNextUpscale = 3 * WAIT_MULTIPLICATOR;
             await forTime(1000 * secondsToWaitBeforeClickingOnNextUpscale);
+            await forPlay();
+            
         }
 
         console.info(chalk.gray(`⬆ Scrolling up`));

@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import spaceTrim from 'spacetrim';
 import { AUTOMATED_ANNOTATION_MARK } from '../../config';
+import { forPlay } from '../../utils/forPlay';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { askChatBingCached } from './utils/askChatBingCached';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
@@ -22,6 +23,8 @@ export async function onceWriteAnnotations({
         'src/**/*.{ts,tsx}',
         //'src/**/TakeChain.ts',
         async (filePath, originalFileContent) => {
+            await forPlay();
+
             /*
             if (basename(filePath) === 'TakeChain.ts') {
                 return null;
@@ -138,7 +141,7 @@ export async function onceWriteAnnotations({
                         throw error;
                     }
 
-                    // !!!! Regenerate the annotation here if error occures here - analyze which error are the problem
+                    // !!! Regenerate the annotation here if error occures here - analyze which error are the problem
                     console.error(chalk.yellow('⚠ ' + error.message));
                 }
             }
@@ -174,8 +177,6 @@ interface IPrompt {
 }
 
 /**
- * TODO: !!!!!!! Skip (or try next repply) if there is just jsdoc without a description
- * TODO: !!!!!!! Await forPlay
  * TODO: !!!!!!! Mark AI written annotations (+ Add somewhere metadata, maybe as markdown file)
  * TODO: !!!!!!! Skip already AI written
  * TODO: requestMultilineText vs requestText

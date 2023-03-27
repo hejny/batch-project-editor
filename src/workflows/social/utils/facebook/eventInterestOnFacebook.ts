@@ -66,6 +66,7 @@ export async function eventInterestOnFacebook({
             // TODO: [🏯] Configurable waiting time
             let secondsToWaitToInterested = 3; /* * WAIT_MULTIPLICATOR*/
             await forTime(1000 * secondsToWaitToInterested);
+            await forPlay();
 
             // const statusAfterClick = await getStatusOfFacebookLikeButton(elementHandle);
             // console.log({ label, statusBeforeClick, statusAfterClick });
@@ -85,6 +86,7 @@ export async function eventInterestOnFacebook({
             // TODO: [🏯] Configurable waiting time
             let secondsToWaitBeforeClickingNextInterested = 30 * WAIT_MULTIPLICATOR;
             await forTime(1000 * secondsToWaitBeforeClickingNextInterested);
+            await forPlay();
         }
 
 

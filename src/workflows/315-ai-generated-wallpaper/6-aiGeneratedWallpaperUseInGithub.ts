@@ -4,6 +4,7 @@ import { join } from 'path';
 import sharp from 'sharp';
 import { forTime } from 'waitasecond';
 import { clickOnText } from '../../utils/clickOnText';
+import { forPlay } from '../../utils/forPlay';
 import { isFileExisting } from '../../utils/isFileExisting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { WALLPAPER_IN_README } from './5-aiGeneratedWallpaperUseInReadme';
@@ -79,6 +80,7 @@ export async function aiGeneratedWallpaperUseInGithub({
             await fileChooser.accept([shrinkedPath]);
             console.info(chalk.gray(`⏳ Waiting for 15 seconds to file to be uploaded`));
             await forTime(1000 * 15 /* To be uploaded - to be able to unlink */);
+            await forPlay();
         } finally {
             await unlink(shrinkedPath);
         }
@@ -90,6 +92,7 @@ export async function aiGeneratedWallpaperUseInGithub({
 
     console.info(chalk.gray(`⏳ Waiting for 15 seconds to everything to settle`));
     await forTime(1000 * 15 /* To be uploaded - to everything to settle */);
+    await forPlay();
 
     return madeSideEffect(`Changed social media banner image in Github repository settings`);
 }

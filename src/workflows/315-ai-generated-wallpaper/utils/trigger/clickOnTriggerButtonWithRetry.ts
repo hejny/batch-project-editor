@@ -32,6 +32,7 @@ export async function clickOnTriggerButtonWithRetry(elementHandle: ElementHandle
         // TODO: [🏯] Configurable waiting time
         let secondsToWaitSecondsBeforeDetectingNewStatusOfTheButton = 2 * WAIT_MULTIPLICATOR;
         await forTime(1000 * secondsToWaitSecondsBeforeDetectingNewStatusOfTheButton);
+        await forPlay();
 
         const statusAfterClick = await getStatusOfButtonWithRetry(elementHandle);
 

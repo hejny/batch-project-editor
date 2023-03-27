@@ -37,8 +37,7 @@ export async function aiGeneratedWallpaperLand({
     console.log({ wallpaperImagineContents, imagines });
 
     for (const imagine of imagines) {
-
-      await forPlay();
+        await forPlay();
 
         //-------------
         if (false) {
@@ -85,18 +84,16 @@ export async function aiGeneratedWallpaperLand({
         let secondsToWaitAfterImagine = 60 * 7 * Math.random() * WAIT_MULTIPLICATOR;
         console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterImagine} seconds after writing /imagine command`));
         await forTime(1000 * secondsToWaitAfterImagine);
-
         await forPlay();
 
         const { triggeredCount } = await triggerMidjourney({ discordPage, triggerMaxCount: 4, scrollMaxPagesCount: 1 });
         console.info(chalk.green(`⏫ Upscaled ${triggeredCount} images`));
 
-        await forPlay();
-
         // TODO: [🏯] Configurable waiting time
         let secondsToWaitAfterUpscale = 60 * 2 * Math.random() * WAIT_MULTIPLICATOR;
         console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterUpscale} seconds after clicking on upscale`));
         await forTime(1000 * secondsToWaitAfterUpscale);
+        await forPlay();
     }
 
     if (landedCount === 0) {

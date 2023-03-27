@@ -16,6 +16,7 @@ export async function getStatusOfButtonWithRetry(elementHandle: ElementHandle<HT
     // TODO: [🏯] Configurable waiting time
     let secondsToRetryGettingButtonStatus = 5 * WAIT_MULTIPLICATOR;
     await forTime(1000 * secondsToRetryGettingButtonStatus);
+    await forPlay();
 
     return await getStatusOfButton(elementHandle, true);
 }

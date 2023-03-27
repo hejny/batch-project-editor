@@ -42,6 +42,7 @@ export async function runAggregators({ isLooping, runAggregator, runProjects }: 
     console.info(``);
     console.info(``);
     await forTime(1000 * 1);
+    await forPlay();
 
     // ----------------------- Do the aggregation ---
     const projectResults: Array<{ projectTitle: string; result: any }> = [];

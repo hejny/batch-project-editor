@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { forTime } from 'waitasecond';
+import { forPlay } from '../../../utils/forPlay';
 import { findElementHandle } from '../../../utils/puppeteer/findElementHandle';
 import { findLastElementHandle } from '../../../utils/puppeteer/findLastElementHandle';
 import { markElement } from '../../../utils/puppeteer/markElement';
@@ -32,6 +33,7 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
     await markElement(newTopicButtonElementHandle);
     await newTopicButtonElementHandle.click();
     await forTime(1000 * 5 /* seconds to switch new topic */);
+    await forPlay();
 
     const preciseButtonElementHandle = await findElementHandle(chatBingPage, {
         tagName: 'SPAN',
@@ -43,6 +45,7 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
     await markElement(preciseButtonElementHandle);
     await preciseButtonElementHandle.click();
     await forTime(1000 * 5 /* seconds to switch precision level */);
+    await forPlay();
 
     const searchboxElementHandle = await findElementHandle(chatBingPage, {
         tagName: 'TEXTAREA',
@@ -56,6 +59,7 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
         { delay: 100 },
     );
     await forTime(1000 * 3 /* seconds after write */);
+    await forPlay();
 
     const submitElementHandle = await findElementHandle(chatBingPage, {
         tagName: 'BUTTON',
@@ -70,6 +74,7 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
     while (true) {
         console.info(chalk.gray(`⏳ Waiting for Chat Bing to respond`));
         await forTime(1000 * 2);
+        await forPlay();
 
         const stopRespondingElementHandle = await findElementHandle(chatBingPage, {
             tagName: 'BUTTON',

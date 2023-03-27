@@ -73,6 +73,8 @@ export async function runWorkflows({
     console.info(``);
     console.info(``);
     await forTime(1000 * 1 /* Wait 1 second before start */);
+    await forPlay();
+
     // ----------------------- Initialize ---
 
     for (const workflow of sortedWorkflows) {

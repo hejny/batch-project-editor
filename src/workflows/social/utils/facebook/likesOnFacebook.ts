@@ -83,6 +83,7 @@ export async function likesOnFacebook({
             // TODO: [🏯] Configurable waiting time
             let secondsToWaitBeforeClickingNextLike = 30 * WAIT_MULTIPLICATOR;
             await forTime(1000 * secondsToWaitBeforeClickingNextLike);
+            await forPlay();
         }
 
         console.info(chalk.gray(`⬇ Scrolling down`));
