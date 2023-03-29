@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import spaceTrim from 'spacetrim';
+import { forEver } from 'waitasecond';
 import { AUTOMATED_ANNOTATION_MARK } from '../../config';
 import { forPlay } from '../../utils/forPlay';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
@@ -23,16 +24,16 @@ export async function onceWriteAnnotations({
     // TODO: Bring back js,jsx files, now temporarly suspended
 
     await modifyFiles(
-        'src/**/*.{ts,tsx}',
+        '{src,scripts,server}/**/*.{ts,tsx}',
         //'src/**/TakeChain.ts',
         async (filePath, originalFileContent) => {
             await forPlay();
 
-            /*
-            if (basename(filePath) === 'TakeChain.ts') {
+            /*/
+            if (filePath !== 'C:/Users/me/autowork/collboard/collboard/src/30-components/utils/Clickable.tsx') {
                 return null;
             }
-            */
+            /**/
 
             if (/\.test.\tsx?$/.test(filePath)) {
                 console.info(`⏩ Skipping file ${filePath} because it is a test`);
@@ -85,7 +86,12 @@ export async function onceWriteAnnotations({
             const { responseText, metadataText } = await askChatBingCached(
                 { requestText },
                 { readJsonFile, modifyJsonFile },
-            );
+            ).catch(async (error) => {
+                // TODO: !!! Better handle this
+                console.error(error);
+                await forEver();
+                return { responseText: '!!!', metadataText: '!!!' };
+            });
 
             metadataTexts.add(metadataText);
 
@@ -120,16 +126,22 @@ export async function onceWriteAnnotations({
                     }
 
                     if (!responseEntity) {
-                        console.error({ responseEntity });
-                        throw new Error(`In response there is no  ${fileEntity.type} ${fileEntity.name}`);
+                        console.error({ fileEntity, responseEntity });
+                        throw new Error(`In response there is no ${fileEntity.type} ${fileEntity.name}`);
                     }
 
-                    if (!responseEntity.annotation) {
-                        console.error({ responseEntity });
+                    if (!responseEntity!.annotation) {
+                        console.error({ fileEntity, responseEntity });
                         throw new Error(`In response there is no annotation for ${fileEntity.type} ${fileEntity.name}`);
                     }
 
-                    const annotation = normalizeAnnotation(responseEntity.annotation);
+                    const annotation = spaceTrim(
+                        normalizeAnnotation(responseEntity!.annotation!) +
+                            `\n\n` +
+                            fileEntity.tags
+                                .map((tag) => `@${tag}` /* <- TODO: Tags with additional params like "@module SDK" */)
+                                .join('\n'),
+                    );
 
                     console.info(`👾👾👾👾👾👾👾👾`);
                     newFileContent = changeAnnotationOfEntity({

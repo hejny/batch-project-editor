@@ -35,7 +35,9 @@ export function parseEntities(content: string): Array<IEntity> {
         }
 
         const annotation = unwrapAnnotation(annotationWrapped);
-        const tags = Array.from(annotation?.match(/@([a-zA-Z0-9_-]+)*/g) || []).map((tag) => tag.replace(/^@/, ''));
+        const tags = Array.from(annotation?.match(/@([a-zA-Z0-9_-]+)*/g) || [])
+            .map((tag) => tag.replace(/^@/, ''))
+            .filter((tag) => tag.trim() !== '');
 
         entities.push({ type: type as IEntityType, name, annotation, annotationWrapped, tags });
     }

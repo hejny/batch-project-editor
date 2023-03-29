@@ -55,7 +55,10 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
     if (searchboxElementHandle === null) {
         throw new Error(`Can not find searchboxElementHandle`);
     }
-    await searchboxElementHandle.type(normalizeChatRequestText(requestText), { delay: 50 });
+
+    const requestTextNormalized = normalizeChatRequestText(requestText);
+    console.info(`🎹 Writing ${requestTextNormalized.length} chars of the request`);
+    await searchboxElementHandle.type(requestTextNormalized, { delay: 5 });
     await forTime(1000 * 3 /* seconds after write */);
     await forPlay();
 
@@ -66,6 +69,8 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
     if (submitElementHandle === null) {
         throw new Error(`Can not find submitElementHandle`);
     }
+
+    console.log(submitElementHandle);
     console.info(`🤖 Clicking on submit`);
     await submitElementHandle.click();
 

@@ -60,9 +60,6 @@ export async function findElementHandle(
                 const element = node;
 
                 for (const [key, value] of Object.entries(where)) {
-                    if (typeof value === 'boolean') {
-                        console.log(key, element[key], value);
-                    }
                     if (element[key] !== value) {
                         return null;
                     }
