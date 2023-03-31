@@ -139,6 +139,7 @@ export async function onceWriteAnnotations({
                         normalizeAnnotation(responseEntity!.annotation!) +
                             `\n\n` +
                             fileEntity.tags
+                                .filter((tag) => ['collboard-modules-sdk', 'private'].includes(tag))
                                 .map((tag) => `@${tag}` /* <- TODO: Tags with additional params like "@module SDK" */)
                                 .join('\n'),
                     );
