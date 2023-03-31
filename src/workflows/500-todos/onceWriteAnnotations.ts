@@ -116,7 +116,7 @@ export async function onceWriteAnnotations({
                             fileEntity.annotation === undefined ||
                             fileEntity.annotation?.includes('@@@') ||
                             fileEntity.annotation?.includes(AUTOMATED_ANNOTATION_MARK) ||
-                            fileEntity.annotation === ''
+                            spaceTrim(fileEntity.annotation) === ''
                         )
                     ) {
                         console.info(
