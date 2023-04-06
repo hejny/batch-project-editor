@@ -24,7 +24,7 @@ export async function onceWriteAnnotations({
     // TODO: Bring back js,jsx files, now temporarly suspended
 
     await modifyFiles(
-        '{src,scripts,server}/**/*.{ts,tsx}',
+        '{src,scripts,server,interfaces}/**/*.{ts,tsx}',
         //'src/**/TakeChain.ts',
         async (filePath, originalFileContent) => {
             await forPlay();
@@ -193,4 +193,6 @@ interface IPrompt {
 /**
  * Note: To run start:
  *     > ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects collboard --allow-dirty-cwd --branch feature/complete-annotations
+ *     > ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects iport
+ *     > ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects %
  */
