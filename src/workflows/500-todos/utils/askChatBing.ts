@@ -110,7 +110,7 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
     return {
         responseText,
         responseHtml,
-        metadataText: `@generator ChatBing from ${new Date().toDateString()}`, // <- TODO: More info about the chat thread, GPT version, date,...,
+        metadataText: `@see ChatBing from ${new Date().toDateString()}`, // <- TODO: More info about the chat thread, GPT version, date,...,
     };
 }
 

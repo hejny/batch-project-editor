@@ -66,5 +66,5 @@ export interface Event {
 }
 
 /**
- * @generator https://jvilk.com/MakeTypes/
+ * @see https://jvilk.com/MakeTypes/
  */

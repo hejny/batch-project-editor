@@ -41,6 +41,6 @@ export async function askChatMock(options: IAskChatMockOptions): Promise<IAskCha
 
         `),
         responseHtml: '',
-        metadataText: `@generator ChatMock from ${new Date().toDateString()}` /* <- TODO: Better */,
+        metadataText: `@see ChatMock from ${new Date().toDateString()}` /* <- TODO: Better */,
     };
 }

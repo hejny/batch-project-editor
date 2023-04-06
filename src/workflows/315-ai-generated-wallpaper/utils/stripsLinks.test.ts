@@ -17,5 +17,5 @@ describe('stripsLinks', () => {
 });
 
 /**
- * @generator https://chat.openai.com/chat/6ef1eeb8-0955-40a9-9feb-a78bceecd1c6
+ * @see https://chat.openai.com/chat/6ef1eeb8-0955-40a9-9feb-a78bceecd1c6
  */
