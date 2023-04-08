@@ -4,7 +4,7 @@ import { BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE } from '../../config';
 import { IAggregator, IAggregatorOptions } from '../IAggregator';
 
 /**
- * @@@
+ * Interface for the result of GitHours ⁘
  */
 interface IGitHoursResult {
     outCommitsCount: number;
@@ -16,6 +16,9 @@ interface IGitHoursResult {
     // <- TODO: [🎆] Would be this automatically annotated even if there is not @ mark for each prop
 }
 
+/**
+ * Class that implements the IAggregator interface for GitHoursResult ⁘
+ */
 export class gitHours implements IAggregator<IGitHoursResult> {
     public initial = {
         outCommitsCount: 0,
