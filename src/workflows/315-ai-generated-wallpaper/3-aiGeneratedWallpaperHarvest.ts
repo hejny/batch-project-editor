@@ -5,7 +5,8 @@ import spaceTrim from 'spacetrim';
 import { stringToArrayBuffer } from '../../utils/stringToArrayBuffer';
 import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { IMAGINE_VERSION } from './config';
+import { CALL_MIDJOURNEY_API_IN_SERIES, IMAGINE_VERSION } from './config';
+import { IMidjourneyJob } from './utils/searchMidjourney/IMidjourneyJob';
 import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 
 export async function aiGeneratedWallpaperHarvest({
@@ -39,11 +40,27 @@ export async function aiGeneratedWallpaperHarvest({
     }
     /**/
 
-    const searchResult = (
-        await imagines.mapAsync(({ imagineSentence }) =>
-            searchMidjourney({ prompt: imagineSentence, version: IMAGINE_VERSION, isRetrying: true }),
-        )
-    ).flat();
+    const searchResult: IMidjourneyJob[] = await (async () => {
+        if (CALL_MIDJOURNEY_API_IN_SERIES) {
+            return (
+                await imagines.mapAsync(({ imagineSentence }) =>
+                    searchMidjourney({ prompt: imagineSentence, version: IMAGINE_VERSION, isRetrying: true }),
+                )
+            ).flat();
+        } else {
+            const searchResult: IMidjourneyJob[] = [];
+            for (const { imagineSentence } of imagines) {
+                searchResult.push(
+                    ...(await searchMidjourney({
+                        prompt: imagineSentence,
+                        version: IMAGINE_VERSION,
+                        isRetrying: true,
+                    })),
+                );
+            }
+            return searchResult;
+        }
+    })();
 
     if (searchResult.length === 0) {
         return skippingBecauseOf(`nothing to harvest yet`);
@@ -54,6 +71,8 @@ export async function aiGeneratedWallpaperHarvest({
     for (const result of searchResult) {
         for (const imageRemotePath of result.image_paths || []) {
             // Download image to gallery
+
+            console.info(chalk.blue(` ⏬  Downloading ${imageRemotePath}`));
 
             const imageResponse = await fetch(imageRemotePath);
 
