@@ -108,8 +108,8 @@
             "focus": true
         },
         {
-            "name": "🤖🚜 Land AIdeas",
-            "commands": ["ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects AIdeas"],
+            "name": "🤖💬 Write annotations",
+            "commands": ["ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects %"],
             "onlySingle": true,
             "focus": true
         },
