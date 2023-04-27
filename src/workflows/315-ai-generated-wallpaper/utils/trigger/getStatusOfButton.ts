@@ -5,7 +5,7 @@ export type ButtonStatus = 'BLANK' | 'TRIGGERED' | 'UNKNOWN';
 
 /**
  * Gets the status of a button ⁘
- * 
+ *
  * @async
  * @function getStatusOfButton
  * @param {ElementHandle<HTMLButtonElement>} elementHandle - The handle to the button element.
@@ -22,7 +22,7 @@ export async function getStatusOfButton(
         return window.getComputedStyle(element).backgroundColor;
     });
 
-    if (color === 'rgb(79, 84, 92)' || color === 'rgb(104, 109, 115)') {
+    if (color === 'rgb(79, 84, 92)' || color === 'rgb(104, 109, 115)' || color === 'rgb(78, 80, 88)') {
         return 'BLANK';
     } else if (
         color === 'rgb(88, 101, 242)' ||
