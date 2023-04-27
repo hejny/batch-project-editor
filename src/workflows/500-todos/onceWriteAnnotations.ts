@@ -76,7 +76,7 @@ export async function onceWriteAnnotations({
              `,
             );
 
-            if (normalizeChatRequestText(requestText).length > 2000) {
+            if (normalizeChatRequestText(requestText).length > 2000 /* <- !!! */) {
                 console.info(`⏩ Skipping file ${filePath} because requestText to chat is too long`);
                 return null;
             }
@@ -193,6 +193,5 @@ interface IPrompt {
 /**
  * Note: To run start:
  *     > ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects collboard --allow-dirty-cwd --branch feature/complete-annotations
- *     > ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects iport
  *     > ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects %
  */

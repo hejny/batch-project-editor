@@ -36,9 +36,9 @@ export async function askChatBing(options: IAskChatBingOptions): Promise<IAskCha
     await forTime(1000 * 5 /* seconds to switch new topic */);
     await forPlay();
 
-    const preciseButtonElementHandle = await findElementHandle(chatBingPage, {
+    const preciseButtonElementHandle /* <- TODO: !!! Rename to */ = await findElementHandle(chatBingPage, {
         tagName: 'SPAN',
-        innerText: 'Precise',
+        innerText: 'Creative',
     });
     if (preciseButtonElementHandle === null) {
         throw new Error(`Can not find preciseButtonElementHandle`);
