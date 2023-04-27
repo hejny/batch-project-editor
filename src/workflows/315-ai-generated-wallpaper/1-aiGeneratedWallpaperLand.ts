@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import { readFile } from 'fs/promises';
-import glob from 'glob-promise';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
@@ -40,25 +39,24 @@ export async function aiGeneratedWallpaperLand({
         await forPlay();
 
         //-------------
-        if (false) {
-            // TODO: !! Temporary blocked because searchMidjourney not working properly
-            // Note: Test if already landed
-            const searchResult = await searchMidjourney({
-                prompt: stripFlagsFromPrompt(imagine),
-                version: IMAGINE_VERSION,
-                isRetrying: false,
-            }).catch((error) => {
-                // TODO: !! What is the best strategy here?
-                console.error(chalk.gray(error));
-                return [];
-            });
-            if (searchResult.length > 0) {
-                continue;
-            }
+        // Note: Test if already landed
+        const searchResult = await searchMidjourney({
+            prompt: stripFlagsFromPrompt(imagine),
+            version: IMAGINE_VERSION,
+            isRetrying: false,
+        }).catch((error) => {
+            // TODO: !! What is the best strategy here?
+            console.error(chalk.gray(error));
+            return [];
+        });
+        if (searchResult.length > 0) {
+            continue;
         }
+
         //-------------
 
         //-------------
+        /*/
         // Note: Test if already harvested
         // TODO: !! Temporary solution - skipping all harvested
         const allWallpapersPaths = await glob(join(wallpaperGalleryPath, '*.png'));
@@ -66,6 +64,7 @@ export async function aiGeneratedWallpaperLand({
         if (allWallpapersPaths.length !== 0) {
             continue;
         }
+        /**/
         //-------------
 
         const discordPage = getDiscordPage();
@@ -86,6 +85,7 @@ export async function aiGeneratedWallpaperLand({
         await forTime(1000 * secondsToWaitAfterImagine);
         await forPlay();
 
+        /**/
         const { triggeredCount } = await triggerMidjourney({ discordPage, triggerMaxCount: 4, scrollMaxPagesCount: 1 });
         console.info(chalk.green(`⏫ Upscaled ${triggeredCount} images`));
 
@@ -94,6 +94,7 @@ export async function aiGeneratedWallpaperLand({
         console.info(chalk.gray(`⏳ Waiting for ${secondsToWaitAfterUpscale} seconds after clicking on upscale`));
         await forTime(1000 * secondsToWaitAfterUpscale);
         await forPlay();
+        /**/
     }
 
     if (landedCount === 0) {

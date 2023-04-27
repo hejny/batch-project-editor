@@ -6,7 +6,7 @@ import { MIDJOURNEY_COOKIES } from '../../../../config';
 import { forPlay } from '../../../../utils/forPlay';
 import { IMidjourneyJob } from './IMidjourneyJob';
 
-const MIDJOURNEY_AMOUNT_ON_PAGE = 50;
+const MIDJOURNEY_AMOUNT_ON_PAGE = 35;
 
 interface ISearchMidjourneyOptions {
     // TODO: [0] userId: number
@@ -19,14 +19,22 @@ export async function searchMidjourney(options: ISearchMidjourneyOptions): Promi
     const aggregatedResult: IMidjourneyJob[] = [];
 
     for (let page = 1; page < 10000 /* <- TODO: Unhardcode this limit */; page++) {
-        console.info(chalk.green(` ⏬  Listing midjourney page ${page} `));
+        console.info(
+            chalk.blue(` ⏬  Listing midjourney page ${page} for prompt "${options.prompt?.substring(0, 100)}"`),
+        );
         const pageResult = await searchMidjourneyOnPage({ ...options, page, amount: MIDJOURNEY_AMOUNT_ON_PAGE });
+
+        console.info(
+            (pageResult.length !== 0 ? chalk.gray : chalk.green)(
+                `Listed ${pageResult.length} images on page ${page} for prompt "${options.prompt?.substring(0, 100)}"`,
+            ),
+        );
+
+        aggregatedResult.push(...pageResult);
 
         if (pageResult.length < MIDJOURNEY_AMOUNT_ON_PAGE) {
             break;
         }
-
-        aggregatedResult.push(...pageResult);
     }
 
     return aggregatedResult;
@@ -37,14 +45,23 @@ async function searchMidjourneyOnPage(
 ): Promise<IMidjourneyJob[]> {
     const { prompt, version, isRetrying, amount, page } = options;
 
-    const url = new URL(`https://www.midjourney.com/api/app/recent-jobs/`);
+    //toDate=2023-04-23+10%3A31%3A57.550116
+    //userId=eeea95c6-92d3-43e4-94fd-3711f8d7eebe
+    //user_id_ranked_score=null
+    //_ql=todo&_qurl=https%3A%2F%2Fwww.midjourney.com%2Fapp%2F%3Fsearch%3DA%2Bpixel%2Bart-inspired%2Bwallpaper%2Bfeaturing%2Ba%2Bretro-style%2Brobot%252C%2Bwith%2Ba%2Blimited%2Bcolor%2Bpalette%2Band%2Bpixel
+    const url = new URL(`https://www.midjourney.com/api/app/recent-jobs`);
 
     url.searchParams.set('amount', amount.toString());
     url.searchParams.set('page', page.toString());
     // url.searchParams.set('jobType', 'yfcc_upsample' /* <- TODO: What this means? */);
     url.searchParams.set('orderBy', 'new');
+    url.searchParams.set('type', 'all');
     url.searchParams.set('jobStatus', 'completed');
-    url.searchParams.set('userId', '310540068588879872' /* <- TODO: [0] Unhardcode */);
+    url.searchParams.set('jobType', 'upscale');
+    url.searchParams.set('searchType', 'advanced');
+    url.searchParams.set('service', 'null');
+    url.searchParams.set('userId', 'eeea95c6-92d3-43e4-94fd-3711f8d7eebe' /* <- TODO: [0] Unhardcode */);
+    // url.searchParams.set('userId', '310540068588879872' /* <- TODO: [0] Unhardcode */);
     url.searchParams.set('isPublished', 'true');
     url.searchParams.set('minRankingScore', '0' /* <- TODO: What this means? */);
     if (prompt) {
@@ -90,14 +107,14 @@ async function searchMidjourneyOnPage(
                     (block) => `
                         ${block(errorMessage)}
 
-                        Retrying after 5 minutes...
+                        Retrying after 30 seconds...
                     `,
                 ),
             ),
             { json },
         );
 
-        await forTime(1000 * 60 * 5);
+        await forTime(1000 * 30);
         await forPlay();
 
         return searchMidjourney(options);

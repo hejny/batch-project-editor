@@ -1,6 +1,6 @@
 export const IMAGINE_VERSION = 5;
 
-export const CALL_MIDJOURNEY_API_IN_SERIES = false;
+export const CALL_MIDJOURNEY_API_IN_SERIES = true;
 
 export const IMAGINE_OPTIONAL_FLAGS: string[] = [
     //'--hd',
