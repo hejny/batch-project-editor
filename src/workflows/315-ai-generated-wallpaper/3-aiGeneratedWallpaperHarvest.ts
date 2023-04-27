@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { readFile } from 'fs/promises';
+import { normalizeTo_snake_case } from 'n12';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { stringToArrayBuffer } from '../../utils/stringToArrayBuffer';
@@ -80,8 +81,12 @@ export async function aiGeneratedWallpaperHarvest({
                 /(?<imageId>[^/]+)\/(?<imageSuffix>[^/]+)\.(?<imageExtension>[^/]+)$/,
             )!.groups!;
 
-            const imageLocalPath = join(wallpaperGalleryPath, `${imageId}-${imageSuffix}.${imageExtension}`);
-            const metaLocalPath = join(wallpaperGalleryPath, `${imageId}-${imageSuffix}.json`);
+            const imageNameSegment = ('Pavol_Hejn_' + normalizeTo_snake_case(result.prompt)).substring(0, 63);
+            const imageLocalPath = join(
+                wallpaperGalleryPath,
+                `${imageNameSegment}_${imageId}-${imageSuffix}.${imageExtension}`,
+            );
+            const metaLocalPath = join(wallpaperGalleryPath, `${imageNameSegment}_${imageId}-${imageSuffix}.json`);
 
             // console.log({ imageRemotePath, imageLocalPath, imageId, imageSuffix, imageExtension });
 
