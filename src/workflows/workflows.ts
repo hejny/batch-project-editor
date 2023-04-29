@@ -1,3 +1,4 @@
+import { removeBom } from './000-removeBom/removeBom';
 import { lines } from './000-lines/lines';
 import { organizeImports } from './010-prettier/organizeImports';
 import { prettier } from './010-prettier/prettier';
@@ -35,6 +36,7 @@ import { terminalsVersion } from './terminals-version/terminalsVersion';
 
 export const WORKFLOWS: IWorkflow[] = [
     lines,
+    removeBom,
     // TODO: updateDependency('touchcontroller'),
     // TODO: updateDependency('configchecker'),
     updateDependency('waitasecond'),
