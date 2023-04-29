@@ -270,6 +270,14 @@ export async function runWorkflows({
                             dot: true,
                             ignore: ['**/node_modules/**', '**/.git/**'],
                         }) /* TODO: .reverse( Reverse + shuffle as CLI flag ) */) {
+                            if (
+                                !(await isFileExisting(
+                                    filePath /* Note: Checking that filePath is file (not folder) */,
+                                ))
+                            ) {
+                                continue;
+                            }
+
                             const fileContent = await readFile(filePath, 'utf8');
 
                             if (fileContent.includes(`@batch-project-editor ignore`)) {
@@ -374,7 +382,7 @@ export async function runWorkflows({
                                         filePath,
                                     )} because JSON contents does not changed and we do not want to do the re-format of the file`,
                                 );
-                                return oldContentString;
+                                return null;
                             }
 
                             return JSON.stringify(newContent, null, 4) + '\n';

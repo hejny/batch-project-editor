@@ -34,3 +34,7 @@ export async function lines({ projectPath, commit }: IWorkflowOptions): Promise<
 
     return commit('⏎ Adding rules for unix lines ');
 }
+
+/**
+ * TODO: Use here propper IWorkflow utils NOT raw functions from 'fs/promises' and 'path'
+ */

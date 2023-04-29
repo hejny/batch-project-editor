@@ -33,10 +33,12 @@ import { socialFacebookEventInterest } from './social/facebook-event-interest';
 import { socialFacebookLikes } from './social/facebook-likes';
 import { socialLinkedinLikes } from './social/linkedin-likes';
 import { terminalsVersion } from './terminals-version/terminalsVersion';
+import { normalizeJsons } from './000-normalizeJsons/normalizeJsons';
 
 export const WORKFLOWS: IWorkflow[] = [
     lines,
     removeBom,
+    normalizeJsons,
     // TODO: updateDependency('touchcontroller'),
     // TODO: updateDependency('configchecker'),
     updateDependency('waitasecond'),
