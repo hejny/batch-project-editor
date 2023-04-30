@@ -1,5 +1,5 @@
-import { removeBom } from './000-removeBom/removeBom';
 import { lines } from './000-lines/lines';
+import { normalizeJsons } from './000-normalizeJsons/normalizeJsons';
 import { organizeImports } from './010-prettier/organizeImports';
 import { prettier } from './010-prettier/prettier';
 import { updateDependency } from './105-updateDependency/updateDependency';
@@ -23,21 +23,21 @@ import { badges } from './800-badges/badges';
 import { contributing } from './810-contributing/contributing';
 import { partners } from './820-partners/partners';
 import { normalizeSvgs } from './900-assets/normalizeSvgs';
+import { IWorkflow } from './IWorkflow';
 import { branchesRemoveMerged } from './branches-remove-merged/branches-remove-merged';
 import { branchesUpdateFeatures } from './branches-update-features/branches-update-features';
 import { collboardModuleNames } from './collboard-module-names/collboard-module-names';
-import { IWorkflow } from './IWorkflow';
 import { onceHarvestAllMidjourney } from './once-harvest-all-midjourney/once-harvest-all-midjourney';
 import { onceRevertLastBpeCommit } from './once-revert-last-bpe-commit/once-revert-last-bpe-commit';
 import { socialFacebookEventInterest } from './social/facebook-event-interest';
 import { socialFacebookLikes } from './social/facebook-likes';
 import { socialLinkedinLikes } from './social/linkedin-likes';
 import { terminalsVersion } from './terminals-version/terminalsVersion';
-import { normalizeJsons } from './000-normalizeJsons/normalizeJsons';
 
 export const WORKFLOWS: IWorkflow[] = [
     lines,
-    removeBom,
+    // removeBom,
+    // encoding,
     normalizeJsons,
     // TODO: updateDependency('touchcontroller'),
     // TODO: updateDependency('configchecker'),

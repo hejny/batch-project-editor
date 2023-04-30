@@ -68,8 +68,7 @@
             "name": "🌾🖼️ Harvest AI–⁠generated wallpapers",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperHarvest --projects %",
-                "ts-node ./src/index.ts --edit --workflows removeBom --projects %"
+                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperHarvest --projects %"
             ],
             "onlySingle": true,
             "focus": true
@@ -97,8 +96,7 @@
             "name": "🔼🖼️➰ Land & Harvest & Use AI–⁠generated wallpapers in a loop",
             "commands": [
                 "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPrepare,-aiGeneratedWallpaperPick --projects %",
-                "ts-node ./src/index.ts --edit --workflows removeBom --projects %"
+                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPrepare,-aiGeneratedWallpaperPick --projects %"
             ],
             "onlySingle": true,
             "focus": true
@@ -145,8 +143,7 @@
         {
             "name": "⏬🖼️ Download MidJourney gallery",
             "commands": [
-                "ts-node ./src/index.ts --edit --workflows onceHarvestAllMidjourney --projects batch-project-editor",
-                "ts-node ./src/index.ts --edit --workflows removeBom --projects %"
+                "ts-node ./src/index.ts --edit --workflows onceHarvestAllMidjourney --projects batch-project-editor"
             ],
             "onlySingle": true,
             "focus": true

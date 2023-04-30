@@ -36,5 +36,5 @@ export async function lines({ projectPath, commit }: IWorkflowOptions): Promise<
 }
 
 /**
- * TODO: Use here propper IWorkflow utils NOT raw functions from 'fs/promises' and 'path'
+ * TODO: [🎎] Maybe use here propper IWorkflow utils (Maybe came up with sth like forEachFile) NOT raw functions from 'fs/promises' and 'path'
  */

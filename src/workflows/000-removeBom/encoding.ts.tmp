@@ -1,0 +1,78 @@
+import chalk from 'chalk';
+import { readFile, writeFile } from 'fs/promises';
+import glob from 'glob-promise';
+import iconv from 'iconv-lite';
+import { join } from 'path';
+import { forTime } from 'waitasecond';
+import { isFileExisting } from '../../utils/isFileExisting';
+import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
+
+export async function encoding({ commit, projectPath }: IWorkflowOptions): Promise<WorkflowResult> {
+    for (const filePath of await glob(
+        join(
+            projectPath,
+            '**/*.json' /* <- TODO: Do not limit to json files OR change to JSON encoding OR condition JSON.parse at the end */,
+        ),
+        {
+            dot: true,
+            ignore: ['**/node_modules/**', '**/.git/**'],
+        },
+    )) {
+        // const filePath = `C:/Users/me/work/hejny/batch-project-editor/.tmp/bom copy.json`;
+
+        if (!(await isFileExisting(filePath))) {
+            /* Note: The path is not a file - for example a folder path */
+            continue;
+        }
+
+        const buffer = await readFile(filePath);
+        let encoding = null;
+
+        // Check for UTF-16 LE byte order mark
+        if (buffer[0] === 0xff && buffer[1] === 0xfe) {
+            encoding = 'utf16le';
+        } else {
+            // Check for UTF-16 LE without BOM
+            let hasNullByte = false;
+            for (let i = 0; i < buffer.length; i += 2) {
+                if (buffer[i] === 0x00 && buffer[i + 1] !== 0x00) {
+                    hasNullByte = true;
+                    break;
+                }
+            }
+            if (hasNullByte) {
+                encoding = 'utf16le';
+            }
+        }
+
+        if (encoding) {
+            const text = iconv.decode(buffer, encoding);
+            const utf8text = iconv.encode(text, 'utf8');
+            await writeFile(filePath, utf8text);
+            console.info(chalk.bgCyan(`💥Converting to UTF-8 ${filePath}`));
+        }
+
+        try {
+            JSON.parse(await readFile(filePath, 'utf8'));
+            console.info(chalk.green(` 🆗  Valid JSON: ${filePath}`));
+        } catch (error) {
+            if (!(error instanceof Error)) {
+                throw error;
+            }
+
+            /*
+            if (!error.message.startsWith(`Unexpected token in JSON at position 1`)) {
+                throw error;
+            }
+            */
+
+            console.info(chalk.red(` ❌  Problem with parsing JSON: ${filePath}`));
+            await forTime(1000 * 60 * 3);
+        }
+    }
+    return commit('💥Change encoding to UTF-8');
+}
+
+/**
+ * TODO: [🎎] Maybe use here propper IWorkflow utils (Maybe came up with sth like forEachFile) NOT raw functions from 'fs/promises' and 'path'
+ */

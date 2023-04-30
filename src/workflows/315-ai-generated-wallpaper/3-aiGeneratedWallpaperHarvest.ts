@@ -1,9 +1,8 @@
 import chalk from 'chalk';
-import { readFile } from 'fs/promises';
+import { readFile, writeFile } from 'fs/promises';
 import { normalizeTo_snake_case } from 'n12';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
-import { stringToArrayBuffer } from '../../utils/stringToArrayBuffer';
 import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { CALL_MIDJOURNEY_API_IN_SERIES, IMAGINE_VERSION } from './config';
@@ -91,7 +90,9 @@ export async function aiGeneratedWallpaperHarvest({
             // console.log({ imageRemotePath, imageLocalPath, imageId, imageSuffix, imageExtension });
 
             await writeFileWithoutOverwriting(imageLocalPath, await imageResponse.arrayBuffer(), imageRemotePath);
-            await writeFileWithoutOverwriting(metaLocalPath, stringToArrayBuffer(JSON.stringify(result, null, 4)));
+
+            // TODO: This produces UTF-16LE files NOT UTF-8> await writeFileWithoutOverwriting(metaLocalPath, stringToArrayBuffer(JSON.stringify(result, null, 4)));
+            await writeFile(metaLocalPath, JSON.stringify(result, null, 4) + '\n');
 
             localDirs.add(wallpaperGalleryPath);
             console.info(chalk.green(`🤖🖼️🚜  ${imageLocalPath}`));
