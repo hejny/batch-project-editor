@@ -400,6 +400,7 @@ export async function runWorkflows({
                     function modifyPackage(
                         fileModifier: (packageContent: PackageJson) => Promisable<PackageJson>,
                     ): Promise<void> {
+                        // TODO: Use modifyJsonFile
                         return modifyJsonFiles<PackageJson>('package.json', (filePath, packageJson) =>
                             fileModifier(packageJson),
                         );
