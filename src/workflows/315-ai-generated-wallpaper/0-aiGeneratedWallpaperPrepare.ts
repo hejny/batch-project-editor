@@ -7,6 +7,9 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { IMAGINE_OPTIONAL_FLAGS, IMAGINE_REQUIRED_FLAGS, IMAGINE_TEMPLATES } from './config';
 import { stripsLinks } from './utils/stripsLinks';
 
+const WALLPAPER_PATH = '/assets/ai/wallpaper/';
+const WALLPAPER_IMAGINE_PATH = WALLPAPER_PATH + 'imagine';
+
 export async function aiGeneratedWallpaperPrepare({
     packageJson,
     projectPath,
@@ -20,10 +23,6 @@ export async function aiGeneratedWallpaperPrepare({
     if (!packageJson.description) {
         return skippingBecauseOf(`no description in package.json`);
     }
-
-    // TODO: [🏯] Dry to some util
-    const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
-    const wallpaperImaginePath = join(wallpaperPath, 'imagine');
 
     let descriptionSentence = packageJson.description;
 
@@ -54,10 +53,12 @@ export async function aiGeneratedWallpaperPrepare({
         }
     }
 
-    console.log(chalk.gray(`Creating folder ${wallpaperPath.split('\\').join('/')}`));
-    await mkdir(wallpaperPath, { recursive: true });
+    console.log(chalk.gray(`Creating folder ${WALLPAPER_PATH.split('\\').join('/')}`));
+    await mkdir(join(projectPath, WALLPAPER_PATH), {
+        recursive: true,
+    }) /* <- TODO: !! modifyFile should automatically make recursive dir for you */;
 
-    await modifyFile(wallpaperImaginePath /* <- !! This path is absolute BUT should be relative */, () =>
+    await modifyFile(WALLPAPER_IMAGINE_PATH, () =>
         spaceTrim(
             (block) => `
             # Note: Each part is new input for imagine command

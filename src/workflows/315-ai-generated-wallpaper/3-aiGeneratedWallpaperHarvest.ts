@@ -14,11 +14,14 @@ export async function aiGeneratedWallpaperHarvest({
     skippingBecauseOf,
     commit,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // TODO: [🏯] Dry to some util
+    // TODO: [🏯] Dry to some util - Use WALLPAPER_PATH + WALLPAPER_IMAGINE_PATH
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperImaginePath = join(wallpaperPath, 'imagine');
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
-    const wallpaperImagineContents = await readFile(wallpaperImaginePath, 'utf8');
+    const wallpaperImagineContents = await readFile(
+        wallpaperImaginePath,
+        'utf8',
+    ); /* <- TODO: !! Use here propper util from BPE workflow NOT raw absolute-path readFile */
     const imagines = spaceTrim(wallpaperImagineContents)
         .split('\r\n')
         .join('\n')

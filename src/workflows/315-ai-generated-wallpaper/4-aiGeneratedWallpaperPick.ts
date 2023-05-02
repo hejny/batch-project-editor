@@ -21,7 +21,7 @@ export async function aiGeneratedWallpaperPick({
     commit,
     skippingBecauseOf,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    // TODO: [🏯] Dry to some util
+    // TODO: [🏯] Dry to some util - Use WALLPAPER_PATH + WALLPAPER_IMAGINE_PATH
     const wallpaperPath = join(projectPath, '/assets/ai/wallpaper/');
     const wallpaperGalleryPath = join(wallpaperPath, 'gallery');
     const wallpaperCurrentPointerPath = join(wallpaperPath, 'current');
