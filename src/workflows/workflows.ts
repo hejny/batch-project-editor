@@ -1,5 +1,4 @@
 import { lines } from './000-lines/lines';
-import { normalizeJsons } from './000-normalizeJsons/normalizeJsons';
 import { organizeImports } from './010-prettier/organizeImports';
 import { prettier } from './010-prettier/prettier';
 import { updateDependency } from './105-updateDependency/updateDependency';
@@ -38,7 +37,7 @@ export const WORKFLOWS: IWorkflow[] = [
     lines,
     // removeBom,
     // encoding,
-    normalizeJsons,
+    // normalizeJsons, <- Note: There are lot of JSON files in UTF-16LE which can not be parsed - "SyntaxError: Unexpected token  in JSON at position 1"
     // TODO: updateDependency('touchcontroller'),
     // TODO: updateDependency('configchecker'),
     updateDependency('waitasecond'),
