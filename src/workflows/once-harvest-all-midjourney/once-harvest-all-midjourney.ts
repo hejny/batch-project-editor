@@ -29,7 +29,7 @@ export async function onceHarvestAllMidjourney({
                 /(?<imageId>[^/]+)\/(?<imageSuffix>[^/]+)\.(?<imageExtension>[^/]+)$/,
             )!.groups!;
 
-            const imageNameSegment = ('Pavol_Hejn_' + normalizeTo_snake_case(result.prompt)).substring(0, 63);
+            const imageNameSegment = ('Pavol_Hejn_' + normalizeTo_snake_case(result.prompt || '')).substring(0, 63);
             const imageLocalPath = join(
                 MIDJOURNEY_GALLERY_PATH,
                 `${imageNameSegment}_${imageId}-${imageSuffix}.${imageExtension}`,
