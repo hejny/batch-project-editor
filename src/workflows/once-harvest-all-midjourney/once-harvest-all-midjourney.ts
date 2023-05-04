@@ -1,7 +1,8 @@
 import chalk from 'chalk';
+import { writeFile } from 'fs/promises';
+import { normalizeTo_snake_case } from 'n12';
 import { join } from 'path';
 import { MIDJOURNEY_GALLERY_PATH } from '../../config';
-import { stringToArrayBuffer } from '../../utils/stringToArrayBuffer';
 import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';
 import { searchMidjourney } from '../315-ai-generated-wallpaper/utils/searchMidjourney/searchMidjourney';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
@@ -18,23 +19,29 @@ export async function onceHarvestAllMidjourney({
         process.exit();
     }
 
-    const images = await searchMidjourney({ prompt: null, version: null, isRetrying: false });
+    const searchResult = await searchMidjourney({ prompt: null, version: null, isRetrying: false });
 
-    for (const image of images) {
-        for (const imageRemotePath of image.image_paths || []) {
+    for (const result of searchResult) {
+        for (const imageRemotePath of result.image_paths || []) {
             const imageResponse = await fetch(imageRemotePath);
 
             const { imageId, imageSuffix, imageExtension } = imageRemotePath.match(
                 /(?<imageId>[^/]+)\/(?<imageSuffix>[^/]+)\.(?<imageExtension>[^/]+)$/,
             )!.groups!;
 
-            const imageLocalPath = join(MIDJOURNEY_GALLERY_PATH, `${imageId}-${imageSuffix}.${imageExtension}`);
-            const metaLocalPath = join(MIDJOURNEY_GALLERY_PATH, `${imageId}-${imageSuffix}.json`);
+            const imageNameSegment = ('Pavol_Hejn_' + normalizeTo_snake_case(result.prompt)).substring(0, 63);
+            const imageLocalPath = join(
+                MIDJOURNEY_GALLERY_PATH,
+                `${imageNameSegment}_${imageId}-${imageSuffix}.${imageExtension}`,
+            );
+            const metaLocalPath = join(MIDJOURNEY_GALLERY_PATH, `${imageNameSegment}_${imageId}-${imageSuffix}.json`);
 
             // console.log({ imageRemotePath, imageLocalPath, imageId, imageSuffix, imageExtension });
 
             await writeFileWithoutOverwriting(imageLocalPath, await imageResponse.arrayBuffer(), imageRemotePath);
-            await writeFileWithoutOverwriting(metaLocalPath, stringToArrayBuffer(JSON.stringify(image, null, 4)));
+
+            // TODO: This produces UTF-16LE files NOT UTF-8>  await writeFileWithoutOverwriting(metaLocalPath, stringToArrayBuffer(JSON.stringify(image, null, 4)));
+            await writeFile(metaLocalPath, JSON.stringify(result, null, 4) + '\n');
 
             console.info(chalk.green(` ⏬🖼  Downloaded ${imageId}`));
         }
