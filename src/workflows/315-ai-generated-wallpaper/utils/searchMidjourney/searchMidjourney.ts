@@ -6,7 +6,7 @@ import { MIDJOURNEY_COOKIES } from '../../../../config';
 import { forPlay } from '../../../../utils/forPlay';
 import { IMidjourneyJob } from './IMidjourneyJob';
 
-const MIDJOURNEY_AMOUNT_ON_PAGE = 35;
+const MIDJOURNEY_AMOUNT_ON_PAGE = 50;
 
 interface ISearchMidjourneyOptions {
     // TODO: [0] userId: number
@@ -15,10 +15,26 @@ interface ISearchMidjourneyOptions {
     isRetrying: boolean;
 }
 
+
+export async function searchFromDownloaded(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {
+  const aggregatedResult: IMidjourneyJob[] = [];
+
+  /*
+  !!! Implement
+    glob()
+
+    for () {
+
+  }
+  */
+
+  return aggregatedResult;
+}
+
 export async function searchMidjourney(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {
     const aggregatedResult: IMidjourneyJob[] = [];
 
-    for (let page = 1; page < 10000 /* <- TODO: Unhardcode this limit */; page++) {
+    for (let page = 1; page < 100000000 /* <- TODO: Unhardcode this limit */; page++) {
         console.info(
             chalk.blue(` ⏬  Listing midjourney page ${page} for prompt "${options.prompt?.substring(0, 100)}"`),
         );

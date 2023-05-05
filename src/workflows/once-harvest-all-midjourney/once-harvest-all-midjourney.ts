@@ -1,7 +1,9 @@
 import chalk from 'chalk';
 import { writeFile } from 'fs/promises';
+import moment from 'moment';
 import { normalizeTo_snake_case } from 'n12';
 import { join } from 'path';
+import { utimes } from 'utimes';
 import { MIDJOURNEY_GALLERY_PATH } from '../../config';
 import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';
 import { searchMidjourney } from '../315-ai-generated-wallpaper/utils/searchMidjourney/searchMidjourney';
@@ -19,7 +21,7 @@ export async function onceHarvestAllMidjourney({
         process.exit();
     }
 
-    const searchResult = await searchMidjourney({ prompt: null, version: null, isRetrying: false });
+    const searchResult = await searchMidjourney({ prompt: null, version: null, isRetrying: true });
 
     for (const result of searchResult) {
         for (const imageRemotePath of result.image_paths || []) {
@@ -29,7 +31,10 @@ export async function onceHarvestAllMidjourney({
                 /(?<imageId>[^/]+)\/(?<imageSuffix>[^/]+)\.(?<imageExtension>[^/]+)$/,
             )!.groups!;
 
-            const imageNameSegment = ('Pavol_Hejn_' + normalizeTo_snake_case(result.prompt || '')).substring(0, 63);
+            // TODO: !!! DRY - imageNameSegment
+            const imageNameSegment = (
+                'Pavol_Hejn_' + normalizeTo_snake_case((result.prompt || '').split('/').join(' '))
+            ).substring(0, 63);
             const imageLocalPath = join(
                 MIDJOURNEY_GALLERY_PATH,
                 `${imageNameSegment}_${imageId}-${imageSuffix}.${imageExtension}`,
@@ -38,10 +43,18 @@ export async function onceHarvestAllMidjourney({
 
             // console.log({ imageRemotePath, imageLocalPath, imageId, imageSuffix, imageExtension });
 
+            const btime = moment(result.enqueue_time).unix();
+
             await writeFileWithoutOverwriting(imageLocalPath, await imageResponse.arrayBuffer(), imageRemotePath);
+            await utimes(imageLocalPath, {
+                btime,
+            });
 
             // TODO: This produces UTF-16LE files NOT UTF-8>  await writeFileWithoutOverwriting(metaLocalPath, stringToArrayBuffer(JSON.stringify(image, null, 4)));
             await writeFile(metaLocalPath, JSON.stringify(result, null, 4) + '\n');
+            await utimes(metaLocalPath, {
+                btime,
+            });
 
             console.info(chalk.green(` ⏬🖼  Downloaded ${imageId}`));
         }

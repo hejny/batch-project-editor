@@ -7,7 +7,7 @@ import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwri
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { CALL_MIDJOURNEY_API_IN_SERIES, IMAGINE_VERSION } from './config';
 import { IMidjourneyJob } from './utils/searchMidjourney/IMidjourneyJob';
-import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
+import { searchFromDownloaded, searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 
 export async function aiGeneratedWallpaperHarvest({
     projectPath,
@@ -54,7 +54,7 @@ export async function aiGeneratedWallpaperHarvest({
             const searchResult: IMidjourneyJob[] = [];
             for (const { imagineSentence } of imagines) {
                 searchResult.push(
-                    ...(await searchMidjourney({
+                    ...(await searchFromDownloaded({
                         prompt: imagineSentence,
                         version: IMAGINE_VERSION,
                         isRetrying: true,

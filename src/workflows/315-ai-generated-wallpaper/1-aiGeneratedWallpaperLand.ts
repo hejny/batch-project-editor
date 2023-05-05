@@ -9,7 +9,7 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { IMAGINE_VERSION } from './config';
 import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
 import { DISCORD_MESSAGE_QUERYSELECTOR } from './utils/discordQuerySelectors';
-import { searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
+import { searchFromDownloaded, searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
 import { stripFlagsFromPrompt } from './utils/stripFlagsFromPrompt';
 import { triggerMidjourney } from './utils/trigger/triggerMidjourney';
 
@@ -43,7 +43,7 @@ export async function aiGeneratedWallpaperLand({
 
         //-------------
         // Note: Test if already landed
-        const searchResult = await searchMidjourney({
+        const searchResult = await searchFromDownloaded({
             prompt: stripFlagsFromPrompt(imagine),
             version: IMAGINE_VERSION,
             isRetrying: false,
