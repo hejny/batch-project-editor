@@ -26,7 +26,7 @@ import { branchesRemoveMerged } from './branches-remove-merged/branches-remove-m
 import { branchesUpdateFeatures } from './branches-update-features/branches-update-features';
 import { collboardModuleNames } from './collboard-module-names/collboard-module-names';
 import { IWorkflow } from './IWorkflow';
-import { onceHarvestAllMidjourney } from './once-harvest-all-midjourney/once-harvest-all-midjourney';
+import { onceHarvestWholeMidjourney } from './once-harvest-whole-midjourney/once-harvest-whole-midjourney';
 import { onceRevertLastBpeCommit } from './once-revert-last-bpe-commit/once-revert-last-bpe-commit';
 import { socialFacebookEventInterest } from './social/facebook-event-interest';
 import { socialFacebookLikes } from './social/facebook-likes';
@@ -81,5 +81,5 @@ export const WORKFLOWS: IWorkflow[] = [
     socialFacebookLikes,
     socialFacebookEventInterest,
     onceRevertLastBpeCommit,
-    onceHarvestAllMidjourney,
+    onceHarvestWholeMidjourney,
 ];

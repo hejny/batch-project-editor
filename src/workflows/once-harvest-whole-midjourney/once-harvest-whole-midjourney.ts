@@ -9,7 +9,7 @@ import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwri
 import { searchMidjourney } from '../315-ai-generated-wallpaper/utils/searchMidjourney/searchMidjourney';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
-export async function onceHarvestAllMidjourney({
+export async function onceHarvestWholeMidjourney({
     projectName,
     madeSideEffect,
     commit,
@@ -65,7 +65,7 @@ export async function onceHarvestAllMidjourney({
         }
     }
 
-    return madeSideEffect(`Downloaded Midjourney gallery`);
+    return madeSideEffect(`Downloaded whole Midjourney gallery`);
 }
 
 /**

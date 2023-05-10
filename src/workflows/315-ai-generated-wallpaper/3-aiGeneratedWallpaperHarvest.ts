@@ -12,6 +12,7 @@ import { searchFromDownloaded } from './utils/searchMidjourney/searchMidjourney'
 export async function aiGeneratedWallpaperHarvest({
     projectPath,
     skippingBecauseOf,
+    madeSideEffect,
     commit,
 }: IWorkflowOptions): Promise<WorkflowResult> {
     // TODO: [🏯] Dry to some util - Use WALLPAPER_PATH + WALLPAPER_IMAGINE_PATH
@@ -110,7 +111,8 @@ export async function aiGeneratedWallpaperHarvest({
     }
     /**/
 
-    return commit(`🤖🖼️🚜 Harvesting AI–⁠generated wallpaper from the MidJourney`);
+    return madeSideEffect(`🤖🖼️🚜 Harvesting AI–⁠generated wallpaper from the MidJourney`);
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!> return commit(`🤖🖼️🚜 Harvesting AI–⁠generated wallpaper from the MidJourney`);
 }
 
 /**

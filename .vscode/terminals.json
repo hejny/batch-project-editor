@@ -141,9 +141,9 @@
         },
 
         {
-            "name": "⏬🖼️ Download MidJourney gallery",
+            "name": "⏬🖼️ Download whole MidJourney gallery",
             "commands": [
-                "ts-node ./src/index.ts --edit --workflows onceHarvestAllMidjourney --projects batch-project-editor"
+                "ts-node ./src/index.ts --edit --workflows onceHarvestWholeMidjourney --projects batch-project-editor"
             ],
             "onlySingle": true,
             "focus": true
