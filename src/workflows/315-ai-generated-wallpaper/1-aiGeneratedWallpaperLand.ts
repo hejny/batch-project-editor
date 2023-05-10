@@ -9,7 +9,7 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 import { IMAGINE_VERSION } from './config';
 import { getDiscordPage, prepareDiscordPage } from './utils/discordPage';
 import { DISCORD_MESSAGE_QUERYSELECTOR } from './utils/discordQuerySelectors';
-import { searchFromDownloaded, searchMidjourney } from './utils/searchMidjourney/searchMidjourney';
+import { searchFromDownloaded } from './utils/searchMidjourney/searchMidjourney';
 import { stripFlagsFromPrompt } from './utils/stripFlagsFromPrompt';
 import { triggerMidjourney } from './utils/trigger/triggerMidjourney';
 
