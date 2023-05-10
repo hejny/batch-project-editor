@@ -1,8 +1,11 @@
 import chalk from 'chalk';
+import { readFile } from 'fs/promises';
+import glob from 'glob-promise';
 import fetch from 'node-fetch';
+import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { forTime } from 'waitasecond';
-import { MIDJOURNEY_COOKIES } from '../../../../config';
+import { MIDJOURNEY_COOKIES, MIDJOURNEY_WHOLE_GALLERY_PATH } from '../../../../config';
 import { forPlay } from '../../../../utils/forPlay';
 import { IMidjourneyJob } from './IMidjourneyJob';
 
@@ -15,20 +18,31 @@ interface ISearchMidjourneyOptions {
     isRetrying: boolean;
 }
 
-
 export async function searchFromDownloaded(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {
-  const aggregatedResult: IMidjourneyJob[] = [];
+    const aggregatedResult: IMidjourneyJob[] = [];
 
-  /*
-  !!! Implement
-    glob()
+    const prompt = spaceTrim(options.prompt || '');
+    const type = !options.version ? null : `v${options.version}_upscale`; /* <- TODO: What about Midjourney 5.1? */
 
-    for () {
+    for (const wallpaperMetadataPath of await glob(join(MIDJOURNEY_WHOLE_GALLERY_PATH, '*.json'))) {
+        const wallpaperMetadata = JSON.parse(await readFile(wallpaperMetadataPath, 'utf-8')) as IMidjourneyJob;
 
-  }
-  */
+        if (
+            !wallpaperMetadata.full_command /* <- What is better use full_command or prompt */
+                .includes(prompt)
+        ) {
+            continue;
+        }
 
-  return aggregatedResult;
+        if (type && wallpaperMetadata.type !== type) {
+            continue;
+        }
+
+        // TODO: Upload to own cloud and replace link by this link + add upscaled version
+        aggregatedResult.push(wallpaperMetadata);
+    }
+
+    return aggregatedResult;
 }
 
 export async function searchMidjourney(options: ISearchMidjourneyOptions): Promise<IMidjourneyJob[]> {

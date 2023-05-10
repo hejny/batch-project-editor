@@ -4,7 +4,7 @@ import moment from 'moment';
 import { normalizeTo_snake_case } from 'n12';
 import { join } from 'path';
 import { utimes } from 'utimes';
-import { MIDJOURNEY_GALLERY_PATH } from '../../config';
+import { MIDJOURNEY_WHOLE_GALLERY_PATH } from '../../config';
 import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';
 import { searchMidjourney } from '../315-ai-generated-wallpaper/utils/searchMidjourney/searchMidjourney';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
@@ -36,14 +36,19 @@ export async function onceHarvestAllMidjourney({
                 'Pavol_Hejn_' + normalizeTo_snake_case((result.prompt || '').split('/').join(' '))
             ).substring(0, 63);
             const imageLocalPath = join(
-                MIDJOURNEY_GALLERY_PATH,
+                MIDJOURNEY_WHOLE_GALLERY_PATH,
                 `${imageNameSegment}_${imageId}-${imageSuffix}.${imageExtension}`,
             );
-            const metaLocalPath = join(MIDJOURNEY_GALLERY_PATH, `${imageNameSegment}_${imageId}-${imageSuffix}.json`);
+            const metaLocalPath = join(
+                MIDJOURNEY_WHOLE_GALLERY_PATH,
+                `${imageNameSegment}_${imageId}-${imageSuffix}.json`,
+            );
 
             // console.log({ imageRemotePath, imageLocalPath, imageId, imageSuffix, imageExtension });
 
-            const btime = moment(result.enqueue_time).unix();
+            const btime = moment(result.enqueue_time).unix() * 1000;
+
+            // console.log({ btime });
 
             await writeFileWithoutOverwriting(imageLocalPath, await imageResponse.arrayBuffer(), imageRemotePath);
             await utimes(imageLocalPath, {

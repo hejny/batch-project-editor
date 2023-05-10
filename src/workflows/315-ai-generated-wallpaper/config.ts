@@ -1,4 +1,4 @@
-export const IMAGINE_VERSION = 5;
+export const IMAGINE_VERSION = 5; /* <- !!! 5.1 */
 
 export const CALL_MIDJOURNEY_API_IN_SERIES = true;
 
