@@ -31,7 +31,7 @@ export const BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE = `🔼 This commit was autom
 
 export const githubOctokit = new Octokit({ auth: GITHUB_TOKEN });
 
-export const WAIT_MULTIPLICATOR = 1;
+export const WAIT_MULTIPLICATOR = 0.4;
 
 export const AUTOMATED_ANNOTATION_MARK = '⁘';
 
