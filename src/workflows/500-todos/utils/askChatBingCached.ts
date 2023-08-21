@@ -31,7 +31,7 @@ export async function askChatBingCached(
 
     await modifyJsonFile<Array<IPrompt>>(PROMPTS_CACHE_PATH, (prompts) => [
         ...(prompts || ([] as any)),
-        { requestText, responseText, responseHtml, metadataText },
+        { model: 'bing-chat', requestText, responseText, responseHtml, metadataText },
     ]);
 
     return { responseText, responseHtml, metadataText };

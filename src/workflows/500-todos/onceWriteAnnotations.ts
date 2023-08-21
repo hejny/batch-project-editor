@@ -131,7 +131,7 @@ export async function onceWriteAnnotations({
                     }
 
                     if (!responseEntity!.annotation) {
-                        console.error({ fileEntity, responseEntity });
+                        console.error({ fileEntity, responseEntity, originalFileContent, responseText });
                         throw new Error(`In response there is no annotation for ${fileEntity.type} ${fileEntity.name}`);
                     }
 
