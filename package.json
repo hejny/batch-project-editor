@@ -6,6 +6,7 @@
         "@octokit/rest": "18.12.0",
         "@types/node-fetch": "2.5.7",
         "chalk": "4.1.2",
+        "chatgpt": "^5.2.5",
         "commander": "9.0.0",
         "compare-versions": "4.1.2",
         "configchecker": "1.5.1",

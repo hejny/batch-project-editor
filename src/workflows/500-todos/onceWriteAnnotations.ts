@@ -1,12 +1,10 @@
 import chalk from 'chalk';
 import spaceTrim from 'spacetrim';
-import { forEver } from 'waitasecond';
 import { AUTOMATED_ANNOTATION_MARK } from '../../config';
 import { forPlay } from '../../utils/forPlay';
 import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
-import { askChatBingCached } from './utils/askChatBingCached';
+import { askChatGpt } from './utils/askChatGpt';
 import { changeAnnotationOfEntity } from './utils/changeAnnotationOfEntity';
-import { prepareChatBingPage } from './utils/chatBingPage';
 import { normalizeAnnotation } from './utils/normalizeAnnotation';
 import { normalizeChatRequestText } from './utils/normalizeChatRequestText';
 import { parseEntities } from './utils/parseEntities';
@@ -83,15 +81,23 @@ export async function onceWriteAnnotations({
 
             let newFileContent = originalFileContent;
 
+            /*/
+            // [0] BingChat version:
             const { responseText, metadataText } = await askChatBingCached(
                 { requestText },
                 { readJsonFile, modifyJsonFile },
             ).catch(async (error) => {
-                // TODO: !!! Better handle this
+                // TODO:  Better handle this
                 console.error(error);
                 await forEver();
                 return { responseText: '!!!', metadataText: '!!!' };
             });
+            /**/
+
+            /**/
+            // [1] ChatGPT version:
+            const { responseText, metadataText } = await askChatGpt({ requestText });
+            /**/
 
             metadataTexts.add(metadataText);
 
@@ -180,15 +186,12 @@ export async function onceWriteAnnotations({
     );
 }
 
+/*/
+// [0] BingChat version:
 onceWriteAnnotations.initialize = prepareChatBingPage;
+/**/
 
-interface IPrompt {
-    requestText: string;
-    responseText?: string;
-    metadataText?: string;
-    errors: Array<string>;
-    additional: Record<string, any>;
-}
+
 
 /**
  * Note: To run start:

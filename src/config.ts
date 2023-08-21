@@ -33,6 +33,8 @@ export const githubOctokit = new Octokit({ auth: GITHUB_TOKEN });
 
 export const WAIT_MULTIPLICATOR = 0.4;
 
+export const OPENAI_API_KEY = config.get('OPENAI_API_KEY').required().value;
+
 export const AUTOMATED_ANNOTATION_MARK = '⁘';
 
 //
