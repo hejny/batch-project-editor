@@ -1,5 +1,4 @@
-import { ChatGPTAPI } from 'chatgpt';
-import { OPENAI_API_KEY } from '../../../config';
+import OpenAI from 'openai';
 
 export interface IAskChatGptOptions {
     requestText: string;
@@ -11,20 +10,31 @@ export interface IAskChatGptReturn {
     metadataText: string;
 }
 
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
 export async function askChatGpt(options: IAskChatGptOptions): Promise<IAskChatGptReturn> {
     const { requestText } = options;
 
-    const chatGptApi = new ChatGPTAPI({
-        apiKey: OPENAI_API_KEY,
-        completionParams: {
-            temperature: 0.5,
-            top_p: 0.8,
-        },
+    const completion = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+            {
+                role: 'user',
+                content: requestText,
+            },
+        ],
     });
-    const response = await chatGptApi.sendMessage(requestText);
+
+    // Display response message to user
+    const responseMessage = completion.choices[0].message.content;
+    if (!responseMessage) {
+        throw new Error(`No response from OpenAPI`);
+    }
 
     return {
-        responseText: response.text,
-        metadataText: `@see ChatGPT API from ${new Date().toDateString()}`, // <- TODO: More info about the chat thread, GPT version, date,...,
+        responseText: responseMessage,
+        metadataText: `Using ${completion.model}`,
     };
 }
