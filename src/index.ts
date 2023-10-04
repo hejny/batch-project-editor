@@ -6,6 +6,7 @@ import { mkdir } from 'fs/promises';
 import { basename, join } from 'path';
 import spaceTrim from 'spacetrim';
 import { BASE_PATH } from './config';
+import { createNewRepository } from './createNewRepository';
 import { declareGlobals } from './globals';
 import { runAggregators } from './runAggregators';
 import { runWorkflows } from './runWorkflows';
@@ -28,6 +29,7 @@ async function main() {
     program.option('--list-projects', `List all local projects`, false);
     program.option('--list-workflows', `List all workflows`, false);
     program.option('--clone', `Clone all projects`, false);
+    program.option('--create <repositoryName>', `Create new repository`);
     program.option('--edit', `Run batch edit of projects; Note: Specify --workflows and --projects`, false);
     program.option('--aggregate', `Run aggregation; Note: Specify --aggregators and --projects`, false);
     program.option('--loop', `Should be looping after few minutes during --edit`, false);
@@ -73,6 +75,7 @@ async function main() {
         listProjects,
         listWorkflows,
         clone,
+        create,
         edit,
         aggregate,
         loop,
@@ -82,6 +85,12 @@ async function main() {
         branch,
         allowDirtyCwd,
     } = program.opts();
+
+    //----------------------------------
+    if (create) {
+        await createNewRepository({ repositoryName: create });
+    }
+    //----------------------------------
 
     //----------------------------------
     if (listRemoteProjects) {

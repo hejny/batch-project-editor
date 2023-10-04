@@ -206,6 +206,13 @@
             "focus": true
         },
         {
+            "name": "➕ Creating new repository",
+            "commands": ["ts-node ./src/index.ts --create test-repo"],
+            "onlySingle": true,
+            "focus": true
+        },
+
+        {
             "name": "📋⚙️ List workflows",
             "command": "ts-node ./src/index.ts --list-workflows",
             "onlySingle": true,
