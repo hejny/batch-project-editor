@@ -1,12 +1,11 @@
 import chalk from 'chalk';
 import { githubOctokit } from './config';
 
-// TODO: !!! Refactor: Split into files
-// TODO: !!! Refactor: Rename functions
 // TODO: !!! Refactor: Rename options
 // TODO: !!! Refactor: Annotate
 // TODO: !!! Refactor: Cleanup
 // TODO: !!! Enhance logging
+// TODO: !!! Refactor: Split into files
 
 interface ICreateNewRepositoryOptions {
     repositoryName: string;
@@ -26,7 +25,7 @@ export async function createNewRepository({ repositoryName }: ICreateNewReposito
 
     /**/
     console.info(chalk.bgGreen(` ⬆  Uploading into repository ${repositoryName} `));
-    const uploadResult = await uploadToRepo({
+    const uploadResult = await uploadToRepository({
         org: '1-2i',
         repo: repositoryName /* <- TODO: !!! Unite names */,
         branch: 'main',
@@ -71,7 +70,7 @@ interface IFileForGithub {
     };
 }
 
-async function uploadToRepo(options: { org: string; repo: string; branch: string; files: Array<IFile> }) {
+async function uploadToRepository(options: { org: string; repo: string; branch: string; files: Array<IFile> }) {
     // <- TODO: !!! Rename to uploadToRepository + other function
     const { org, repo, branch, files } = options;
 
