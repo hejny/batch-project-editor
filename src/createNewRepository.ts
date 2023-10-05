@@ -2,6 +2,13 @@ import chalk from 'chalk';
 // import { readFile } from 'fs-extra';
 import { githubOctokit } from './config';
 
+// TODO: !!! Refactor: Turn on github pages
+// TODO: !!! Refactor: Split into files
+// TODO: !!! Refactor: Rename functions
+// TODO: !!! Refactor: Rename options
+// TODO: !!! Refactor: Annotate
+// TODO: !!! Refactor: Cleanup
+
 interface ICreateNewRepositoryOptions {
     repositoryName: string;
 }
