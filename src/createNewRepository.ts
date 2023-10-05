@@ -7,7 +7,7 @@ interface ICreateNewRepositoryOptions {
 }
 
 export async function createNewRepository({ repositoryName }: ICreateNewRepositoryOptions) {
-    /**/
+    /*/
     console.info(chalk.bgGreen(` ➕  Creating new repository ${repositoryName} `));
     const createResult = await githubOctokit.repos.createInOrg({
         org: '1-2i',
@@ -37,39 +37,32 @@ interface IFileInGit {
 }
 
 async function uploadToRepo(options: { org: string; repo: string; branch: string }) {
+    // <- TODO: !!! Rename to uploadToRepository + other function
     const { org, repo, branch } = options;
 
-    // Check if the repository already exists
-    const isRepositoryInitialized = await checkRepositoryInitialized({ org, repo, branch });
-
-    console.log({ isRepositoryInitialized });
-
-    if (!isRepositoryInitialized) {
-        console.info(chalk.bgGreen(` 🌟  Creating initial commit`));
-
-        // If the repository doesn't exist, create an initial commit with an empty tree
-        const emptyTreeSha = await createEmptyTree({ org, repo });
-        const initialCommit = await createInitialCommit({ org, repo, treeSha: emptyTreeSha });
-
-        await createBranch({ org, repo, branch, commitSha: initialCommit.sha });
-    }
-
-    // Continue with your code for adding files and creating commits
+    // gets commit's AND its tree's SHA
     const currentCommit = await getCurrentCommit({ org, repo, branch });
+
+    /*
+    const filesPaths = await glob(coursePath);
+    const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile({ org, repo })));
+    const pathsForBlobs = filesPaths.map((fullPath) => path.relative(coursePath, fullPath));
+    */
+
     const files: Array<IFileInGit> = [
         {
-            path: 'CNAME',
-            content: await createBlobForString({ org, repo, content: 'test.webgpt.cz' }),
+            path: 'CNAME' /* <- !!! Pass as param */,
+            content: await createBlobForString({ org, repo, content: 'test.webgpt.cz' /* <- !!! Pass as param */ }),
         },
-        // Add more files here
     ];
+
     const newTree = await createNewTree({
         owner: org,
         repo,
         files,
         parentTreeSha: currentCommit.treeSha,
     });
-    const commitMessage = 'My commit message';
+    const commitMessage = `My commit message`; /* <- !!! Pass as param */
     const newCommit = await createNewCommit({
         org,
         repo,
@@ -78,85 +71,6 @@ async function uploadToRepo(options: { org: string; repo: string; branch: string
         currentCommitSha: currentCommit.commitSha,
     });
     await setBranchToCommit({ org, repo, branch, commitSha: newCommit.sha });
-}
-
-async function checkRepositoryInitialized(options: { org: string; repo: string; branch: string }) {
-    const { org, repo, branch } = options;
-    try {
-        // Check if the default branch (usually "main" or "master") exists
-        const { data: defaultBranchData } = await githubOctokit.repos.getBranch({
-            owner: org,
-            repo,
-            branch,
-        });
-        return true;
-    } catch (error) {
-        if (error.status === 404) {
-            return false;
-        }
-        throw error;
-    }
-}
-
-async function checkRepositoryExists(options: { org: string; repo: string }) {
-    const { org, repo } = options;
-    try {
-        await githubOctokit.repos.get({ owner: org, repo });
-        return true;
-    } catch (error) {
-        if (error.status === 404) {
-            return false;
-        }
-        throw error;
-    }
-}
-
-async function createEmptyTree(options: { org: string; repo: string }) {
-    const { org, repo } = options;
-
-    // Create a dummy file to add to the initial tree
-    const dummyFileContent = 'Initial commit';
-    const dummyFileBlob = await createBlobForString({ org, repo, content: dummyFileContent });
-
-    // Create a tree with the dummy file
-    const tree = [
-        {
-            path: 'README.md', // You can use any file name you prefer
-            mode: '100644',
-            type: 'blob',
-            sha: dummyFileBlob.sha,
-        },
-    ] as any;
-
-    const { data } = await githubOctokit.git.createTree({
-        owner: org,
-        repo,
-        tree,
-    });
-
-    return data.sha;
-}
-
-async function createInitialCommit(options: { org: string; repo: string; treeSha: string }) {
-    const { org, repo, treeSha } = options;
-    const intialCommit = await githubOctokit.git.createCommit({
-        owner: org,
-        repo,
-        message: '🌟 Initial commit',
-        tree: treeSha,
-        parents: [],
-    });
-    return intialCommit.data;
-}
-
-async function createBranch(options: { org: string; repo: string; branch: string; commitSha: string }) {
-    const { org, repo, branch, commitSha } = options;
-    await githubOctokit.git.createRef({
-        owner: org,
-        repo,
-        ref: `refs/heads/${branch}`,
-        sha: commitSha,
-    });
 }
 
 async function getCurrentCommit(options: { org: string; repo: string; branch: string }) {
