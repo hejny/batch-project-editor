@@ -1,8 +1,5 @@
-import Octokit from '@octokit/rest';
 import chalk from 'chalk';
-import { readFile } from 'fs-extra';
-import glob from 'globby';
-import path from 'path';
+// import { readFile } from 'fs-extra';
 import { githubOctokit } from './config';
 
 interface ICreateNewRepositoryOptions {
@@ -10,45 +7,74 @@ interface ICreateNewRepositoryOptions {
 }
 
 export async function createNewRepository({ repositoryName }: ICreateNewRepositoryOptions) {
+    /*/
     console.info(chalk.bgGreen(` ➕  Creating new repository ${repositoryName} `));
-
     const createResult = await githubOctokit.repos.createInOrg({
         org: '1-2i',
         name: repositoryName,
         private: false,
     });
+    console.log(createResult);
+    /**/
 
-    await uploadToRepo({
+    /**/
+    console.info(chalk.bgGreen(` ⬆  Uploading into repository ${repositoryName} `));
+    const uploadResult = await uploadToRepo({
         org: '1-2i',
-        name: repositoryName,
+        repo: repositoryName /* <- TODO: !!! Unite names */,
         branch: 'main',
     });
-
-    console.log(createResult);
+    console.log(uploadResult);
+    /**/
 }
 
-async function uploadToRepo(options: { coursePath: string; org: string; repo: string; branch: string }) {
-    const { coursePath, org, repo, branch } = options;
+interface IFileInGit {
+    path: string;
+    content: {
+        url: string;
+        sha: string;
+    };
+}
+
+async function uploadToRepo(options: { org: string; repo: string; branch: string }) {
+    const { org, repo, branch } = options;
 
     // gets commit's AND its tree's SHA
-    const currentCommit = await getCurrentCommit(githubOctokit, org, repo, branch);
+    const currentCommit = await getCurrentCommit({ org, repo, branch });
+
+    /*
     const filesPaths = await glob(coursePath);
-    const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(githubOctokit, org, repo)));
+    const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile({ org, repo })));
     const pathsForBlobs = filesPaths.map((fullPath) => path.relative(coursePath, fullPath));
-    const newTree = await createNewTree(githubOctokit, org, repo, filesBlobs, pathsForBlobs, currentCommit.treeSha);
+    */
+
+    const files: Array<IFileInGit> = [
+        {
+            path: 'test.txt',
+            content: await createBlobForString({ org, repo, content: 'Hello world' /* <- !!! Pass as param */ }),
+        },
+    ];
+
+    const newTree = await createNewTree({
+        owner: org,
+        repo,
+        files,
+        parentTreeSha: currentCommit.treeSha,
+    });
     const commitMessage = `My commit message`;
-    const newCommit = await createNewCommit(
-        githubOctokit,
+    const newCommit = await createNewCommit({
         org,
         repo,
-        commitMessage,
-        newTree.sha,
-        currentCommit.commitSha,
-    );
-    await setBranchToCommit(githubOctokit, org, repo, branch, newCommit.sha);
+        message: commitMessage,
+        currentTreeSha: newTree.sha,
+        currentCommitSha: currentCommit.commitSha,
+    });
+    await setBranchToCommit({ org, repo, branch, commitSha: newCommit.sha });
 }
 
-const getCurrentCommit = async (githubOctokit: Octokit, org: string, repo: string, branch: string = 'master') => {
+async function getCurrentCommit(options: { org: string; repo: string; branch: string }) {
+    const { org, repo, branch } = options;
+
     const { data: refData } = await githubOctokit.git.getRef({
         owner: org,
         repo,
@@ -64,13 +90,15 @@ const getCurrentCommit = async (githubOctokit: Octokit, org: string, repo: strin
         commitSha,
         treeSha: commitData.tree.sha,
     };
-};
+}
 
+/*
 // Notice that readFile's utf8 is typed differently from Github's utf-8
 const getFileAsUTF8 = (filePath: string) => readFile(filePath, 'utf8');
+*/
 
-const createBlobForFile = (githubOctokit: Octokit, org: string, repo: string) => async (filePath: string) => {
-    const content = await getFileAsUTF8(filePath);
+async function createBlobForString(options: { org: string; repo: string; content: string }) {
+    const { org, repo, content } = options;
     const blobData = await githubOctokit.git.createBlob({
         owner: org,
         repo,
@@ -78,41 +106,60 @@ const createBlobForFile = (githubOctokit: Octokit, org: string, repo: string) =>
         encoding: 'utf-8',
     });
     return blobData.data;
-};
+}
 
-const createNewTree = async (
-    githubOctokit: Octokit,
-    owner: string,
-    repo: string,
-    blobs: Octokit.GitCreateBlobResponse[],
-    paths: string[],
-    parentTreeSha: string,
-) => {
+async function createBlobForFile(options: { org: string; repo: string }) {
+    const { org, repo } = options;
+
+    return async (filePath: string) => {
+        const content = `!!!${filePath}`;
+        //const content = await getFileAsUTF8(filePath);
+        const blobData = await githubOctokit.git.createBlob({
+            owner: org,
+            repo,
+            content,
+            encoding: 'utf-8',
+        });
+        return blobData.data;
+    };
+}
+
+async function createNewTree(options: {
+    owner: string;
+    repo: string;
+    files: Array<IFileInGit>;
+    // blobs: any; //Octokit.GitCreateBlobResponse[];
+    // paths: string[];
+    parentTreeSha: string;
+}) {
+    const { owner, repo, files, parentTreeSha } = options;
+
     // My custom config. Could be taken as parameters
-    const tree = blobs.map(({ sha }, index) => ({
-        path: paths[index],
+    const tree = files.map(({ path, content: { sha } }) => ({
+        path,
         mode: `100644`,
         type: `blob`,
         sha,
-    })) as Octokit.GitCreateTreeParamsTree[];
+    }));
     const { data } = await githubOctokit.git.createTree({
         owner,
         repo,
         tree,
         base_tree: parentTreeSha,
-    });
+    } as any);
     return data;
-};
+}
 
-const createNewCommit = async (
-    githubOctokit: Octokit,
-    org: string,
-    repo: string,
-    message: string,
-    currentTreeSha: string,
-    currentCommitSha: string,
-) =>
-    (
+async function createNewCommit(options: {
+    org: string;
+    repo: string;
+    message: string;
+    currentTreeSha: string;
+    currentCommitSha: string;
+}) {
+    const { org, repo, message, currentTreeSha, currentCommitSha } = options;
+
+    return await (
         await githubOctokit.git.createCommit({
             owner: org,
             repo,
@@ -121,17 +168,14 @@ const createNewCommit = async (
             parents: [currentCommitSha],
         })
     ).data;
+}
 
-const setBranchToCommit = (
-    githubOctokit: Octokit,
-    org: string,
-    repo: string,
-    branch: string = `master`,
-    commitSha: string,
-) =>
-    githubOctokit.git.updateRef({
+async function setBranchToCommit(options: { org: string; repo: string; branch: string; commitSha: string }) {
+    const { org, repo, branch, commitSha } = options;
+    return await githubOctokit.git.updateRef({
         owner: org,
         repo,
         ref: `heads/${branch}`,
         sha: commitSha,
     });
+}
