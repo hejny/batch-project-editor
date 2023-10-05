@@ -34,6 +34,17 @@ export async function createNewRepository({ repositoryName }: ICreateNewReposito
     });
     console.log(uploadResult);
     /**/
+
+    /**/
+    await githubOctokit.repos.createPagesSite({
+        owner: '1-2i',
+        repo: repositoryName,
+        source: {
+            branch: 'main',
+            path: '/',
+        },
+    });
+    /**/
 }
 
 interface IFileInGit {
