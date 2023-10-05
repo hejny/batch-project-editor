@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import { githubOctokit } from './config';
 
 // TODO: !!! Refactor: Annotate
-// TODO: !!! Enhance logging
 // TODO: !!! Refactor: Split into files
 
 interface ICreateNewRepositoryOptions {
@@ -14,19 +13,20 @@ export async function createNewRepository(options: ICreateNewRepositoryOptions) 
     const { organizationName, repositoryName } = options;
 
     /**/
-    console.info(chalk.bgGreen(` ➕  Creating new repository ${repositoryName} `));
+    console.info(chalk.cyan(` ➕  Creating new repository ${repositoryName} `));
     const createResult = await githubOctokit.repos.createInOrg({
         org: organizationName,
         name: repositoryName,
         auto_init: true,
         private: false,
     });
-    console.log(createResult);
+    // console.log(createResult);
+    console.info(chalk.green(` Repository ${repositoryName} created `));
     /**/
 
     /**/
-    console.info(chalk.bgGreen(` ⬆  Uploading into repository ${repositoryName} `));
-    const uploadResult = await uploadToRepository({
+    console.info(chalk.cyan(` ⬆  Uploading into repository ${repositoryName} `));
+    /* const uploadResult = */ await uploadToRepository({
         organizationName,
         repositoryName,
         branch: 'main',
@@ -43,10 +43,12 @@ export async function createNewRepository(options: ICreateNewRepositoryOptions) 
             // TODO: !!! Change default README.md
         ],
     });
-    console.log(uploadResult);
+    // console.log(uploadResult);
+    console.info(chalk.green(`Uploaded into repository ${repositoryName}`));
     /**/
 
     /**/
+    console.info(chalk.cyan(` 🌎  Publishing repository ${repositoryName} `));
     await githubOctokit.repos.createPagesSite({
         owner: organizationName,
         repo: repositoryName,
@@ -55,6 +57,7 @@ export async function createNewRepository(options: ICreateNewRepositoryOptions) 
             path: '/',
         },
     });
+    console.info(chalk.green(`Published on:\nhttps://${repositoryName}.webgpt.cz` /* <- TODO: Unhardcode */));
     /**/
 }
 
@@ -126,7 +129,6 @@ async function getCurrentCommit(options: { organizationName: string; repositoryN
     };
 }
 
-
 async function createBlobForGithub(options: { organizationName: string; repositoryName: string; content: string }) {
     const { organizationName, repositoryName: repo, content } = options;
     const blobData = await githubOctokit.git.createBlob({
@@ -137,7 +139,6 @@ async function createBlobForGithub(options: { organizationName: string; reposito
     });
     return blobData.data;
 }
-
 
 async function createNewTree(options: {
     organizationName: string;
