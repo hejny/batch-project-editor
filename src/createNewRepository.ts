@@ -37,6 +37,7 @@ interface IFileInGit {
 }
 
 async function uploadToRepo(options: { org: string; repo: string; branch: string }) {
+    // <- TODO: !!! Rename to uploadToRepository + other function
     const { org, repo, branch } = options;
 
     // gets commit's AND its tree's SHA
@@ -50,8 +51,8 @@ async function uploadToRepo(options: { org: string; repo: string; branch: string
 
     const files: Array<IFileInGit> = [
         {
-            path: 'test.txt',
-            content: await createBlobForString({ org, repo, content: 'Hello world' /* <- !!! Pass as param */ }),
+            path: 'CNAME' /* <- !!! Pass as param */,
+            content: await createBlobForString({ org, repo, content: 'test.webgpt.cz' /* <- !!! Pass as param */ }),
         },
     ];
 
@@ -61,7 +62,7 @@ async function uploadToRepo(options: { org: string; repo: string; branch: string
         files,
         parentTreeSha: currentCommit.treeSha,
     });
-    const commitMessage = `My commit message`;
+    const commitMessage = `My commit message`; /* <- !!! Pass as param */
     const newCommit = await createNewCommit({
         org,
         repo,
