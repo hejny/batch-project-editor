@@ -12,6 +12,7 @@ export async function createNewRepository({ repositoryName }: ICreateNewReposito
     const createResult = await githubOctokit.repos.createInOrg({
         org: '1-2i',
         name: repositoryName,
+        auto_init: true,
         private: false,
     });
     console.log(createResult);
