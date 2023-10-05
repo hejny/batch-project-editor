@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { githubOctokit } from './config';
 
 // TODO: !!! Refactor: Turn on github pages
+// TODO: !!! Prefix relevant comments by "Note: "
 // TODO: !!! Refactor: Split into files
 // TODO: !!! Refactor: Rename functions
 // TODO: !!! Refactor: Rename options
@@ -14,7 +15,7 @@ interface ICreateNewRepositoryOptions {
 }
 
 export async function createNewRepository({ repositoryName }: ICreateNewRepositoryOptions) {
-    /*/
+    /**/
     console.info(chalk.bgGreen(` ➕  Creating new repository ${repositoryName} `));
     const createResult = await githubOctokit.repos.createInOrg({
         org: '1-2i',
@@ -31,6 +32,18 @@ export async function createNewRepository({ repositoryName }: ICreateNewReposito
         org: '1-2i',
         repo: repositoryName /* <- TODO: !!! Unite names */,
         branch: 'main',
+        files: [
+            {
+                path: 'index.html',
+                content: `<h1>Welcome to ${repositoryName}!</h1>`,
+            },
+            {
+                path: 'CNAME',
+                content: `${repositoryName}.webgpt.cz`,
+            },
+            // TODO: !!! Add commit message
+            // TODO: !!! Change default README.md
+        ],
     });
     console.log(uploadResult);
     /**/
@@ -47,7 +60,12 @@ export async function createNewRepository({ repositoryName }: ICreateNewReposito
     /**/
 }
 
-interface IFileInGit {
+interface IFile {
+    path: string;
+    content: string;
+}
+
+interface IFileForGithub {
     path: string;
     content: {
         url: string;
@@ -55,9 +73,9 @@ interface IFileInGit {
     };
 }
 
-async function uploadToRepo(options: { org: string; repo: string; branch: string }) {
+async function uploadToRepo(options: { org: string; repo: string; branch: string; files: Array<IFile> }) {
     // <- TODO: !!! Rename to uploadToRepository + other function
-    const { org, repo, branch } = options;
+    const { org, repo, branch, files } = options;
 
     // gets commit's AND its tree's SHA
     const currentCommit = await getCurrentCommit({ org, repo, branch });
@@ -68,17 +86,17 @@ async function uploadToRepo(options: { org: string; repo: string; branch: string
     const pathsForBlobs = filesPaths.map((fullPath) => path.relative(coursePath, fullPath));
     */
 
-    const files: Array<IFileInGit> = [
-        {
-            path: 'CNAME' /* <- !!! Pass as param */,
-            content: await createBlobForString({ org, repo, content: 'test.webgpt.cz' /* <- !!! Pass as param */ }),
-        },
-    ];
+    const filesForGithub: Array<IFileForGithub> = await Promise.all(
+        files.map(async ({ path, content }) => ({
+            path,
+            content: await createBlobForGithub({ org, repo, content }),
+        })),
+    );
 
     const newTree = await createNewTree({
         owner: org,
         repo,
-        files,
+        files: filesForGithub,
         parentTreeSha: currentCommit.treeSha,
     });
     const commitMessage = `My commit message`; /* <- !!! Pass as param */
@@ -117,7 +135,7 @@ async function getCurrentCommit(options: { org: string; repo: string; branch: st
 const getFileAsUTF8 = (filePath: string) => readFile(filePath, 'utf8');
 */
 
-async function createBlobForString(options: { org: string; repo: string; content: string }) {
+async function createBlobForGithub(options: { org: string; repo: string; content: string }) {
     const { org, repo, content } = options;
     const blobData = await githubOctokit.git.createBlob({
         owner: org,
@@ -147,7 +165,7 @@ async function createBlobForFile(options: { org: string; repo: string }) {
 async function createNewTree(options: {
     owner: string;
     repo: string;
-    files: Array<IFileInGit>;
+    files: Array<IFileForGithub>;
     // blobs: any; //Octokit.GitCreateBlobResponse[];
     // paths: string[];
     parentTreeSha: string;

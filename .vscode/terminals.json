@@ -207,7 +207,7 @@
         },
         {
             "name": "➕ Creating new repository",
-            "commands": ["ts-node ./src/index.ts --create test-repo"],
+            "commands": ["ts-node ./src/index.ts --create test"],
             "onlySingle": true,
             "focus": true
         },
