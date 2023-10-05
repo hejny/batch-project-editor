@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import { githubOctokit } from './config';
 
-// TODO: !!! Prefix relevant comments by "Note: "
 // TODO: !!! Refactor: Split into files
 // TODO: !!! Refactor: Rename functions
 // TODO: !!! Refactor: Rename options
@@ -76,7 +75,7 @@ async function uploadToRepo(options: { org: string; repo: string; branch: string
     // <- TODO: !!! Rename to uploadToRepository + other function
     const { org, repo, branch, files } = options;
 
-    // gets commit's AND its tree's SHA
+    // Note:  Gets commit's AND its tree's SHA
     const currentCommit = await getCurrentCommit({ org, repo, branch });
 
     /*
@@ -171,7 +170,7 @@ async function createNewTree(options: {
 }) {
     const { owner, repo, files, parentTreeSha } = options;
 
-    // My custom config. Could be taken as parameters
+    // Note: My custom config. Could be taken as parameters
     const tree = files.map(({ path, content: { sha } }) => ({
         path,
         mode: `100644`,
