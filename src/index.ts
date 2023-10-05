@@ -88,7 +88,7 @@ async function main() {
 
     //----------------------------------
     if (create) {
-        await createNewRepository({ repositoryName: create });
+        await createNewRepository({ organizationName: '1-2i' /* <- TODO: Unhardcode */, repositoryName: create });
     }
     //----------------------------------
 

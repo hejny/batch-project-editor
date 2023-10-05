@@ -1,21 +1,23 @@
 import chalk from 'chalk';
 import { githubOctokit } from './config';
 
-// TODO: !!! Refactor: Rename options
 // TODO: !!! Refactor: Annotate
 // TODO: !!! Refactor: Cleanup
 // TODO: !!! Enhance logging
 // TODO: !!! Refactor: Split into files
 
 interface ICreateNewRepositoryOptions {
+    organizationName: string;
     repositoryName: string;
 }
 
-export async function createNewRepository({ repositoryName }: ICreateNewRepositoryOptions) {
+export async function createNewRepository(options: ICreateNewRepositoryOptions) {
+    const { organizationName, repositoryName } = options;
+
     /**/
     console.info(chalk.bgGreen(` ➕  Creating new repository ${repositoryName} `));
     const createResult = await githubOctokit.repos.createInOrg({
-        org: '1-2i',
+        org: organizationName,
         name: repositoryName,
         auto_init: true,
         private: false,
@@ -26,8 +28,8 @@ export async function createNewRepository({ repositoryName }: ICreateNewReposito
     /**/
     console.info(chalk.bgGreen(` ⬆  Uploading into repository ${repositoryName} `));
     const uploadResult = await uploadToRepository({
-        org: '1-2i',
-        repo: repositoryName /* <- TODO: !!! Unite names */,
+        organizationName,
+        repositoryName,
         branch: 'main',
         files: [
             {
@@ -47,7 +49,7 @@ export async function createNewRepository({ repositoryName }: ICreateNewReposito
 
     /**/
     await githubOctokit.repos.createPagesSite({
-        owner: '1-2i',
+        owner: organizationName,
         repo: repositoryName,
         source: {
             branch: 'main',
@@ -70,12 +72,16 @@ interface IFileForGithub {
     };
 }
 
-async function uploadToRepository(options: { org: string; repo: string; branch: string; files: Array<IFile> }) {
-    // <- TODO: !!! Rename to uploadToRepository + other function
-    const { org, repo, branch, files } = options;
+async function uploadToRepository(options: {
+    organizationName: string;
+    repositoryName: string;
+    branch: string;
+    files: Array<IFile>;
+}) {
+    const { organizationName, repositoryName, branch, files } = options;
 
     // Note:  Gets commit's AND its tree's SHA
-    const currentCommit = await getCurrentCommit({ org, repo, branch });
+    const currentCommit = await getCurrentCommit({ organizationName, repositoryName, branch });
 
     /*
     const filesPaths = await glob(coursePath);
@@ -86,39 +92,39 @@ async function uploadToRepository(options: { org: string; repo: string; branch: 
     const filesForGithub: Array<IFileForGithub> = await Promise.all(
         files.map(async ({ path, content }) => ({
             path,
-            content: await createBlobForGithub({ org, repo, content }),
+            content: await createBlobForGithub({ organizationName, repositoryName, content }),
         })),
     );
 
     const newTree = await createNewTree({
-        owner: org,
-        repo,
+        organizationName,
+        repositoryName,
         files: filesForGithub,
         parentTreeSha: currentCommit.treeSha,
     });
     const commitMessage = `My commit message`; /* <- !!! Pass as param */
     const newCommit = await createNewCommit({
-        org,
-        repo,
+        organizationName,
+        repositoryName,
         message: commitMessage,
         currentTreeSha: newTree.sha,
         currentCommitSha: currentCommit.commitSha,
     });
-    await setBranchToCommit({ org, repo, branch, commitSha: newCommit.sha });
+    await setBranchToCommit({ organizationName, repositoryName, branch, commitSha: newCommit.sha });
 }
 
-async function getCurrentCommit(options: { org: string; repo: string; branch: string }) {
-    const { org, repo, branch } = options;
+async function getCurrentCommit(options: { organizationName: string; repositoryName: string; branch: string }) {
+    const { organizationName, repositoryName, branch } = options;
 
     const { data: refData } = await githubOctokit.git.getRef({
-        owner: org,
-        repo,
+        owner: organizationName,
+        repo: repositoryName,
         ref: `heads/${branch}`,
     });
     const commitSha = refData.object.sha;
     const { data: commitData } = await githubOctokit.git.getCommit({
-        owner: org,
-        repo,
+        owner: organizationName,
+        repo: repositoryName,
         commit_sha: commitSha,
     });
     return {
@@ -132,10 +138,10 @@ async function getCurrentCommit(options: { org: string; repo: string; branch: st
 const getFileAsUTF8 = (filePath: string) => readFile(filePath, 'utf8');
 */
 
-async function createBlobForGithub(options: { org: string; repo: string; content: string }) {
-    const { org, repo, content } = options;
+async function createBlobForGithub(options: { organizationName: string; repositoryName: string; content: string }) {
+    const { organizationName, repositoryName: repo, content } = options;
     const blobData = await githubOctokit.git.createBlob({
-        owner: org,
+        owner: organizationName,
         repo,
         content,
         encoding: 'utf-8',
@@ -143,15 +149,15 @@ async function createBlobForGithub(options: { org: string; repo: string; content
     return blobData.data;
 }
 
-async function createBlobForFile(options: { org: string; repo: string }) {
-    const { org, repo } = options;
+async function createBlobForFile(options: { organizationName: string; repositoryName: string }) {
+    const { organizationName, repositoryName } = options;
 
     return async (filePath: string) => {
         const content = `!!!${filePath}`;
         //const content = await getFileAsUTF8(filePath);
         const blobData = await githubOctokit.git.createBlob({
-            owner: org,
-            repo,
+            owner: organizationName,
+            repo: repositoryName,
             content,
             encoding: 'utf-8',
         });
@@ -160,14 +166,14 @@ async function createBlobForFile(options: { org: string; repo: string }) {
 }
 
 async function createNewTree(options: {
-    owner: string;
-    repo: string;
+    organizationName: string;
+    repositoryName: string;
     files: Array<IFileForGithub>;
     // blobs: any; //Octokit.GitCreateBlobResponse[];
     // paths: string[];
     parentTreeSha: string;
 }) {
-    const { owner, repo, files, parentTreeSha } = options;
+    const { organizationName: owner, repositoryName, files, parentTreeSha } = options;
 
     // Note: My custom config. Could be taken as parameters
     const tree = files.map(({ path, content: { sha } }) => ({
@@ -178,7 +184,7 @@ async function createNewTree(options: {
     }));
     const { data } = await githubOctokit.git.createTree({
         owner,
-        repo,
+        repo: repositoryName,
         tree,
         base_tree: parentTreeSha,
     } as any);
@@ -186,18 +192,18 @@ async function createNewTree(options: {
 }
 
 async function createNewCommit(options: {
-    org: string;
-    repo: string;
+    organizationName: string;
+    repositoryName: string;
     message: string;
     currentTreeSha: string;
     currentCommitSha: string;
 }) {
-    const { org, repo, message, currentTreeSha, currentCommitSha } = options;
+    const { organizationName, repositoryName, message, currentTreeSha, currentCommitSha } = options;
 
     return await (
         await githubOctokit.git.createCommit({
-            owner: org,
-            repo,
+            owner: organizationName,
+            repo: repositoryName,
             message,
             tree: currentTreeSha,
             parents: [currentCommitSha],
@@ -205,11 +211,16 @@ async function createNewCommit(options: {
     ).data;
 }
 
-async function setBranchToCommit(options: { org: string; repo: string; branch: string; commitSha: string }) {
-    const { org, repo, branch, commitSha } = options;
+async function setBranchToCommit(options: {
+    organizationName: string;
+    repositoryName: string;
+    branch: string;
+    commitSha: string;
+}) {
+    const { organizationName, repositoryName, branch, commitSha } = options;
     return await githubOctokit.git.updateRef({
-        owner: org,
-        repo,
+        owner: organizationName,
+        repo: repositoryName,
         ref: `heads/${branch}`,
         sha: commitSha,
     });
