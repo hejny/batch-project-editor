@@ -6,17 +6,19 @@ import { IFile } from './interfaces/IFile';
 import { IFileForGithub } from './interfaces/IFileForGithub';
 import { setBranchToCommit } from './setBranchToCommit';
 
+interface UploadToRepositoryOptions {
+  organizationName: string;
+  repositoryName: string;
+  branch: string;
+  files: Array<IFile>;
+}
+
 /**
  * Upload files to repository during publishing
  *
  * @private within github-publish folder
  */
-export async function uploadToRepository(options: {
-    organizationName: string;
-    repositoryName: string;
-    branch: string;
-    files: Array<IFile>;
-}) {
+export async function uploadToRepository(options: UploadToRepositoryOptions) {
     const { organizationName, repositoryName, branch, files } = options;
 
     // Note:  Gets commit's AND its tree's SHA

@@ -1,17 +1,19 @@
 import { githubOctokit } from '../../config';
 
-/**
- * Create new commit during publishing
- *
- * @private within github-publish folder
- */
-export async function createNewCommit(options: {
+interface CreateNewCommitOptions {
     organizationName: string;
     repositoryName: string;
     message: string;
     currentTreeSha: string;
     currentCommitSha: string;
-}) {
+}
+
+/**
+ * Create new commit during publishing
+ *
+ * @private within github-publish folder
+ */
+export async function createNewCommit(options: CreateNewCommitOptions) {
     const { organizationName, repositoryName, message, currentTreeSha, currentCommitSha } = options;
 
     return await (

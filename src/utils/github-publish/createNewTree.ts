@@ -1,19 +1,19 @@
 import { githubOctokit } from '../../config';
 import { IFileForGithub } from './interfaces/IFileForGithub';
 
+interface CreateNewTreeOptions {
+  organizationName: string;
+  repositoryName: string;
+  files: Array<IFileForGithub>;
+  parentTreeSha: string;
+}
+
 /**
  * Create new git tree during publishing
  *
  * @private within github-publish folder
  */
-export async function createNewTree(options: {
-    organizationName: string;
-    repositoryName: string;
-    files: Array<IFileForGithub>;
-    // blobs: any; //Octokit.GitCreateBlobResponse[];
-    // paths: string[];
-    parentTreeSha: string;
-}) {
+export async function createNewTree(options: CreateNewTreeOptions) {
     const { organizationName: owner, repositoryName, files, parentTreeSha } = options;
 
     // Note: My custom config. Could be taken as parameters

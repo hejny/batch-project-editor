@@ -1,16 +1,18 @@
 import { githubOctokit } from '../../config';
 
+interface SetBranchToCommitOptions {
+  organizationName: string;
+  repositoryName: string;
+  branch: string;
+  commitSha: string;
+}
+
 /**
  * Set branch head to given commit during publishing
  *
  * @private within github-publish folder
  */
-export async function setBranchToCommit(options: {
-    organizationName: string;
-    repositoryName: string;
-    branch: string;
-    commitSha: string;
-}) {
+export async function setBranchToCommit(options: SetBranchToCommitOptions) {
     const { organizationName, repositoryName, branch, commitSha } = options;
     return await githubOctokit.git.updateRef({
         owner: organizationName,

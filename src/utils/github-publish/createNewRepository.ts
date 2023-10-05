@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { githubOctokit } from '../../config';
 import { uploadToRepository } from './uploadToRepository';
 
-interface ICreateNewRepositoryOptions {
+interface CreateNewRepositoryOptions {
     organizationName: string;
     repositoryName: string;
 }
@@ -12,7 +12,7 @@ interface ICreateNewRepositoryOptions {
  *
  * @public
  */
-export async function createNewRepository(options: ICreateNewRepositoryOptions) {
+export async function createNewRepository(options: CreateNewRepositoryOptions) {
     const { organizationName, repositoryName } = options;
 
     /**/
