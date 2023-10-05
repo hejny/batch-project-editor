@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import { githubOctokit } from './config';
 
 // TODO: !!! Refactor: Annotate
-// TODO: !!! Refactor: Cleanup
 // TODO: !!! Enhance logging
 // TODO: !!! Refactor: Split into files
 
@@ -83,12 +82,6 @@ async function uploadToRepository(options: {
     // Note:  Gets commit's AND its tree's SHA
     const currentCommit = await getCurrentCommit({ organizationName, repositoryName, branch });
 
-    /*
-    const filesPaths = await glob(coursePath);
-    const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile({ org, repo })));
-    const pathsForBlobs = filesPaths.map((fullPath) => path.relative(coursePath, fullPath));
-    */
-
     const filesForGithub: Array<IFileForGithub> = await Promise.all(
         files.map(async ({ path, content }) => ({
             path,
@@ -133,10 +126,6 @@ async function getCurrentCommit(options: { organizationName: string; repositoryN
     };
 }
 
-/*
-// Notice that readFile's utf8 is typed differently from Github's utf-8
-const getFileAsUTF8 = (filePath: string) => readFile(filePath, 'utf8');
-*/
 
 async function createBlobForGithub(options: { organizationName: string; repositoryName: string; content: string }) {
     const { organizationName, repositoryName: repo, content } = options;
@@ -149,21 +138,6 @@ async function createBlobForGithub(options: { organizationName: string; reposito
     return blobData.data;
 }
 
-async function createBlobForFile(options: { organizationName: string; repositoryName: string }) {
-    const { organizationName, repositoryName } = options;
-
-    return async (filePath: string) => {
-        const content = `!!!${filePath}`;
-        //const content = await getFileAsUTF8(filePath);
-        const blobData = await githubOctokit.git.createBlob({
-            owner: organizationName,
-            repo: repositoryName,
-            content,
-            encoding: 'utf-8',
-        });
-        return blobData.data;
-    };
-}
 
 async function createNewTree(options: {
     organizationName: string;
