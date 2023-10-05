@@ -1,5 +1,10 @@
 import { githubOctokit } from '../../config';
 
+/**
+ * Get current commit during publishing
+ *
+ * @private within github-publish folder
+ */
 export async function getCurrentCommit(options: { organizationName: string; repositoryName: string; branch: string }) {
     const { organizationName, repositoryName, branch } = options;
 

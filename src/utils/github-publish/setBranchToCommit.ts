@@ -1,5 +1,10 @@
 import { githubOctokit } from '../../config';
 
+/**
+ * Set branch head to given commit during publishing
+ *
+ * @private within github-publish folder
+ */
 export async function setBranchToCommit(options: {
     organizationName: string;
     repositoryName: string;

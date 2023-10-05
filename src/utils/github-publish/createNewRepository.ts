@@ -7,6 +7,11 @@ interface ICreateNewRepositoryOptions {
     repositoryName: string;
 }
 
+/**
+ * Create new repository, upload files into it and publish to Github Pages
+ *
+ * @public
+ */
 export async function createNewRepository(options: ICreateNewRepositoryOptions) {
     const { organizationName, repositoryName } = options;
 

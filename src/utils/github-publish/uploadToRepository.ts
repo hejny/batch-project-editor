@@ -6,6 +6,11 @@ import { IFile } from './interfaces/IFile';
 import { IFileForGithub } from './interfaces/IFileForGithub';
 import { setBranchToCommit } from './setBranchToCommit';
 
+/**
+ * Upload files to repository during publishing
+ *
+ * @private within github-publish folder
+ */
 export async function uploadToRepository(options: {
     organizationName: string;
     repositoryName: string;

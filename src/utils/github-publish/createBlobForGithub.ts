@@ -1,5 +1,10 @@
 import { githubOctokit } from '../../config';
 
+/**
+ * Helper for conversion IFile to IFileForGithub
+ *
+ * @private within github-publish folder
+ */
 export async function createBlobForGithub(options: {
     organizationName: string;
     repositoryName: string;

@@ -1,5 +1,10 @@
 import { githubOctokit } from '../../config';
 
+/**
+ * Create new commit during publishing
+ *
+ * @private within github-publish folder
+ */
 export async function createNewCommit(options: {
     organizationName: string;
     repositoryName: string;

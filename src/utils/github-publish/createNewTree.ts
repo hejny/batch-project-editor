@@ -1,6 +1,11 @@
 import { githubOctokit } from '../../config';
 import { IFileForGithub } from './interfaces/IFileForGithub';
 
+/**
+ * Create new git tree during publishing
+ *
+ * @private within github-publish folder
+ */
 export async function createNewTree(options: {
     organizationName: string;
     repositoryName: string;
