@@ -1,8 +1,6 @@
 import chalk from 'chalk';
-// import { readFile } from 'fs-extra';
 import { githubOctokit } from './config';
 
-// TODO: !!! Refactor: Turn on github pages
 // TODO: !!! Prefix relevant comments by "Note: "
 // TODO: !!! Refactor: Split into files
 // TODO: !!! Refactor: Rename functions
