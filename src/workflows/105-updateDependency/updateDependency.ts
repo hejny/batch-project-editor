@@ -16,7 +16,7 @@ export function updateDependency(dependencyName: string): IWorkflow {
             commit,
             skippingBecauseOf,
         }: IWorkflowOptions) {
-            const dependencyName = 'spacetrim'; /* <- TODO: More libraries */
+            const dependencyName = 'n12'; /* <- TODO: More libraries */
             // TODO: [0] for (const libraryName of ['spacetrim']) {
 
             const dependencyUsedVersionWithPrefix =
@@ -28,25 +28,25 @@ export function updateDependency(dependencyName: string): IWorkflow {
 
             const dependencyUsedVersion = removeDependencyPrefix(dependencyUsedVersionWithPrefix);
 
-            const dependencyCurrentVersion = await fetchPackageVersion(dependencyName);
+            const dependencyUpToDateVersion = await fetchPackageVersion(dependencyName);
 
-            if (dependencyUsedVersion === dependencyCurrentVersion) {
+            if (dependencyUsedVersion === dependencyUpToDateVersion) {
                 return /* [0] */ skippingBecauseOf(
-                    `using ${dependencyName} in current version ${dependencyUsedVersion}`,
+                    `Already using ${dependencyName} in current version ${dependencyUsedVersion}`,
                 );
             }
 
-            const updateSingnature = `${dependencyName}@${dependencyUsedVersion} → ${dependencyName}@${dependencyCurrentVersion}`;
+            const updateSingnature = `${dependencyName}@${dependencyUsedVersion} → ${dependencyName}@${dependencyUpToDateVersion}`;
             console.info(chalk.cyan(`Updating ${updateSingnature}`));
 
             try {
-                await execCommandOnProject(`npm install ${dependencyName}@${dependencyCurrentVersion}`);
+                await execCommandOnProject(`npm install ${dependencyName}@${dependencyUpToDateVersion}`);
                 await execCommandOnProject(`npm run test`);
 
                 return await commit(
                     /* [0] */
                     spaceTrim(`
-                        🔼 Update ${dependencyName} to ${dependencyCurrentVersion}
+                        🔼 Update ${dependencyName} to ${dependencyUpToDateVersion}
 
                         ${updateSingnature}
                     `),
