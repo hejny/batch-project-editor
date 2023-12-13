@@ -64,11 +64,23 @@ export async function runWorkflows({
     for (const workflow of sortedWorkflows) {
         console.info(chalk.green(` ${workflow.name} `));
     }
+    if (sortedWorkflows.length === 0) {
+        // Note: When no workflow is running then show all workflows in gray
+        for (const workflow of WORKFLOWS) {
+            console.info(chalk.gray(` ${workflow.name} `));
+        }
+    }
     console.info(``);
     console.info(``);
     console.info(chalk.bgBlue(` 🏤  Running ${sortedProjects.length} projects `));
     for (const project of sortedProjects) {
         console.info(chalk.blue(` ${basename(project)} `));
+    }
+    if (sortedProjects.length === 0) {
+        // Note: When no project is running then show all projects in gray
+        for (const project of allProjects) {
+            console.info(chalk.gray(` ${basename(project)} `));
+        }
     }
     console.info(``);
     console.info(``);
