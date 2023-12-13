@@ -1,7 +1,7 @@
 import { lines } from './000-lines/lines';
 import { organizeImports } from './010-prettier/organizeImports';
 import { prettier } from './010-prettier/prettier';
-import { updateDependency } from './105-updateDependency/updateDependency';
+import { createUpdateDependencyWorkflow } from './105-updateDependency/createUpdateDependencyWorkflow';
 import { auditDependencies } from './110-auditDependencies/auditDependencies';
 import { libraryBoilerplate } from './200-libraryBoilerplate/libraryBoilerplate';
 import { license } from './300-license/license';
@@ -40,16 +40,24 @@ export const WORKFLOWS: IWorkflow[] = [
     // normalizeJsons, <- Note: There are lot of JSON files in UTF-16LE which can not be parsed - "SyntaxError: Unexpected token  in JSON at position 1"
     // TODO: updateDependency('touchcontroller'),
     // TODO: updateDependency('configchecker'),
-    updateDependency('waitasecond'),
-    updateDependency('xyzt'),
+    createUpdateDependencyWorkflow('waitasecond'),
+    createUpdateDependencyWorkflow('xyzt'),
     // TODO: updateDependency('everstorage'),
     // updateDependency('pdfmk'),
-    updateDependency('destroyable'),
-    updateDependency('n12'),
-    updateDependency('locate-app'),
-    updateDependency('spacetrim'),
+    createUpdateDependencyWorkflow('destroyable'),
+    createUpdateDependencyWorkflow('n12'),
+    createUpdateDependencyWorkflow('locate-app'),
+    createUpdateDependencyWorkflow('spacetrim'),
     // updateDependency('save-ukraine'),
     // updateDependency('unundefined'),
+    createUpdateDependencyWorkflow('@promptbook/core'),
+    createUpdateDependencyWorkflow('@promptbook/execute-javascript'),
+    createUpdateDependencyWorkflow('@promptbook/openai'),
+    createUpdateDependencyWorkflow('@promptbook/remote-client'),
+    createUpdateDependencyWorkflow('@promptbook/remote-server'),
+    createUpdateDependencyWorkflow('@promptbook/types'),
+    createUpdateDependencyWorkflow('@promptbook/utils'),
+    createUpdateDependencyWorkflow('@promptbook/wizzard'),
     auditDependencies,
     libraryBoilerplate,
     license,

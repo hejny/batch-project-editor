@@ -1,12 +1,12 @@
 import chalk from 'chalk';
-import { capitalize } from 'lodash';
+import { normalizeTo_PascalCase } from 'n12';
 import spaceTrim from 'spacetrim';
 import { fetchPackageVersion } from '../../utils/fetchPackageVersion';
 import { removeDependencyPrefix } from '../../utils/removeDependencyPrefix';
 import { IWorkflow, IWorkflowOptions } from '../IWorkflow';
 
-export function updateDependency(dependencyName: string): IWorkflow {
-    const workflowName = `update${capitalize(dependencyName)}`;
+export function createUpdateDependencyWorkflow(dependencyName: string): IWorkflow {
+    const workflowName = `updateDependency${normalizeTo_PascalCase(dependencyName)}`;
     return {
         [workflowName]: async function ({
             packageJson,
@@ -16,9 +16,6 @@ export function updateDependency(dependencyName: string): IWorkflow {
             commit,
             skippingBecauseOf,
         }: IWorkflowOptions) {
-            const dependencyName = 'n12'; /* <- TODO: More libraries */
-            // TODO: [0] for (const libraryName of ['spacetrim']) {
-
             const dependencyUsedVersionWithPrefix =
                 (packageJson.dependencies || {})[dependencyName] || (packageJson.devDependencies || {})[dependencyName];
 
