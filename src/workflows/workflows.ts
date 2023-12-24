@@ -22,10 +22,11 @@ import { badges } from './800-badges/badges';
 import { contributing } from './810-contributing/contributing';
 import { partners } from './820-partners/partners';
 import { normalizeSvgs } from './900-assets/normalizeSvgs';
+import { publishPatchVersion } from './990-publishPatchVersion/publishPatchVersion';
+import { IWorkflow } from './IWorkflow';
 import { branchesRemoveMerged } from './branches-remove-merged/branches-remove-merged';
 import { branchesUpdateFeatures } from './branches-update-features/branches-update-features';
 import { collboardModuleNames } from './collboard-module-names/collboard-module-names';
-import { IWorkflow } from './IWorkflow';
 import { onceHarvestWholeMidjourney } from './once-harvest-whole-midjourney/once-harvest-whole-midjourney';
 import { onceRevertLastBpeCommit } from './once-revert-last-bpe-commit/once-revert-last-bpe-commit';
 import { socialFacebookEventInterest } from './social/facebook-event-interest';
@@ -35,6 +36,7 @@ import { terminalsVersion } from './terminals-version/terminalsVersion';
 
 export const WORKFLOWS: IWorkflow[] = [
     lines,
+
     // removeBom,
     // encoding,
     // normalizeJsons, <- Note: There are lot of JSON files in UTF-16LE which can not be parsed - "SyntaxError: Unexpected token  in JSON at position 1"
@@ -85,6 +87,7 @@ export const WORKFLOWS: IWorkflow[] = [
     normalizeSvgs,
     prettier,
     organizeImports,
+    publishPatchVersion,
     socialLinkedinLikes,
     socialFacebookLikes,
     socialFacebookEventInterest,
