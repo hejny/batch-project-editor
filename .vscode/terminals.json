@@ -30,6 +30,12 @@
             "focus": true
         },
         {
+            "name": "🔼📦 Publish/deploy patch versions of each project",
+            "commands": ["ts-node ./src/index.ts --edit --workflows publishPatchVersion --projects %"],
+            "onlySingle": false,
+            "focus": true
+        },
+        {
             "name": "🔼🍴 Run update feature branches",
             "commands": [
                 "ts-node ./src/index.ts --clone",
