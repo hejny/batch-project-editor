@@ -2,10 +2,21 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 
 interface ITerminal {
     name: string;
-    command: string;
+    command?: string;
+    commands?: string[];
     onlySingle: boolean;
     focus: boolean;
+    execute?: boolean;
 }
+
+/*
+<- TODO:
+> type ITerminal = {
+>     name: string;
+>     onlySingle: boolean;
+>     focus: boolean;
+> } & ({ command: string } | { commands: string[] });
+*/
 
 export async function terminalsVersion({ commit, modifyJsonFile }: IWorkflowOptions): Promise<WorkflowResult> {
     await modifyJsonFile<{ terminals: ITerminal[] }>('.vscode/terminals.json', (fileJson) => {
@@ -16,7 +27,25 @@ export async function terminalsVersion({ commit, modifyJsonFile }: IWorkflowOpti
                 return;
             }
 
-            if (fileJson!.terminals.some((existingTerminal) => existingTerminal.command === newTerminal.command)) {
+            if (
+                fileJson!.terminals.some(
+                    (existingTerminal) =>
+                        existingTerminal.command &&
+                        newTerminal.command &&
+                        existingTerminal.command === newTerminal.command,
+                )
+            ) {
+                return;
+            }
+
+            if (
+                fileJson!.terminals.some(
+                    (existingTerminal) =>
+                        existingTerminal.commands &&
+                        newTerminal.commands &&
+                        existingTerminal.commands.join(',') === newTerminal.commands.join(','),
+                )
+            ) {
                 return;
             }
 
@@ -39,6 +68,21 @@ export async function terminalsVersion({ commit, modifyJsonFile }: IWorkflowOpti
             name: '🔼🩹 Release patch version',
             command: 'npm version patch',
             onlySingle: true,
+            focus: true,
+        });
+
+        addTerminal({
+            name: '🔼👑🧪 Release pre-major version',
+            commands: ['npm version premajor', 'npm version prerelease'],
+            onlySingle: true,
+            execute: false,
+            focus: true,
+        });
+        addTerminal({
+            name: '🔼🚀🧪 Release pre-minor version',
+            commands: ['npm version preminor', 'npm version prerelease'],
+            onlySingle: true,
+            execute: false,
             focus: true,
         });
 
