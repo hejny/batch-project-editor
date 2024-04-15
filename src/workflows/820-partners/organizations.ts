@@ -5,7 +5,7 @@ export function pickPartnersForProject({
     projectOrg,
     projectName,
 }: Pick<IWorkflowOptions, 'projectUrl' | 'projectOrg' | 'projectName'>) {
-    const { hedu, collboard,webgpt, czechevents, sigmastamp } = ORGANIZATIONS;
+    const { hedu, collboard, webgpt, czechevents, sigmastamp } = ORGANIZATIONS;
 
     switch (projectOrg) {
         case 'hejny':
@@ -35,11 +35,12 @@ const ORGANIZATIONS = {
         logoSrc: new URL(`https://collboard.fra1.cdn.digitaloceanspaces.com/assets/18.12.1/logo-small.png`),
     },
     webgpt: {
-      title: `WebGPT`,
-      url: new URL(`https://webgpt.cz/?partner=ph&utm_medium=referral&utm_source=github-readme&utm_campaign=partner-ph`),
-      logoSrc: new URL(`https://webgpt.cz/_next/static/media/webgpt.white.04a40f79.svg`),
-  },
-
+        title: `WebGPT`,
+        url: new URL(
+            `https://webgpt.cz/?partner=ph&utm_medium=referral&utm_source=github-readme&utm_campaign=partner-ph`,
+        ),
+        logoSrc: new URL(`https://webgpt.cz/_next/static/media/webgpt.black.b25d862f.svg`),
+    },
 
     //----
     czechevents: {
