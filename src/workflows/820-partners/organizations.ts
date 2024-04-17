@@ -39,7 +39,7 @@ const ORGANIZATIONS = {
         url: new URL(
             `https://webgpt.cz/?partner=ph&utm_medium=referral&utm_source=github-readme&utm_campaign=partner-ph`,
         ),
-        logoSrc: new URL(`https://webgpt.cz/_next/static/media/webgpt.black.b25d862f.svg`),
+        logoSrc: new URL(`https://webgpt.cz/_next/static/media/webgpt.white.7e7069eb.png`),
     },
 
     //----
