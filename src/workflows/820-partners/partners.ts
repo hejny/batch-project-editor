@@ -32,10 +32,10 @@ export async function partners({
 
                     ${block(
                         organizations
-                            .map(({ title, url, logoSrc }) =>
+                            .map(({ title, url, logoSrc ,width}) =>
                                 spaceTrim(`
                               <a href="${url.href}">
-                                <img src="${logoSrc.href}" alt="${title} logo" width="50"  />
+                                <img src="${logoSrc.href}" alt="${title} logo" width="${width}"  />
                               </a>
                         `),
                             )
