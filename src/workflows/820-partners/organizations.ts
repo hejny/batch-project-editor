@@ -12,9 +12,10 @@ export function pickPartnersForProject({
             return [webgpt, promptbook];
         case 'hejny':
             // TODO: Only for libraries, for non-libraties, use []
-            return [collboard, webgpt];
+            return [collboard, webgpt, promptbook];
         case 'collboard':
             return [
+                collboard,
                 /*hedu, collboard*/
             ];
 
