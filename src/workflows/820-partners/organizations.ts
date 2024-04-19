@@ -5,7 +5,7 @@ export function pickPartnersForProject({
     projectOrg,
     projectName,
 }: Pick<IWorkflowOptions, 'projectUrl' | 'projectOrg' | 'projectName'>) {
-    const { hedu, collboard, webgpt, promptbook, czechevents, sigmastamp } = ORGANIZATIONS;
+    const { hedu, collboard, webgpt, promptbook } = ORGANIZATIONS;
 
     switch (projectOrg) {
         case 'webgptorg':
@@ -17,8 +17,6 @@ export function pickPartnersForProject({
             return [
                 /*hedu, collboard*/
             ];
-        case 'sigmastamp':
-            return [collboard, czechevents, sigmastamp];
 
         default:
             return [];
@@ -40,19 +38,20 @@ const ORGANIZATIONS = {
     },
     webgpt: {
         title: `WebGPT`,
-        url: new URL(`https://github.com/webgptorg/promptbook`),
-        logoSrc: new URL(`https://raw.githubusercontent.com/webgptorg/promptbook/main/other/design/logo-render-h1.png`),
+        url: new URL(
+            `https://webgpt.cz/?partner=ph&utm_medium=referral&utm_source=github-readme&utm_campaign=partner-ph`,
+        ),
+        logoSrc: new URL(`https://webgpt.cz/_next/static/media/webgpt-blue.e2bf1fff.png`),
         width: 70,
     },
     promptbook: {
         title: `Promptbook`,
-        url: new URL(
-            `https://webgpt.cz/?partner=ph&utm_medium=referral&utm_source=github-readme&utm_campaign=partner-ph`,
-        ),
+        url: new URL(`https://github.com/webgptorg/promptbook`),
         logoSrc: new URL(`https://raw.githubusercontent.com/webgptorg/promptbook/main/other/design/logo.png`),
         width: 45,
     },
     //----
+    /*
     czechevents: {
         title: `Czech.events`,
         url: new URL(`https://czech.events/`),
@@ -65,4 +64,5 @@ const ORGANIZATIONS = {
         logoSrc: new URL(`https://www.sigmastamp.ml/sigmastamp-logo.white.svg`),
         width: 50,
     },
+    */
 };
