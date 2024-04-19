@@ -10,6 +10,7 @@ import { IWorkflowOptions, WorkflowResult } from '../IWorkflow';
 const BADGES_IN_README = /<!--Badges-->(?<badges>.*)<!--\/Badges-->/is;
 
 export async function badges({
+    packageJson,
     projectTitle,
     projectName,
     projectPath,
@@ -95,6 +96,12 @@ export async function badges({
             href: `http://ipv6-test.com/validate.php?url=collboard.com` /* <- "collboard.com" is hardcoded */,
         });
     }
+
+    badges.push({
+        title: `Socket`,
+        imageSrc: `https://socket.dev/api/badge/npm/package/${packageJson.name}`,
+        href: `https://socket.dev/npm/package/${packageJson.name}`,
+    });
 
     // Note: Test working of images and links
     const badgesLoadable = (
