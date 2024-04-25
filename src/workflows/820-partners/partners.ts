@@ -35,7 +35,7 @@ export async function partners({
                             .map(({ title, url, logoLightModeSrc, logoDarkModeSrc, height }) =>
                                 // #gh-light-mode-only | height=${height}
                                 spaceTrim(`
-                                    <a href="${url}" title="${title}"><img src="${logoLightModeSrc}#gh-light-mode-only" alt="${title}" height="${height}"/><img src="${logoDarkModeSrc}#gh-dark-mode-only" alt="${title}" height="${height}"/></a>
+                                    <a href="${url}" title="${title}"><img src="${logoLightModeSrc}#gh-light-mode-only" alt="${title}" height="${height}"/></a>
                                 `),
                             )
                             .join('\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n'),
