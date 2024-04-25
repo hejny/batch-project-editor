@@ -32,14 +32,13 @@ export async function partners({
 
                     ${block(
                         organizations
-                            .map(({ title, url, logoSrc ,width}) =>
+                            .map(({ title, url, logoLightModeSrc, logoDarkModeSrc, height }) =>
+                                // #gh-light-mode-only | height=${height}
                                 spaceTrim(`
-                              <a href="${url.href}">
-                                <img src="${logoSrc.href}" alt="${title} logo" width="${width}"  />
-                              </a>
-                        `),
+                                    <a href="${url}" title="${title}"><img src="${logoLightModeSrc}#gh-light-mode-only" alt="${title}" height="${height}"/><img src="${logoDarkModeSrc}#gh-dark-mode-only" alt="${title}" height="${height}"/></a>
+                                `),
                             )
-                            .join('\n&nbsp;&nbsp;&nbsp;\n'),
+                            .join('\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n'),
                     )}
 
 
