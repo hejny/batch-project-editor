@@ -5,6 +5,7 @@ import { createUpdateDependencyWorkflow } from './105-updateDependency/createUpd
 import { auditDependencies } from './110-auditDependencies/auditDependencies';
 import { libraryBoilerplate } from './200-libraryBoilerplate/libraryBoilerplate';
 import { license } from './300-license/license';
+import { funding } from './305-funding/funding';
 import { description } from './310-description/description';
 import { descriptionInGithub } from './310-description/descriptionInGithub';
 import { aiGeneratedWallpaperPrepare } from './315-ai-generated-wallpaper/0-aiGeneratedWallpaperPrepare';
@@ -63,6 +64,7 @@ export const WORKFLOWS: IWorkflow[] = [
     auditDependencies,
     libraryBoilerplate,
     license,
+    funding,
     description,
     descriptionInGithub,
     aiGeneratedWallpaperPrepare,
