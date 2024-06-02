@@ -14,8 +14,8 @@ jobs:
             - uses: actions/setup-node@v1
               with:
                   node-version: 17
-            - run: npm ci
-            - run: npm test
+            - run: pnpm ci
+            - run: pnpm test
 
     release:
         name: Create Release
@@ -49,9 +49,9 @@ jobs:
               with:
                   node-version: 17
                   registry-url: https://registry.npmjs.org/
-            - run: npm ci
-            - run: npm run build
-            - run: npm publish
+            - run: pnpm ci
+            - run: pnpm run build
+            - run: pnpm publish
               env:
                   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 

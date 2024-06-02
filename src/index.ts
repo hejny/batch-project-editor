@@ -165,7 +165,7 @@ async function main() {
                 });
                 await execCommand({
                     cwd: join(cwd, projectUrl.href.split('/').pop()!),
-                    command: `npm ci`,
+                    command: `pnpm ci`,
                     crashOnError: false,
                 });
             }

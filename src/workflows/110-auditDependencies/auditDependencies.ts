@@ -9,8 +9,8 @@ export async function auditDependencies({
     execCommandOnProject,
     commit,
 }: IWorkflowOptions): Promise<WorkflowResult> {
-    await execCommand({ cwd: projectPath, crashOnError: false, command: 'npm install' });
-    await execCommand({ cwd: projectPath, crashOnError: false, command: 'npm audit fix' });
+    await execCommand({ cwd: projectPath, crashOnError: false, command: 'pnpm install' });
+    await execCommand({ cwd: projectPath, crashOnError: false, command: 'pnpm audit fix' });
 
     await commit(
         spaceTrim(`
