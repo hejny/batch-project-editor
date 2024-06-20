@@ -32,7 +32,7 @@ export async function auditDependencies({
 
     return commit(
         spaceTrim(`
-          🔺 Removing dependencies prefixes
+          🔺 Removing dependency prefixes
 
           Removing prefixes before versioning - we just want "10.4.0" not "^10.4.0"
           For more reasoning watch https://youtu.be/ctkGh7RpgQ8

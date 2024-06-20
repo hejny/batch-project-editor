@@ -8,6 +8,19 @@ export async function publishPatchVersion({
     execCommandOnProject,
     commit,
 }: IWorkflowOptions): Promise<WorkflowResult> {
+    await execCommandOnProject(`npm install --package-lock-only`);
+    await execCommandOnProject(`rm pnpm-lock.yaml -f`); // <-   -f, --force           ignore nonexistent files and arguments, never prompt
+    await execCommandOnProject(`rm yarn.lock -f`);
+
+    await commit(
+        spaceTrim(`
+            🔽 Install dependencies
+
+             Before releasing the package, install it using most standard installers - NPM and remove all other lockfiles.
+
+        `),
+    );
+
     await execCommand({
         cwd: projectPath,
         crashOnError: true,
