@@ -1,3 +1,4 @@
+import { removeEmojis, removeMarkdownFormatting } from '@promptbook/utils';
 import { readFile } from 'fs/promises';
 import { basename, join } from 'path';
 import { PackageJson } from 'type-fest';
@@ -8,10 +9,14 @@ export async function findProjectTitle(projectPath: string): Promise<string> {
         const match = (await readFile(join(projectPath, 'README.md'), 'utf8')).match(/^#\s*(?<projectTitle>.*)\s*$/m);
 
         if (match && match.groups && match.groups.projectTitle) {
-            // TODO: Return without leading emoji
-            //       Not: "🔼 Batch project editor"
-            //       But: "Batch project editor"
-            return match.groups.projectTitle;
+            let projectTitle = match.groups.projectTitle;
+            projectTitle = removeEmojis(projectTitle);
+            projectTitle = removeMarkdownFormatting(projectTitle);
+            projectTitle = projectTitle
+                .split(/\!\[.*\]\(.*\)/)
+                .join('')
+                .trim();
+            return projectTitle;
         }
     }
 
