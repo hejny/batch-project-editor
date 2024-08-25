@@ -19,7 +19,7 @@ jobs:
                   node-version: 17
 
             - name: Install dependencies
-              run: pnpm ci
+              run: pnpm i --frozen-lockfile --yes
 
             - name: Test
               run: npm run test
