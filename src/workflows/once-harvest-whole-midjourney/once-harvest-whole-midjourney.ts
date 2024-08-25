@@ -1,7 +1,7 @@
+import { normalizeTo_snake_case } from '@promptbook/utils';
 import chalk from 'chalk';
 import { writeFile } from 'fs/promises';
 import moment from 'moment';
-import { normalizeTo_snake_case } from 'n12';
 import { join } from 'path';
 import { utimes } from 'utimes';
 import { MIDJOURNEY_WHOLE_GALLERY_PATH } from '../../config';

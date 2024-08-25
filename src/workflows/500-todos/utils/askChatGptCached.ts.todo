@@ -1,4 +1,4 @@
-import { normalizeWhitespaces } from 'n12';
+import { normalizeWhitespaces } from '@promptbook/utils';
 import { IWorkflowOptions } from '../../IWorkflow';
 import { askChatBing, IAskChatBingOptions, IAskChatBingReturn } from './askChatBing';
 

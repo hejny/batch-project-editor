@@ -1,4 +1,5 @@
-import { removeEmojis, removeMarkdownFormatting } from '@promptbook/utils';
+import { removeMarkdownFormatting } from '@promptbook/markdown-utils';
+import { removeEmojis } from '@promptbook/utils';
 import { readFile } from 'fs/promises';
 import { basename, join } from 'path';
 import { PackageJson } from 'type-fest';

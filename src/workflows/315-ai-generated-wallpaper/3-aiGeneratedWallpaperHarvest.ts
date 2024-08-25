@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { readFile, writeFile } from 'fs/promises';
-import { normalizeTo_snake_case } from 'n12';
+import { normalizeTo_snake_case } from '@promptbook/utils';
 import { join } from 'path';
 import spaceTrim from 'spacetrim';
 import { writeFileWithoutOverwriting } from '../../utils/writeFileWithoutOverwriting';

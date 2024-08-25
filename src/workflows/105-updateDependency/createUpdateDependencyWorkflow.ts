@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { normalizeTo_PascalCase } from 'n12';
+import { normalizeTo_PascalCase } from '@promptbook/utils';
 import spaceTrim from 'spacetrim';
 import { fetchPackageVersion } from '../../utils/fetchPackageVersion';
 import { removeDependencyPrefix } from '../../utils/removeDependencyPrefix';
