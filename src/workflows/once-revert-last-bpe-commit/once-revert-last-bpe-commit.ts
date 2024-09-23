@@ -19,7 +19,7 @@ export async function onceRevertLastBpeCommit({
     for (const recentCommit of recentCommits) {
         if (!recentCommit.body.includes(BATCH_PROJECT_EDITOR_COMMIT_SIGNATURE)) {
             continue;
-            // return skippingBecauseOf(`Last commit is not by Batch project editor`);
+            // return skippingBecauseOf(`Last commit is not by Batch project editor`);up
         }
 
         /**/
