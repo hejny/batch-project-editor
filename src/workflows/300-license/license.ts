@@ -231,7 +231,9 @@ export async function license({
     });
 
     await modifyFile('LICENSE.md', () => licenseText);
-    await rm(join(projectPath, 'LICENSE')).catch(()=> void /* ENOENT: no such file or directory, stat 'X:\autowork\hejny\spacetrim\LICENSE */);
+    await rm(join(projectPath, 'LICENSE')).catch(
+        () => void 0 /* ENOENT: no such file or directory, stat 'X:\autowork\hejny\spacetrim\LICENSE */,
+    );
 
     return commit('📝 License ');
 }
