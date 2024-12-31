@@ -32,6 +32,7 @@ export function execCommand(options: IExecCommandOptions): Promise<string> {
         try {
             const commandProcess = spawn(command, args, {
                 cwd,
+                shell: true,
             });
 
             commandProcess.on('message', (message) => {

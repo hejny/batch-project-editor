@@ -239,7 +239,7 @@ export async function aiGeneratedWallpaperPick({
     });
 
     const url = `http://localhost:${port}`;
-    spawn(await locateChrome(), [url]);
+    spawn(await locateChrome(), [url], { shell: true });
     console.info(chalk.bgGrey(` 👉  Pick wallpeper for ${projectName} on ${url}`));
 
     const pickedWallpaper = await pickedWallpaperPromise;

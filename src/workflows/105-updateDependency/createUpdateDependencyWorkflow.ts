@@ -62,7 +62,7 @@ export function createUpdateDependencyWorkflow(dependencyName: string): IWorkflo
                     ),
                 );
 
-                spawn(await locateVSCode(), [projectPath]);
+                spawn(await locateVSCode(), [projectPath], {shell:true});
 
                 */
                 throw error;

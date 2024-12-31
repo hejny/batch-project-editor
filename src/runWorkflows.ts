@@ -153,7 +153,7 @@ export async function runWorkflows({
                                 ),
                             );
 
-                            spawn(await locateVSCode(), [projectPath]);
+                            spawn(await locateVSCode(), [projectPath], { shell: true });
 
                             continue;
                         }

@@ -56,7 +56,7 @@ export async function branchesUpdateFeatures({
                             chalk.gray(`⏩ Opening project ${projectTitle} in VSCode because automatic merge failed.`),
                         );
 
-                        spawn(await locateVSCode(), [projectPath]);
+                        spawn(await locateVSCode(), [projectPath], { shell: true });
                         throw new Error(result);
                     } else if (/Already up to date/i.test(result)) {
                         return false;
