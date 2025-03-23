@@ -1,5 +1,5 @@
-import chalk from 'chalk';
 import { normalizeTo_PascalCase } from '@promptbook/utils';
+import chalk from 'chalk';
 import spaceTrim from 'spacetrim';
 import { fetchPackageVersion } from '../../utils/fetchPackageVersion';
 import { removeDependencyPrefix } from '../../utils/removeDependencyPrefix';
@@ -37,7 +37,7 @@ export function createUpdateDependencyWorkflow(dependencyName: string): IWorkflo
             console.info(chalk.cyan(`Updating ${updateSingnature}`));
 
             try {
-                await execCommandOnProject(`pnpm install ${dependencyName}@${dependencyUpToDateVersion}`);
+                await execCommandOnProject(`pnpm install ${dependencyName}@${dependencyUpToDateVersion} --yes`);
                 await execCommandOnProject(`pnpm run test`);
 
                 return await commit(
