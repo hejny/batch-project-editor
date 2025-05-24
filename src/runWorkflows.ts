@@ -216,22 +216,30 @@ export async function runWorkflows({
                     }
 
                     const configPath = join(projectPath, 'batch-project-editor.js');
+
+                    // console.log('!!! configPath', configPath, await isFileExisting(configPath));
                     if (await isFileExisting(configPath)) {
-                        try {
-                            const config = require(configPath);
-                            if (config.ignoreWorkflows) {
-                                if (config.ignoreWorkflows.includes(workflowName)) {
-                                    // TODO: Probbably use standard skippingOfBecause
-                                    console.info(
-                                        chalk.gray(
-                                            `⏩ Skipping workflow ${workflowName} for project ${projectTitle} because projects config ignores this workflow`,
-                                        ),
-                                    );
-                                    continue;
-                                }
+                        const configContent = await readFile(configPath, 'utf8');
+
+                        // console.log('!!! configPath configContent', configContent);
+
+                        const config = eval(`${configContent}`);
+
+                        // const imported = await import(configPath);
+                        // const config = imported.default ?? imported;
+
+                        // console.log('!!! configPath config', config);
+                        if (config.ignoreWorkflows) {
+                            // console.log('!!! configPath config.ignoreWorkflows', config.ignoreWorkflows);
+                            if (config.ignoreWorkflows.includes(workflowName)) {
+                                // TODO: Probbably use standard skippingOfBecause
+                                console.info(
+                                    chalk.gray(
+                                        `⏩ Skipping workflow ${workflowName} for project ${projectTitle} because projects config ignores this workflow`,
+                                    ),
+                                );
+                                continue;
                             }
-                        } catch (error) {
-                            console.error(error);
                         }
                     }
 
