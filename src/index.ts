@@ -165,7 +165,7 @@ async function main() {
                 });
                 await execCommand({
                     cwd: join(cwd, projectUrl.href.split('/').pop()!),
-                    command: `pnpm i --frozen-lockfile --yes`,
+                    command: `pnpm i --frozen-lockfile`,
                     crashOnError: false,
                 });
             }

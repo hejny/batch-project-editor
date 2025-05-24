@@ -37,7 +37,7 @@ export function createUpdateDependencyWorkflow(dependencyName: string): IWorkflo
             console.info(chalk.cyan(`Updating ${updateSingnature}`));
 
             try {
-                await execCommandOnProject(`pnpm install ${dependencyName}@${dependencyUpToDateVersion} --yes`);
+                await execCommandOnProject(`pnpm install ${dependencyName}@${dependencyUpToDateVersion}`);
                 await execCommandOnProject(`pnpm run test`);
 
                 return await commit(
