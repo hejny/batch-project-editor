@@ -5,8 +5,8 @@
         {
             "name": "🔼 Run",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows %,-once%,-branchesUpdateFeatures,-descriptionInGithub,-aiGeneratedWallpaper%,-social% --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows %,-once%,-branchesUpdateFeatures,-descriptionInGithub,-aiGeneratedWallpaper%,-social% --projects %"
             ],
             "onlySingle": false,
             "focus": true
@@ -14,8 +14,8 @@
         {
             "name": "🔼⏎ Change CRLF to LF",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows lines --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows lines --projects %"
             ],
             "onlySingle": false,
             "focus": true
@@ -23,23 +23,23 @@
         {
             "name": "🔼📦 Run update & audit dependencies",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows update%,auditDependencies --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows update%,auditDependencies --projects %"
             ],
             "onlySingle": false,
             "focus": true
         },
         {
             "name": "🔼📦 Publish/deploy patch versions of each project",
-            "commands": ["ts-node ./src/index.ts --edit --workflows publishPatchVersion --projects %"],
+            "commands": ["npx ts-node ./src/index.ts --edit --workflows publishPatchVersion --projects %"],
             "onlySingle": false,
             "focus": true
         },
         {
             "name": "🔼🍴 Run update feature branches",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows branchesUpdateFeatures --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows branchesUpdateFeatures --projects %"
             ],
             "onlySingle": false,
             "focus": true
@@ -47,8 +47,8 @@
         {
             "name": "🏭🖼️ Prepare AI–⁠generated wallpapers",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows description,aiGeneratedWallpaperPrepare --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows description,aiGeneratedWallpaperPrepare --projects %"
             ],
             "onlySingle": true,
             "focus": true
@@ -56,8 +56,8 @@
         {
             "name": "🚜🖼️ Land AI–⁠generated wallpapers",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperLand --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperLand --projects %"
             ],
             "onlySingle": true,
             "focus": true
@@ -65,7 +65,7 @@
         {
             "name": "🚜🖼️ Trigger AI–⁠generated wallpapers",
             "commands": [
-                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperTrigger --projects batch-project-editor"
+                "npx ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperTrigger --projects batch-project-editor"
             ],
             "onlySingle": true,
             "focus": true
@@ -73,8 +73,8 @@
         {
             "name": "🌾🖼️ Harvest AI–⁠generated wallpapers",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperHarvest --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperHarvest --projects %"
             ],
             "onlySingle": true,
             "focus": true
@@ -83,8 +83,8 @@
         {
             "name": "👉🖼️ Pick AI–⁠generated wallpapers",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperPick --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperPick --projects %"
             ],
             "onlySingle": true,
             "focus": true
@@ -92,8 +92,8 @@
         {
             "name": "💸🖼️ Use AI–⁠generated wallpapers",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperUse% --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperUse% --projects %"
             ],
             "onlySingle": true,
             "focus": true
@@ -101,53 +101,53 @@
         {
             "name": "🔼🖼️➰ Land & Harvest & Use AI–⁠generated wallpapers in a loop",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPrepare,-aiGeneratedWallpaperPick --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --loop --workflows aiGeneratedWallpaper%,-aiGeneratedWallpaperPrepare,-aiGeneratedWallpaperPick --projects %"
             ],
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🤖🚜 Land AIdeas",
-            "commands": ["ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperLand --projects AIdeas"],
+            "commands": ["npx ts-node ./src/index.ts --edit --workflows aiGeneratedWallpaperLand --projects AIdeas"],
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🤖💬 Write annotations",
-            "commands": ["ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects %"],
+            "commands": ["npx ts-node ./src/index.ts --edit --workflows onceWriteAnnotations --projects %"],
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🤵 Interact on social networks",
             "commands": [
-                "ts-node ./src/index.ts --edit --loop --workflows social%,-socialFacebookEventInterest --projects hejny"
+                "npx ts-node ./src/index.ts --edit --loop --workflows social%,-socialFacebookEventInterest --projects hejny"
             ],
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🤖💭",
-            "commands": ["ts-node ./src/index.ts --edit --loop --workflows socialFacebookLikes --projects %"],
+            "commands": ["npx ts-node ./src/index.ts --edit --loop --workflows socialFacebookLikes --projects %"],
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🤵👍 Give likes on Facebook",
-            "commands": ["ts-node ./src/index.ts --edit --loop --workflows socialFacebookLikes --projects hejny"],
+            "commands": ["npx ts-node ./src/index.ts --edit --loop --workflows socialFacebookLikes --projects hejny"],
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🤵👍 Give likes on LinkedIn",
-            "commands": ["ts-node ./src/index.ts --edit --loop --workflows socialLinkedinLikes --projects hejny"],
+            "commands": ["npx ts-node ./src/index.ts --edit --loop --workflows socialLinkedinLikes --projects hejny"],
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🤵📅 Interested events for Czech.events",
-            "commands": ["ts-node ./src/index.ts --edit --workflows socialFacebookEventInterest --projects hejny"],
+            "commands": ["npx ts-node ./src/index.ts --edit --workflows socialFacebookEventInterest --projects hejny"],
             "onlySingle": true,
             "focus": true
         },
@@ -155,7 +155,7 @@
         {
             "name": "⏬🖼️ Download whole MidJourney gallery",
             "commands": [
-                "ts-node ./src/index.ts --edit --workflows onceHarvestWholeMidjourney --projects batch-project-editor"
+                "npx ts-node ./src/index.ts --edit --workflows onceHarvestWholeMidjourney --projects batch-project-editor"
             ],
             "onlySingle": true,
             "focus": true
@@ -163,41 +163,41 @@
         {
             "name": "🔼🐈 Run Github description",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --edit --workflows description,descriptionInGithub --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --edit --workflows description,descriptionInGithub --projects %"
             ],
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🔽 Clone",
-            "command": "ts-node ./src/index.ts --clone",
+            "command": "npx ts-node ./src/index.ts --clone",
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🔼🧪👨🏽‍💻 Run one workflow on one project",
-            "command": "ts-node ./src/index.ts --edit --workflows badges --projects spacetrim",
+            "command": "npx ts-node ./src/index.ts --edit --workflows badges --projects spacetrim",
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "📋🏤 List remote projects",
-            "command": "ts-node ./src/index.ts --list-remote-projects",
+            "command": "npx ts-node ./src/index.ts --list-remote-projects",
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "📋🏤 List local projects",
-            "command": "ts-node ./src/index.ts --list-projects",
+            "command": "npx ts-node ./src/index.ts --list-projects",
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🕤 Git hours",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --aggregate --aggregator gitHours --projects %"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --aggregate --aggregator gitHours --projects %"
             ],
             "onlySingle": true,
             "focus": true
@@ -205,28 +205,28 @@
         {
             "name": "🕤💙 Git hours for H-edu projects",
             "commands": [
-                "ts-node ./src/index.ts --clone",
-                "ts-node ./src/index.ts --aggregate --aggregator gitHours --projects hedu-collboard-integration"
+                "npx ts-node ./src/index.ts --clone",
+                "npx ts-node ./src/index.ts --aggregate --aggregator gitHours --projects hedu-collboard-integration"
             ],
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "➕ Creating new repository",
-            "commands": ["ts-node ./src/index.ts --create test"],
+            "commands": ["npx ts-node ./src/index.ts --create test"],
             "onlySingle": true,
             "focus": true
         },
 
         {
             "name": "📋⚙️ List workflows",
-            "command": "ts-node ./src/index.ts --list-workflows",
+            "command": "npx ts-node ./src/index.ts --list-workflows",
             "onlySingle": true,
             "focus": true
         },
         {
             "name": "🔙 Revert last BPE commit",
-            "command": "ts-node ./src/index.ts --edit --workflows onceRevertLastBpeCommit --projects %",
+            "command": "npx ts-node ./src/index.ts --edit --workflows onceRevertLastBpeCommit --projects %",
             "onlySingle": true,
             "focus": true
         }
