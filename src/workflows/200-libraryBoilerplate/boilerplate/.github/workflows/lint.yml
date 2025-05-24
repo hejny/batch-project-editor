@@ -19,7 +19,7 @@ jobs:
                   node-version: 17
 
             - name: Install dependencies
-              run: pnpm i --frozen-lockfile --yes
+              run: pnpm i --frozen-lockfile
 
             - name: Lint
               run: pnpm run lint
