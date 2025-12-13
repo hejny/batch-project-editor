@@ -9,7 +9,7 @@ export async function repository({
     await modifyPackage((packageJson) => {
         packageJson.repository = {
             type: 'git',
-            url: repositoryUrl,
+            url: `git+${repositoryUrl.trim()}.git`,
         };
     });
     return commit('🍱 Add repository into package.json');
