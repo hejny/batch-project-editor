@@ -191,6 +191,11 @@ export async function runWorkflows({
                         */
                     }
 
+                    console.info(
+                        chalk.bgWhite(
+                            `                                                                                   `,
+                        ),
+                    );
                     console.info(`🔼 Running workflow ${workflowName} for project ${projectTitle}`);
 
                     await execCommand({
